@@ -1,0 +1,27 @@
+{
+  "name": "spark-property-manager",
+  "version": "0.0.1",
+  "description": "Spark Realestate Property Management Application",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "author": "Steve Park",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.15.4",
+    "jquery-mobile": "1.5.0-alpha.1",
+    "properties-reader": "0.0.16",
+    "pg": "7.4.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wsapiens/spark-property-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/wsapiens/spark-property-manager/issues"
+  },
+  "homepage": "https://github.com/wsapiens/spark-property-manager#readme"
+}
