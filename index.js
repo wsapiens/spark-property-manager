@@ -27,7 +27,18 @@ app.get('/properties', function(req, res) {
         console.error(e.stack);
         res.send(e.stack);
       });
-    //pool.end();
+});
+
+app.get('/expenses', function(req, res) {
+  pool.query('select * from expense')
+      .then(rs => {
+        console.log(rs.rows);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(rs.rows));
+      }).catch(e => {
+        console.error(e.stack);
+        res.send(e.stack);
+      });
 });
 
 app.get('/api/v1/import/projects/123', function(req, res) {
