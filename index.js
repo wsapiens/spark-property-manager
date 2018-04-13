@@ -19,7 +19,7 @@ var audit = {};
 
 app.get('/properties', function(req, res) {
   client.connect();
-  
+
   client.query('select * from property', (err, qres) => {
     console.log(err, qres);
     res.setHeader('Content-Type', 'application/json');
@@ -67,4 +67,4 @@ app.post('/api/v1/import/projects', function(req, res) {
   res.send(JSON.stringify({"uri": "http://localhost:"+port+"/api/v1/import/projects/123"}));
 });
  
-app.listen(port);
+app.listen(properties.get('app.port'), properties.get('app.hostname'));
