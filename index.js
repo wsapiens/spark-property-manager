@@ -2,14 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const PropertiesReader = require('properties-reader');
 const properties = PropertiesReader('app.properties');
-const { Pool, Client } = require('pg'); // PostgreSql DB Client
-const pool = new Pool({
-   host: properties.get('db.hostname'),
-   port: Number(properties.get('db.port')),
-   database: properties.get('db.name'),
-   user: properties.get('db.username'),
-   password: properties.get('db.password'),
-});
+
 const app = express();
 const port = 8080;
 
@@ -17,28 +10,12 @@ app.use(bodyParser.json());
 
 var audit = {};
 
-app.get('/properties', function(req, res) {
-  pool.query('select * from property')
-      .then(rs => {
-        console.log(rs.rows);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(rs.rows));
-      }).catch(e => {
-        console.error(e.stack);
-        res.send(e.stack);
-      });
-});
 
-app.get('/expenses', function(req, res) {
-  pool.query('select * from expense')
-      .then(rs => {
-        console.log(rs.rows);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(rs.rows));
-      }).catch(e => {
-        console.error(e.stack);
-        res.send(e.stack);
-      });
+
+
+
+app.post('/expense', function(req, res) {
+  pool.query();
 });
 
 app.get('/api/v1/import/projects/123', function(req, res) {

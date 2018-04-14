@@ -15,7 +15,8 @@ CREATE TABLE property (
 CREATE TABLE property_unit (
   id bigserial primary key,
   property_id integer REFERENCES property (id),
-  name text
+  name text,
+  is_building boolean default false
 );
 
 CREATE TABLE rental_price (
@@ -50,6 +51,7 @@ CREATE TABLE work_order (
 CREATE TABLE expense (
   id bigserial primary key,
   unit_id integer REFERENCES property_unit (id),
+  pay_to text,
   description text,
   amount numeric(2)
 );
