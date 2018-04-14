@@ -14,6 +14,18 @@ router.get('/', function(req, res, next) {
       });
 });
 
+router.get('/:expenseId', function(req, res, next) {
+  db.query('SELECT * FROM expense WHERE id=$1',[ req.params.expenseId ])
+      .then(rs => {
+        console.log(rs.rows[0]);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(rs.rows[0]));
+      }).catch(e => {
+        console.error(e.stack);
+        res.send(e.stack);
+      });
+});
+
 router.post('/', function(req, res, next) {
   console.log("[ create expense ]\n");
   console.log(req.body['unit_id']);

@@ -14,6 +14,32 @@ router.get('/', function(req, res, next) {
       });
 });
 
+router.get('/:propertyId', function(req, res, next) {
+  db.query('SELECT * FROM property WHERE id=$1',[ req.params.propertyId ])
+      .then(rs => {
+        console.log(rs.rows[0]);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify(rs.rows[0]));
+      }).catch(e => {
+        console.error(e.stack);
+        res.send(e.stack);
+      });
+});
+
+router.get('/:propertyId/units', function(req, res, next) {
+  db.query('SELECT u.id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
+        + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id'
+        + ' WHERE p.id=$1',[ req.params.propertyId ])
+      .then(rs => {
+        console.log(rs.rows);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({"data": rs.rows}));
+      }).catch(e => {
+        console.error(e.stack);
+        res.send(e.stack);
+      });
+});
+
 router.post('/', function(req, res, next) {
   console.log("[ create property ]\n");
   console.log(req.body['type_id']);
