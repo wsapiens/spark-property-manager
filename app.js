@@ -5,6 +5,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
+var managerRouter = require('./routes/manager');
 var expensesRouter = require('./routes/expenses');
 var propertiesRouter = require('./routes/properties');
 var unitsRouter = require('./routes/units');
@@ -26,6 +27,7 @@ app.use(
 
 
 app.use('/', indexRouter);
+app.use('/manager', managerRouter);
 app.use('/expenses', expensesRouter);
 app.use('/properties', propertiesRouter);
 app.use('/units', unitsRouter);
