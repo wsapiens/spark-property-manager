@@ -22,7 +22,7 @@ CREATE TABLE property_unit (
 CREATE TABLE rental_price (
   id bigserial primary key,
   unit_id integer REFERENCES property_unit (id),
-  price numeric(2),
+  price money,
   time timestamp
 );
 
@@ -30,22 +30,22 @@ CREATE TABLE property_tax (
   id bigserial primary key,
   property_id integer REFERENCES property (id),
   description text,
-  amount numeric(2),
-  time timestamp
+  amount money,
+  pay_date date default CURRENT_DATE
 );
 
 CREATE TABLE work_order (
  id bigserial primary key,
  unit_id integer REFERENCES property_unit (id),
  description text not null,
- cost_estimation numeric(2),
+ estimated_cost money,
  assignee_name text,
  assignee_phone text,
  assignee_email text,
  status text,
- scheduled_time timestamp,
- start_time timestamp,
- end_time timestamp
+ scheduled_date date,
+ start_date date,
+ end_date date
 );
 
 CREATE TABLE expense (
@@ -53,7 +53,8 @@ CREATE TABLE expense (
   unit_id integer REFERENCES property_unit (id),
   pay_to text,
   description text,
-  amount numeric(2)
+  amount money,
+  pay_time timestamp default CURRENT_TIMESTAMP
 );
 
 CREATE TABLE work_order_expense (
@@ -75,6 +76,6 @@ CREATE TABLE rental_income (
   tenant_id integer REFERENCES tenant (id),
   method text,
   reference text,
-  amount numeric(2),
+  amount money,
   time timestamp
 );
