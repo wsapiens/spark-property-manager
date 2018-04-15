@@ -2,6 +2,7 @@
 <html>
   <head>
     <% include head %>
+    <script type="text/javascript" src="/javascripts/commons.js"></script>
     <script type="text/javascript" src="/javascripts/expense-manager.js"></script>
   </head>
   <body>
@@ -35,33 +36,39 @@
       </form>
     </div>
     <br><br><br><br>
+    <hr>
+    <br><br>
+    <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
+    <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
+    <br><br>
     <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
 			<thead>
 				<tr>
+          <th><input name="select_all" value="1" type="checkbox"></th>
 					<th>Id</th>
-          <th>UnitId</th>
-					<th>Street</th>
-					<th>Unit</th>
-					<th>City</th>
+					<th>PropertyAddres</th>
+					<th>ProptertyUnit</th>
+					<th>PropertyCity</th>
 					<th>PayTo</th>
-					<th>Desc</th>
+					<th>Description</th>
 					<th>Amount</th>
 					<th>PayTime</th>
 				</tr>
 			</thead>
 			<tfoot>
 				<tr>
+          <th></th>
           <th>Id</th>
-          <th>UnitId</th>
-					<th>Street</th>
-					<th>Unit</th>
-					<th>City</th>
+					<th>PropertyAddres</th>
+					<th>PropertyUnit</th>
+					<th>PropertyCity</th>
 					<th>PayTo</th>
-					<th>Desc</th>
+					<th>Description</th>
 					<th>Amount</th>
 					<th>PayTime</th>
 				</tr>
 			</tfoot>
 		</table>
+    <br><br>
   </body>
 </html>

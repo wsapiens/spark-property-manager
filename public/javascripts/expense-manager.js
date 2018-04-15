@@ -1,6 +1,5 @@
 var table;
 $(document).ready(function(){
-  var $property_select = $('#property-select');
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $.get("/properties", function(data, status){
@@ -63,17 +62,25 @@ $(document).ready(function(){
     table = $('#expenses').dataTable({
             "ajax": "/expenses",
             "columns": [
+                { data: null,
+                  searchable: false,
+                  orderable: false,
+                  width: '4%',
+                  className: 'dt-body-center',
+                  render: function () {
+                            return '<input type="checkbox">';
+                          }
+                },
                 { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "unit_id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "address_street", "width" : "20%" },
+                { "data": "address_street", "width" : "18%" },
                 { "data": "name", className: 'dt-body-center' },
-                { "data": "address_city", className: 'dt-body-right' },
+                { "data": "address_city", className: 'dt-body-center' },
                 { "data": "pay_to", className: 'dt-body-center'},
-                { "data": "description", "width" : "20%" },
+                { "data": "description", "width" : "18%" },
                 { "data": "amount", className: 'dt-body-right' },
-                { "data": "pay_time", "width" : "15%", className: 'dt-body-right' }
+                { "data": "pay_time", "width" : "15%", className: 'dt-body-center' }
             ],
-            "order": [[ 0, "asc" ]],
+            "order": [[ 1, "desc" ]],
             "processing": true,
             //"serverSide": true,
             "paging": true,
@@ -81,4 +88,116 @@ $(document).ready(function(){
             "pagingType": "full_numbers"
         }
     );
+
+    // Handle click on checkbox
+    $('#expenses tbody').on('click', 'input[type="checkbox"]', function(e){
+       var $row = $(this).closest('tr');
+       // Get row data
+       var data = table.api().row($row).data();
+       // Determine whether row ID is in the list of selected row IDs
+       var index = $.inArray(data, rows_selected);
+
+       // If checkbox is checked and row ID is not in list of selected row IDs
+       if(this.checked && index === -1){
+          rows_selected.push(data);
+       // Otherwise, if checkbox is not checked and row ID is in list of selected row IDs
+       } else if (!this.checked && index !== -1){
+          rows_selected.splice(index, 1);
+       }
+
+       if(this.checked){
+          $row.addClass('selected');
+       } else {
+          $row.removeClass('selected');
+       }
+
+       // Update state of "Select all" control
+       updateDataTableSelectAllCtrl(table);
+
+       // Prevent click event from propagating to parent
+       e.stopPropagation();
+    });
+
+    // Handle click on table cells with checkboxes
+    $('#expenses').on('click', 'tbody td, thead th:first-child', function(){
+       $(this).parent().find('input[type="checkbox"]').trigger('click');
+    });
+
+    // Handle click on "Select all" control
+    $('thead input[name="select_all"]', table.api().table().container()).on('click', function(e){
+       if(this.checked){
+          $('#expenses tbody input[type="checkbox"]:not(:checked)').trigger('click');
+       } else {
+          $('#expenses tbody input[type="checkbox"]:checked').trigger('click');
+       }
+
+       // Prevent click event from propagating to parent
+       e.stopPropagation();
+    });
+
+    // Handle table draw event
+    table.on('draw', function(){
+       // Update state of "Select all" control
+       updateDataTableSelectAllCtrl(table);
+    });
+});
+
+$(document).on('click', '#delete-button', function(){
+  if(0 !== rows_selected.length) {
+    $.each(rows_selected, function(key, value){
+      $.ajax({
+        url:"/expenses/"+value['id'],
+        type: "DELETE",
+        // data: JSON.stringify({"ids": ids}),
+        contentType: "application/json; charset=utf-8",
+        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        dataType: "json",
+        statusCode: {
+          200: function() {
+                refreshTable(table, true);
+               },
+          400: function(response) {
+                resultPopup(response);
+               },
+          401: function() {
+                location.reload();
+               },
+          500: function(response) {
+                resultPopup(response);
+               }
+        }
+      });
+    });
+  }
+});
+
+$(document).on('click', '#edit-button', function(){
+  if(1 === rows_selected.length) {
+    $('#property-select').labselect('Select Property');
+    $.get("/expenses/"+rows_selected[0]['id'], function(data, status){
+      if("success" === status) {
+        $.get("/units/"+data['unit_id'], function(udata, ustatus){
+          if("success" === ustatus) {
+            $('#property-select').val(udata['property_id']);
+          }
+        })
+        // id: "5", unit_id: 9, pay_to: "Greg", description: "Toilet Fix", amount: "$200.39", …
+        //$('#selectBox option:eq(3)').prop('selected', true);
+        $("html, body").animate({ scrollTop: 0 }, "slow");
+      }
+    });
+    // $.ajax({
+    //   url:"/expenses/"+rows_selected['id'],
+    //   type: "GET",
+    //     // data: JSON.stringify({"ids": ids}),
+    //   contentType: "application/json; charset=utf-8",
+    //     // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+    //   dataType: "json",
+    //   statusCode: {
+    //     200: function(data) {
+    //           $("html, body").animate({ scrollTop: 0 }, "slow");
+    //         }
+    //     }
+    //   });
+  }
 });
