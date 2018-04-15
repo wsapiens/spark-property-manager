@@ -63,15 +63,15 @@ $(document).ready(function(){
     table = $('#expenses').dataTable({
             "ajax": "/expenses",
             "columns": [
-                { "data": "id", "width" : "8%" },
-                { "data": "unit_id", "width" : "8%" },
+                { "data": "id", "width" : "8%", className: 'dt-body-center' },
+                { "data": "unit_id", "width" : "8%", className: 'dt-body-center' },
                 { "data": "address_street", "width" : "20%" },
-                { "data": "name" },
-                { "data": "address_city" },
-                { "data": "pay_to"},
+                { "data": "name", className: 'dt-body-center' },
+                { "data": "address_city", className: 'dt-body-right' },
+                { "data": "pay_to", className: 'dt-body-center'},
                 { "data": "description", "width" : "20%" },
-                { "data": "amount" },
-                { "data": "pay_time", "width" : "15%" }
+                { "data": "amount", className: 'dt-body-right' },
+                { "data": "pay_time", "width" : "15%", className: 'dt-body-right' }
             ],
             "order": [[ 0, "asc" ]],
             "processing": true,
