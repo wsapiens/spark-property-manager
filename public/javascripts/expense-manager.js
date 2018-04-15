@@ -1,4 +1,6 @@
 var table;
+var payTime;
+var expenseId;
 $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
@@ -49,11 +51,47 @@ $(document).ready(function(){
       console.log(payTo);
       console.log(payDesc);
       if( unitId && payAmount ) {
-        $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, amount: payAmount})
-         .done(function(data) {
-           console.log(data);
-           table.api().ajax.url("/expenses").load();
-         })
+        if(expenseId) {
+           $.ajax({
+             url:"/expenses/"+expenseId,
+             type: "PUT",
+             data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, amount: payAmount, pay_time: payTime}),
+             contentType: "application/json; charset=utf-8",
+             // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+             dataType: "json",
+             statusCode: {
+               200: function() {
+                 table.api().ajax.url("/expenses").load();
+                 $('#unit-select option:selected').prop('selected', false).change();
+                 $('#pay-amount-text').val("");
+                 $('#pay-to-text').val("");
+                 $('#pay-desc-text').val("");
+                 expenseId = null;
+                 payTime = null;
+               },
+               400: function(response) {
+                 resultPopup(response);
+               },
+               401: function() {
+                 location.reload();
+               },
+               500: function(response) {
+                 resultPopup(response);
+               }
+             }
+           });
+        } else {
+          $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, amount: payAmount})
+           .done(function(data) {
+             console.log(data);
+             table.api().ajax.url("/expenses").load();
+             $('#unit-select option:selected').prop('selected', false).change();
+             $('#property-select option:selected').prop('selected', false).change();
+             $('#pay-amount-text').val("");
+             $('#pay-to-text').val("");
+             $('#pay-desc-text').val("");
+           })
+        }
       } else {
         alert('unit and amount are required!')
       }
@@ -173,31 +211,24 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $('#property-select').labselect('Select Property');
     $.get("/expenses/"+rows_selected[0]['id'], function(data, status){
       if("success" === status) {
         $.get("/units/"+data['unit_id'], function(udata, ustatus){
           if("success" === ustatus) {
-            $('#property-select').val(udata['property_id']);
+            $('#property-select').val(udata['property_id']).change();
+            $('#pay-amount-text').val(Number(data['amount'].replace("$", "")));
+            $('#pay-to-text').val(data['pay_to']);
+            $('#pay-desc-text').val(data['description']);
+            payTime = data['pay_time'];
+            expenseId = rows_selected[0]['id'];
+            window.setTimeout(function(){
+              console.log(">>>>>" +data['unit_id']);
+              $('#unit-select').val(data['unit_id']).change();
+            }, 500);
           }
         })
-        // id: "5", unit_id: 9, pay_to: "Greg", description: "Toilet Fix", amount: "$200.39", …
-        //$('#selectBox option:eq(3)').prop('selected', true);
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });
-    // $.ajax({
-    //   url:"/expenses/"+rows_selected['id'],
-    //   type: "GET",
-    //     // data: JSON.stringify({"ids": ids}),
-    //   contentType: "application/json; charset=utf-8",
-    //     // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
-    //   dataType: "json",
-    //   statusCode: {
-    //     200: function(data) {
-    //           $("html, body").animate({ scrollTop: 0 }, "slow");
-    //         }
-    //     }
-    //   });
   }
 });
