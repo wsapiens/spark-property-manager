@@ -3,7 +3,10 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  db.query('SELECT * FROM expense')
+  db.query('SELECT e.id, e.unit_id, p.address_street, u.name, p.address_city, e.pay_to, e.description, e.amount, e.pay_time '
+          + 'FROM expense AS e '
+          + 'JOIN property_unit AS u ON e.unit_id = u.id '
+          + 'JOIN property AS p ON u.property_id = p.id')
       .then(rs => {
         console.log(rs.rows);
         res.setHeader('Content-Type', 'application/json');

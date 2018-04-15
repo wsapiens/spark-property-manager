@@ -2,19 +2,66 @@
 <html>
   <head>
     <% include head %>
+    <script type="text/javascript" src="/javascripts/expense-manager.js"></script>
   </head>
   <body>
     <div class="container">
+      <h1>Expense Manager</h1>
       <form>
-        <div class="ui-field-contain">
-          <select name="select-native-3" id="select-native-3" data-iconpos="left">
-            <option value="1">The 1st Option</option>
-            <option value="2">The 2nd Option</option>
-            <option value="3">The 3rd Option</option>
-            <option value="4">The 4th Option</option>
-          </select>
-        </div>
+        <label for="property-select" class="select ui-select">Property:</label>
+        <select name="select-native-1" id="property-select">
+          <option value="1">Select Property</option>
+        </select>
+        <br>
+        <label for="unit-select" class="select ui-select">Unit:</label>
+        <select name="select-native-1" id="unit-select">
+          <option value="1">Select Unit</option>
+        </select>
+      </form>
+      <br><br><br>
+      <form>
+        <label for="pay-amount-text">Pay Amount:</label>
+        <input type="number" data-clear-btn="true" name="pay-amount-text" id="pay-amount-text" value="">
+        <br>
+        <label for="pay-to-text">Pay To:</label>
+        <input type="text" data-clear-btn="true" name="pay-to-text" id="pay-to-text" value="">
+        <br>
+        <label for="pay-desc-text">Description:</label>
+        <textarea name="pay-desc-text" id="pay-desc-text"></textarea>
+      </form>
+      <br>
+      <form align="right">
+        <input type="button" data-inline="true" id="submit-button" value="Submit">
       </form>
     </div>
+    <br><br><br><br>
+    <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+			<thead>
+				<tr>
+					<th>Id</th>
+          <th>UnitId</th>
+					<th>Street</th>
+					<th>Unit</th>
+					<th>City</th>
+					<th>PayTo</th>
+					<th>Desc</th>
+					<th>Amount</th>
+					<th>PayTime</th>
+				</tr>
+			</thead>
+			<tfoot>
+				<tr>
+          <th>Id</th>
+          <th>UnitId</th>
+					<th>Street</th>
+					<th>Unit</th>
+					<th>City</th>
+					<th>PayTo</th>
+					<th>Desc</th>
+					<th>Amount</th>
+					<th>PayTime</th>
+				</tr>
+			</tfoot>
+		</table>
   </body>
 </html>
