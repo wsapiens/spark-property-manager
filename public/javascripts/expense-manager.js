@@ -53,6 +53,7 @@ $(document).ready(function(){
         $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, amount: payAmount})
          .done(function(data) {
            console.log(data);
+           table.api().ajax.url("/expenses").load();
          })
       } else {
         alert('unit and amount are required!')
