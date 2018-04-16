@@ -18,6 +18,11 @@
         <select name="select-native-1" id="unit-select">
           <option value="1">Select Unit</option>
         </select>
+        <br>
+        <label for="type-select" class="select ui-select">Unit:</label>
+        <select name="select-native-1" id="type-select">
+          <option value="1">Select Expense Type</option>
+        </select>
       </form>
       <br><br><br>
       <form>
@@ -42,33 +47,35 @@
     <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
     <br><br>
     <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
-			<thead>
-				<tr>
+      <thead>
+        <tr>
           <th><input name="select_all" value="1" type="checkbox"></th>
-					<th>Id</th>
-					<th>PropertyAddres</th>
-					<th>ProptertyUnit</th>
-					<th>PropertyCity</th>
-					<th>PayTo</th>
-					<th>Description</th>
-					<th>Amount</th>
-					<th>PayTime</th>
-				</tr>
-			</thead>
-			<tfoot>
-				<tr>
+          <th>Id</th>
+          <th>PropertyAddres</th>
+          <th>ProptertyUnit</th>
+          <th>PropertyCity</th>
+          <th>PayTo</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Time</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
           <th></th>
           <th>Id</th>
-					<th>PropertyAddres</th>
-					<th>PropertyUnit</th>
-					<th>PropertyCity</th>
-					<th>PayTo</th>
-					<th>Description</th>
-					<th>Amount</th>
-					<th>PayTime</th>
-				</tr>
-			</tfoot>
-		</table>
+          <th>PropertyAddres</th>
+          <th>PropertyUnit</th>
+          <th>PropertyCity</th>
+          <th>PayTo</th>
+          <th>Description</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Time</th>
+        </tr>
+      </tfoot>
+    </table>
     <br><br>
   </body>
 </html>
