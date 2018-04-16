@@ -36,6 +36,12 @@
         <textarea name="pay-desc-text" id="pay-desc-text"></textarea>
       </form>
       <br>
+      <label>Upload Photo Copy of Receipt:</label>
+      <form ref='uploadForm' id='uploadForm' action="/file/receipt" method="post" encType="multipart/form-data">
+        <input type="file" name="photo" accept="image/*">
+        <input type="submit" value="Upload">
+      </form>
+      <br><br><br>
       <form align="right">
         <input type="button" data-inline="true" id="submit-button" value="Submit">
       </form>
@@ -58,6 +64,7 @@
             <th>Type</th>
             <th>Amount</th>
             <th>Time</th>
+            <th>Receipt</th>
           </tr>
         </thead>
         <tfoot>
@@ -72,6 +79,7 @@
             <th>Type</th>
             <th>Amount</th>
             <th>Time</th>
+            <th>Receipt</th>
           </tr>
         </tfoot>
       </table>

@@ -10,6 +10,7 @@ var expensesRouter = require('./routes/expenses');
 var expenseTypesRouter = require('./routes/types');
 var propertiesRouter = require('./routes/properties');
 var unitsRouter = require('./routes/units');
+var fileRouter = require('./routes/file');
 
 var app = express();
 
@@ -33,6 +34,7 @@ app.use('/expenses', expensesRouter);
 app.use('/expense-types', expenseTypesRouter);
 app.use('/properties', propertiesRouter);
 app.use('/units', unitsRouter);
+app.use('/file', fileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

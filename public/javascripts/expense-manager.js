@@ -130,14 +130,15 @@ $(document).ready(function(){
                           }
                 },
                 { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "address_street", "width" : "18%" },
+                { "data": "address_street", "width" : "10%" },
                 { "data": "name", className: 'dt-body-center' },
                 { "data": "address_city", className: 'dt-body-center' },
                 { "data": "pay_to", className: 'dt-body-center'},
-                { "data": "description", "width" : "18%" },
+                { "data": "description", "width" : "10%" },
                 { "data": "pay_type", className: 'dt-body-center' },
                 { "data": "amount", className: 'dt-body-right' },
-                { "data": "pay_time", "width" : "15%", className: 'dt-body-center' }
+                { "data": "pay_time", "width" : "15%", className: 'dt-body-center' },
+                { "data": "file", "width" : "10%", className: 'dt-body-center' }
             ],
             "order": [[ 1, "desc" ]],
             "processing": true,

@@ -60,7 +60,8 @@ CREATE TABLE expense (
   type_id integer REFERENCES expense_type (id),
   description text,
   amount money,
-  pay_time timestamp default CURRENT_TIMESTAMP
+  pay_time timestamp default CURRENT_TIMESTAMP,
+  file text
 );
 
 
