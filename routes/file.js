@@ -5,7 +5,7 @@ var upload = multer({
   dest: __dirname + '../public/receipts/',
 });
 
-router.post('/receipt', upload.array(), function(req, res, next) {
+router.post('/receipt', upload.single('photo'), function(req, res, next) {
   if (!req.files)
     return res.status(400).send('No files were uploaded.');
 
