@@ -1,6 +1,7 @@
 var table;
 var payTime;
 var expenseId;
+var receiptFile = '';
 $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
@@ -66,12 +67,13 @@ $(document).ready(function(){
     console.log(payAmount);
     console.log(payTo);
     console.log(payDesc);
+    console.log(receiptFile);
     if( unitId && typeId && payAmount ) {
       if(expenseId) {
         $.ajax({
           url:"/expenses/"+expenseId,
           type: "PUT",
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime, file: receiptFile}),
           contentType: "application/json; charset=utf-8",
           // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
@@ -99,7 +101,7 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount})
+        $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile})
          .done(function(data) {
             console.log(data);
             table.api().ajax.url("/expenses").load();
@@ -110,6 +112,7 @@ $(document).ready(function(){
             $('#pay-to-text').val("");
             $('#pay-desc-text').val("");
             $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            receiptFile = '';
           });
       }
     } else {

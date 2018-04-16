@@ -65,7 +65,7 @@ router.put('/:expenseId', function(req, res, next) {
   console.log(req.body['file']);
   console.log(req.params.expenseId);
 
-  db.query('UPDATE expense SET unit_id=$1, pay_to=$2, description=$3, type_id=$4, amount=$5, pay_time=$6 file=%7 WHERE id=$8',
+  db.query('UPDATE expense SET unit_id=$1, pay_to=$2, description=$3, type_id=$4, amount=$5, pay_time=$6, file=$7 WHERE id=$8',
             [ req.body['unit_id'],
               req.body['pay_to'],
               req.body['description'],
