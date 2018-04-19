@@ -142,7 +142,7 @@ $(document).ready(function(){
                 { "data": "description", "width" : "10%" },
                 { "data": "pay_type", className: 'dt-body-center' },
                 { "data": "amount", className: 'dt-body-right' },
-                { "data": "pay_time", "width" : "15%", className: 'dt-body-center' },
+                { "data": "pay_time", "width" : "10%", className: 'dt-body-center' },
                 { "data": "file", "width" : "10%", className: 'dt-body-center' }
             ],
             "order": [[ 1, "desc" ]],
@@ -150,7 +150,8 @@ $(document).ready(function(){
             //"serverSide": true,
             "paging": true,
             "searching": true,
-            "pagingType": "full_numbers"
+            "pagingType": "full_numbers",
+            "scrollX": true
         }
   );
 
