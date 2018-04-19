@@ -36,10 +36,10 @@
         <textarea name="pay-desc-text" id="pay-desc-text"></textarea>
       </form>
       <br>
-      <label>Upload Photo Copy of Receipt:</label>
-      <form ref='uploadForm' id='uploadForm' action="/file/receipt" method="post" encType="multipart/form-data">
-        <input type="file" name="photo" accept="image/*">
-        <input type="submit" value="Upload">
+      <form action="/file/receipt" enctype="multipart/form-data" method="post">
+        <label>Upload Photo Copy of Receipt:</label>
+        <input type="file" name="receipt" accept="image/*">
+        <input type="submit" name="file-upload" value="Upload Receipt">
       </form>
       <br><br><br>
       <form align="right">
