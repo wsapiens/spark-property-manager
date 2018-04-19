@@ -1,7 +1,6 @@
 var table;
 var payTime;
 var expenseId;
-var receiptFile = '';
 $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
@@ -63,6 +62,7 @@ $(document).ready(function(){
     var payAmount = $('#pay-amount-text').val();
     var payTo = $('#pay-to-text').val();
     var payDesc = $('#pay-desc-text').val();
+    var receiptFile = $('#uploaded').val();
     console.log(unitId);
     console.log(payAmount);
     console.log(payTo);
@@ -84,6 +84,7 @@ $(document).ready(function(){
               $('#pay-amount-text').val("");
               $('#pay-to-text').val("");
               $('#pay-desc-text').val("");
+              $('#uploaded').val("");
               expenseId = null;
               payTime = null;
               refreshTable(table, false);
@@ -111,6 +112,7 @@ $(document).ready(function(){
             $('#pay-amount-text').val("");
             $('#pay-to-text').val("");
             $('#pay-desc-text').val("");
+            $('#uploaded').val("");
             $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             receiptFile = '';
           });
@@ -203,6 +205,47 @@ $(document).ready(function(){
     // Update state of "Select all" control
     updateDataTableSelectAllCtrl(table);
   });
+
+  $('#upload-button').on('click', function() {
+    $.ajax({
+        // Your server script to process the upload
+        url: '/file/receipt',
+        type: 'POST',
+
+        // Form data
+        data: new FormData($('#file-upload-form')[0]),
+
+        // Tell jQuery not to process data or worry about content-type
+        // You *must* include these options!
+        cache: false,
+        contentType: false,
+        processData: false,
+        statusCode: {
+          200: function(response) {
+                console.log(response);
+                $('#uploaded').val('<a href="/uploads/' + response + '" target="_blank">' + response + '</a>');
+               }
+        },
+
+        // Custom XMLHttpRequest
+        xhr: function() {
+            var myXhr = $.ajaxSettings.xhr();
+            if (myXhr.upload) {
+                // For handling the progress of the upload
+                myXhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        $('progress').attr({
+                            value: e.loaded,
+                            max: e.total,
+                        });
+                    }
+                } , false);
+            }
+            return myXhr;
+        }
+    });
+  });
+
 });
 
 $(document).on('click', '#delete-button', function(){
@@ -245,6 +288,7 @@ $(document).on('click', '#edit-button', function(){
             $('#pay-to-text').val(data['pay_to']);
             $('#pay-desc-text').val(data['description']);
             $('#type-select').val(data['type_id']).change();
+            $('#uploaded').val(data['file']);
             payTime = data['pay_time'];
             expenseId = rows_selected[0]['id'];
             window.setTimeout(function(){
