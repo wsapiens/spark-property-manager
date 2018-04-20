@@ -5,10 +5,18 @@ A Realestate Property Management WebApplication to manage BooKeeping and WorkOrd
 
 ## Step To Setup
 ## Postgresql
-https://www.postgresql.org/download/
+```bash
+$ sudo apt-get update
+$ sudo apt-get install postgresql postgresql-contrib
+```
 
 ## Create User and Database
-https://www.digitalocean.com/community/tutorials/how-to-install-and-use-postgresql-on-ubuntu-16-04
+```bash
+$ sudo -u postgres psql
+```
+```bash
+$ createuser -P -s dbusername --createdb
+```
 
 ## Download spark-property-Manager
 ```bash
@@ -38,7 +46,7 @@ $ vi app.properties
 $ npm start
 ```
 
-## Open on Browser
+## Open by Browser
 http://localhost:8080
 
 ## Login by default admin user credential 'email'/'password'
