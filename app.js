@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -17,6 +18,8 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+// trust first proxy
+app.set('trust proxy', 1);
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,6 +29,12 @@ app.use(
   express.static(path.join(__dirname, 'node_modules')),
   express.static(path.join(__dirname, 'public'))
 );
+app.use(session({
+  secret: 's3C537',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // change this to true when run as https
+}));
 
 
 app.use('/', indexRouter);
