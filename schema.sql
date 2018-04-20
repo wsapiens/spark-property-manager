@@ -87,6 +87,12 @@ CREATE TABLE rental_income (
   time timestamp
 );
 
+CREATE TABLE company (
+  id bigserial primary key,
+  name text,
+  phone text
+);
+
 CREATE TABLE login_user (
   id bigserial primary key,
   company_id integer REFERENCES company (id),
@@ -95,12 +101,6 @@ CREATE TABLE login_user (
   phone text,
   is_admin boolean default false,
   is_manager boolean default false
-);
-
-CREATE TABLE company (
-  id bigserial primary key,
-  name text,
-  phone text
 );
 
 -- IMPORT BASIC APPLICATION DATA
