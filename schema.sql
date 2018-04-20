@@ -64,8 +64,6 @@ CREATE TABLE expense (
   file text
 );
 
-
-
 CREATE TABLE work_order_expense (
   id bigserial primary key,
   work_id integer REFERENCES work_order (id),
@@ -89,6 +87,22 @@ CREATE TABLE rental_income (
   time timestamp
 );
 
+CREATE TABLE login_user (
+  id bigserial primary key,
+  company_id integer REFERENCES company (id),
+  email text not null UNIQUE, -- username
+  password text not null,
+  phone text,
+  is_admin boolean default false,
+  is_manager boolean default false
+);
+
+CREATE TABLE company (
+  id bigserial primary key,
+  name text,
+  phone text
+);
+
 -- IMPORT BASIC APPLICATION DATA
 INSERT INTO expense_type (name) VALUES ('Advertising');
 INSERT INTO expense_type (name) VALUES ('Auto and Travel');
@@ -108,3 +122,9 @@ INSERT INTO property_type (name) VALUES ('single');
 INSERT INTO property_type (name) VALUES ('multi');
 INSERT INTO property_type (name) VALUES ('condo');
 INSERT INTO property_type (name) VALUES ('apartment');
+
+INSERT INTO company(name) VALUES ('base company');
+CREATE EXTENSION pgcrypto;
+INSERT INTO login_user(company_id, email, password, is_admin, is_manager) VALUES (1, 'email', crypt('password', gen_salt('bf')), true, true);
+
+--- SELECT id, company_id, email, phone, is_admin, is_manager FROM login_user WHERE email='email' AND password = crypt('password-to-test',password);
