@@ -3,9 +3,16 @@ CREATE TABLE property_type (
   name VARCHAR(40) not null
 );
 
+CREATE TABLE company (
+  id bigserial primary key,
+  name text,
+  phone text
+);
+
 CREATE TABLE property (
   id bigserial primary key,
   type_id integer REFERENCES property_type (id),
+  company_id integer REFERENCES company (id),
   address_street text not null,
   address_city text not null,
   address_state text not null,
@@ -87,17 +94,13 @@ CREATE TABLE rental_income (
   time timestamp
 );
 
-CREATE TABLE company (
-  id bigserial primary key,
-  name text,
-  phone text
-);
-
 CREATE TABLE login_user (
   id bigserial primary key,
   company_id integer REFERENCES company (id),
   email text not null UNIQUE, -- username
   password text not null,
+  firstname text,
+  lastname text,
   phone text,
   is_admin boolean default false,
   is_manager boolean default false

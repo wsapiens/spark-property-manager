@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include head %>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Sign In</h1>
+      <form method="post" action="/auth">
+        <p>
+          <label>Username:</label>
+          <input type="text" name="username">
+        </p>
+        <p>
+          <label>Password:</label>
+          <input type="text" name="password">
+        </p>
+        <p>
+          <input type="submit" value="Login">
+        </p>
+      </form>
+    </div>
+  </body>
+</html>

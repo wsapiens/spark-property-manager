@@ -4,10 +4,10 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   db.query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
-          + 'FROM expense AS e '
-          + 'JOIN property_unit AS u ON e.unit_id = u.id '
-          + 'JOIN property AS p ON u.property_id = p.id '
-          + 'LEFT JOIN expense_type AS t ON t.id = e.type_id')
+         + 'FROM expense AS e '
+         + 'LEFT JOIN expense_type AS t ON t.id = e.type_id '
+         + 'LEFT JOIN property_unit AS u ON e.unit_id = u.id '
+         + 'LEFT JOIN property AS p ON p.id = u.property_id AND p.company_id = $1', [ req.session.company_id ])
       .then(rs => {
         console.log(rs.rows);
         res.setHeader('Content-Type', 'application/json');
