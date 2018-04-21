@@ -4,6 +4,7 @@ var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var ipfilter = require('express-ipfilter').IpFilter;
 
 var indexRouter = require('./routes/index');
 var managerRouter = require('./routes/manager');
@@ -36,6 +37,10 @@ app.use(session({
   cookie: { secure: false } // change this to true when run as https
 }));
 
+// IP list to block or allow
+var ips = [];
+app.use(ipfilter(ips));
+// app.use(ipfilter(ips, {mode: 'allow'}));
 
 app.use('/', indexRouter);
 app.use('/manager', managerRouter);
