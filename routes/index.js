@@ -25,6 +25,7 @@ router.post('/auth', function(req, res, next) {
         req.session.firstname = rs.rows[0]['firstname'];
         return res.redirect('/');
       }
+      res.redirect('/login')
       res.render('index', { error_message: 'Authentication Fail123' });
     }).catch(e => {
       console.error(e.stack);
