@@ -81,10 +81,11 @@ $(document).ready(function(){
             200: function() {
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
-              $('#pay-amount-text').val("");
-              $('#pay-to-text').val("");
-              $('#pay-desc-text').val("");
-              $('#uploaded').val("");
+              $('#pay-amount-text').val('');
+              $('#pay-to-text').val('');
+              $('#pay-desc-text').val('');
+              $('#file-select').val('');
+              $('#uploaded').val('');
               expenseId = null;
               payTime = null;
               refreshTable(table, false);
@@ -109,10 +110,11 @@ $(document).ready(function(){
             $('#unit-select option:selected').prop('selected', false).change();
             $('#type-select option:selected').prop('selected', false).change();
             $('#property-select option:selected').prop('selected', false).change();
-            $('#pay-amount-text').val("");
-            $('#pay-to-text').val("");
-            $('#pay-desc-text').val("");
-            $('#uploaded').val("");
+            $('#pay-amount-text').val('');
+            $('#pay-to-text').val('');
+            $('#pay-desc-text').val('');
+            $('#file-select').val('');
+            $('#uploaded').val('');
             $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             receiptFile = '';
           });
@@ -225,6 +227,7 @@ $(document).ready(function(){
           200: function(response) {
                 console.log(response);
                 $('#uploaded').val('<a href="/uploads/' + response + '" target="_blank">' + response + '</a>');
+                $.mobile.loading( "hide" );
                }
         },
 
@@ -235,9 +238,22 @@ $(document).ready(function(){
                 // For handling the progress of the upload
                 myXhr.upload.addEventListener('progress', function(e) {
                     if (e.lengthComputable) {
-                        $('progress').attr({
-                            value: e.loaded,
-                            max: e.total,
+                        // $('#progressbar').progressbar({
+                        //     value: e.loaded,
+                        //     max: e.total,
+                        // });
+                        var $this = $( this ),
+                        theme = $this.jqmData( "theme" ) || $.mobile.loader.prototype.options.theme,
+                        msgText = $this.jqmData( "msgtext" ) || $.mobile.loader.prototype.options.text,
+                        textVisible = $this.jqmData( "textvisible" ) || $.mobile.loader.prototype.options.textVisible,
+                        textonly = !!$this.jqmData( "textonly" );
+                        html = $this.jqmData( "html" ) || "";
+                        $.mobile.loading( "show", {
+                          text: msgText,
+                          textVisible: textVisible,
+                          theme: theme,
+                          textonly: textonly,
+                          html: html
                         });
                     }
                 } , false);
