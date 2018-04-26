@@ -3,7 +3,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  db.query('SELECT * FROM property')
+  db.query('SELECT p.id, t.name as type_name, p.address_street, p.address_city, p.address_state, p.address_zip, p.index_number FROM property AS p JOIN property_type AS t on p.type_id = t.id WHERE p.company_id = $1', [ req.session.company_id ])
       .then(rs => {
         console.log(rs.rows);
         res.setHeader('Content-Type', 'application/json');
@@ -49,14 +49,15 @@ router.post('/', function(req, res, next) {
   console.log(req.body['address_zip']);
   console.log(req.body['index_number']);
 
-  db.query('INSERT INTO property(type_id, address_street, address_city, address_state, address_zip, index_number)'
-           + ' VALUES ($1, $2, $3, $4, $5, $6)',
+  db.query('INSERT INTO property(type_id, address_street, address_city, address_state, address_zip, index_number, company_id)'
+           + ' VALUES ($1, $2, $3, $4, $5, $6, $7)',
             [ req.body['type_id'],
               req.body['address_street'],
               req.body['address_city'],
               req.body['address_state'],
               req.body['address_zip'],
-              req.body['index_number'] ])
+              req.body['index_number'],
+              req.session.company_id ])
     .then(rs => {
       res.send(rs);
     }).catch(e => {

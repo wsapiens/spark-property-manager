@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include head %>
+    <script type="text/javascript" src="/javascripts/commons.js"></script>
+    <script type="text/javascript" src="/javascripts/property-manager.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Property Manager</h1>
+      <form>
+        <label for="property-type-select" class="select ui-select">Property Type:</label>
+        <select name="select-native-1" id="property-type-select">
+          <option value="1">Select Property Type</option>
+        </select>
+      </form>
+      <br><br><br>
+      <form>
+        <label for="address-street-text">Street:</label>
+        <input type="text" data-clear-btn="true" name="address-street-text" id="address-street-text" value="">
+        <br>
+        <label for="address-city-text">City:</label>
+        <input type="text" data-clear-btn="true" name="address-city-text" id="address-city-text" value="">
+        <br>
+        <label for="address-state-text">State:</label>
+        <input type="text" data-clear-btn="true" name="address-state-text" id="address-state-text" value="">
+        <br>
+        <label for="address-zip-text">ZIP:</label>
+        <input type="text" data-clear-btn="true" name="address-zip-text" id="address-zip-text" value="">
+        <br>
+        <label for="index-text">Index Number:</label>
+        <input type="text" data-clear-btn="true" name="index-text" id="index-text" value="">
+      </form>
+      <br><br><br>
+      <form align="right">
+        <input type="button" data-inline="true" id="submit-button" value="Submit">
+      </form>
+      <br><br><br><br>
+      <hr>
+      <br><br>
+      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
+      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
+      <br><br>
+      <table id="properties" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+        <thead>
+          <tr>
+            <th><input name="select_all" value="1" type="checkbox"></th>
+            <th>Id</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>Type</th>
+            <th>Index</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip</th>
+            <th>Type</th>
+            <th>Index</th>
+          </tr>
+        </tfoot>
+      </table>
+      <br><br>
+    </div>
+  </body>
+</html>

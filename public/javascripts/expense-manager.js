@@ -18,14 +18,14 @@ $(document).ready(function(){
                                   + value['address_state']
                                   + value['address_zip']
                                   + '</option>');
-      });
-      if(data['data'].length > 0) {
-        $('#property-select option:first').attr("selected",true);
-      }
+    });
+    if(data['data'].length > 0) {
+      $('#property-select option:first').attr("selected",true);
+    }
       //$('#property-select').val($('#property-select option:first').val());
   });
 
-  $.get("/expense-types", function(data, status){
+  $.get("/types/expense", function(data, status){
     console.log(data['data']);
     $('#type-select').append('<option>Select Expense Type</option>');
     $.each(data['data'], function(key, value){

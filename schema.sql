@@ -16,7 +16,8 @@ CREATE TABLE property (
   address_street text not null,
   address_city text not null,
   address_state text not null,
-  address_zip text not null
+  address_zip text not null,
+  index_number text
 );
 
 CREATE TABLE property_unit (
