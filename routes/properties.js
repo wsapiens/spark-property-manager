@@ -3,7 +3,9 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  db.query('SELECT p.id, t.name as type_name, p.address_street, p.address_city, p.address_state, p.address_zip, p.index_number FROM property AS p JOIN property_type AS t on p.type_id = t.id WHERE p.company_id = $1', [ req.session.company_id ])
+  db.query('SELECT p.id, t.name as type_name, p.address_street, p.address_city, p.address_state, p.address_zip, p.index_number '
+         + 'FROM property AS p JOIN property_type AS t on p.type_id = t.id '
+         + 'WHERE p.company_id = $1', [ req.session.company_id ])
       .then(rs => {
         console.log(rs.rows);
         res.setHeader('Content-Type', 'application/json');

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include head %>
+    <script type="text/javascript" src="/javascripts/commons.js"></script>
+    <script type="text/javascript" src="/javascripts/unit-manager.js"></script>
+  </head>
+  <body>
+    <% include header %>
+    <div class="container">
+      <h1>Unit Manager</h1>
+      <form>
+        <label for="property-select" class="select ui-select">Property:</label>
+        <select name="select-native-1" id="property-select">
+          <option value="1">Select Property</option>
+        </select>
+      </form>
+      <br><br><br>
+      <form>
+        <label for="unit-name-text">Unit Name:</label>
+        <input type="text" data-clear-btn="true" name="unit-name-text" id="unit-name-text" value="">
+        <br>
+        <label for="is-building-checkbox">This Unit Is Building Itself</label>
+        <input type="checkbox" name="is-building-checkbox" id="is-building-checkbox">
+        <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
+      </form>
+      <br><br><br>
+      <form align="right">
+        <input type="button" data-inline="true" id="submit-button" value="Submit">
+      </form>
+      <br><br><br><br>
+      <hr>
+      <br><br>
+      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
+      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
+      <br><br>
+      <table id="units" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+        <thead>
+          <tr>
+            <th><input name="select_all" value="1" type="checkbox"></th>
+            <th>Id</th>
+            <th>Street</th>
+            <th>UnitName</th>
+            <th>IsBuiling</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Street</th>
+            <th>UnitName</th>
+            <th>IsBuiling</th>
+          </tr>
+        </tfoot>
+      </table>
+      <br><br>
+    </div>
+    <% include panel %>
+    <% include footer %>
+  </body>
+</html>

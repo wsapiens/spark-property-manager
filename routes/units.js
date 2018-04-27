@@ -4,7 +4,8 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   db.query('SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
-        + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id')
+        + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id '
+        + ' WHERE p.company_id = $1', [ req.session.company_id ])
       .then(rs => {
         console.log(rs.rows);
         res.setHeader('Content-Type', 'application/json');

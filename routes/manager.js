@@ -15,4 +15,11 @@ router.get('/property', function(req, res, next) {
   res.render('property', { title: 'Property Manager' });
 });
 
+router.get('/unit', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.redirect('/login')
+  }
+  res.render('unit', { title: 'Unit Manager' });
+});
+
 module.exports = router;
