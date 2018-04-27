@@ -4,16 +4,16 @@
     <% include head %>
   </head>
   <body>
+    <% include header %>
     <div class="container">
       <h1>Dashboard</h1>
-      <!-- <form action="/manager/expense">
-          <input type="submit" value="Expense Manager" />
-      </form> -->
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
       <input type="button" value="Property Manager" onclick="window.location.href='/manager/property'" />
       <form action="/logout">
         <input type="submit" value="Logout" />
       </form>
     </div>
+    <% include panel %>
+    <% include footer %>
   </body>
 </html>
