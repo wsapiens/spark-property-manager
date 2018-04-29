@@ -1,4 +1,5 @@
 const db = require('../db');
+const log = require('../log');
 var express = require('express');
 var router = express.Router();
 
@@ -12,6 +13,7 @@ router.get('/', function(req, res, next) {
         res.send(JSON.stringify({"data": rs.rows}));
       }).catch(e => {
         console.error(e.stack);
+        log.error(e.stack);
         res.send(e.stack);
       });
 });
@@ -24,6 +26,7 @@ router.get('/:propertyId', function(req, res, next) {
         res.send(JSON.stringify(rs.rows[0]));
       }).catch(e => {
         console.error(e.stack);
+        log.error(e.stack);
         res.send(e.stack);
       });
 });
@@ -38,18 +41,19 @@ router.get('/:propertyId/units', function(req, res, next) {
         res.send(JSON.stringify({"data": rs.rows}));
       }).catch(e => {
         console.error(e.stack);
+        log.error(e.statck);
         res.send(e.stack);
       });
 });
 
 router.post('/', function(req, res, next) {
-  console.log("[ create property ]\n");
-  console.log(req.body['type_id']);
-  console.log(req.body['address_street']);
-  console.log(req.body['address_city']);
-  console.log(req.body['address_state']);
-  console.log(req.body['address_zip']);
-  console.log(req.body['index_number']);
+  log.debug("[ create property ]\n");
+  log.debug(req.body['type_id']);
+  log.debug(req.body['address_street']);
+  log.debug(req.body['address_city']);
+  log.debug(req.body['address_state']);
+  log.debug(req.body['address_zip']);
+  log.debug(req.body['index_number']);
 
   db.query('INSERT INTO property(type_id, address_street, address_city, address_state, address_zip, index_number, company_id)'
            + ' VALUES ($1, $2, $3, $4, $5, $6, $7)',
@@ -64,19 +68,20 @@ router.post('/', function(req, res, next) {
       res.send(rs);
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });
 
 router.put('/:propertyId', function(req, res, next) {
-  console.log("[ update property ]\n");
-  console.log(req.body['type_id']);
-  console.log(req.body['address_street']);
-  console.log(req.body['address_city']);
-  console.log(req.body['address_state']);
-  console.log(req.body['address_zip']);
-  console.log(req.body['index_number']);
-  console.log(req.params.propertyId);
+  log.debug("[ update property ]\n");
+  log.debug(req.body['type_id']);
+  log.debug(req.body['address_street']);
+  log.debug(req.body['address_city']);
+  log.debug(req.body['address_state']);
+  log.debug(req.body['address_zip']);
+  clog.debug(req.body['index_number']);
+  log.debug(req.params.propertyId);
 
   db.query('UPDATE property SET type_id=$1, address_street=$2, address_city=$3, address_state=$4, address_zip=$5, index_number=$6 WHERE id=$7',
           [ req.body['type_id'],
@@ -90,13 +95,14 @@ router.put('/:propertyId', function(req, res, next) {
       res.send(rs);
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });
 
 router.delete('/:propertyId', function(req, res, next) {
-  console.log("[ delete property ]\n");
-  console.log(req.params.propertyId);
+  log.debug("[ delete property ]\n");
+  log.debug(req.params.propertyId);
 
   db.query('DELETE FROM property_unit WHERE property_id=$1',[ req.params.propertyId ])
     .then(rs => {
@@ -105,10 +111,12 @@ router.delete('/:propertyId', function(req, res, next) {
           res.send(rs);
         }).catch(e => {
           console.error(e.stack);
+          log.error(e.stack);
           res.send(e.stack);
         });
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });

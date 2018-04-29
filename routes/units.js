@@ -1,4 +1,5 @@
 const db = require('../db');
+const log = require('../log');
 var express = require('express');
 var router = express.Router();
 
@@ -12,6 +13,7 @@ router.get('/', function(req, res, next) {
         res.send(JSON.stringify({"data": rs.rows}));
       }).catch(e => {
         console.error(e.stack);
+        log.error(e.stack);
         res.send(e.stack);
       });
 });
@@ -26,15 +28,16 @@ router.get('/:unitId', function(req, res, next) {
         res.send(JSON.stringify(rs.rows[0]));
       }).catch(e => {
         console.error(e.stack);
+        log.error(e.stack);
         res.send(e.stack);
       });
 });
 
 router.post('/', function(req, res, next) {
-  console.log("[ create unit ]\n");
-  console.log(req.body['property_id']);
-  console.log(req.body['name']);
-  console.log(req.body['is_building']);
+  log.debug("[ create unit ]\n");
+  log.debug(req.body['property_id']);
+  log.debug(req.body['name']);
+  log.debug(req.body['is_building']);
 
   db.query('INSERT INTO property_unit(property_id, name, is_building)'
            + ' VALUES ($1, $2, $3)',
@@ -45,16 +48,17 @@ router.post('/', function(req, res, next) {
       res.send(rs);
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });
 
 router.put('/:unitId', function(req, res, next) {
-  console.log("[ update unit ]\n");
-  console.log(req.body['property_id']);
-  console.log(req.body['name']);
-  console.log(req.body['is_building']);
-  console.log(req.params.unitId);
+  log.debug("[ update unit ]\n");
+  log.debug(req.body['property_id']);
+  log.debug(req.body['name']);
+  log.debug(req.body['is_building']);
+  log.debug(req.params.unitId);
 
   db.query('UPDATE property_unit SET property_id=$1, name=$2, is_building=$3'
            + ' WHERE id=$4',
@@ -66,19 +70,21 @@ router.put('/:unitId', function(req, res, next) {
       res.send(rs);
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });
 
 router.delete('/:unitId', function(req, res, next) {
-  console.log("[ delete unit ]\n");
-  console.log(req.params.unitId);
+  log.debug("[ delete unit ]\n");
+  log.debug(req.params.unitId);
 
   db.query('DELETE FROM property_unit WHERE id=$1', [ req.params.unitId ])
     .then(rs => {
       res.send(rs);
     }).catch(e => {
       console.error(e.stack);
+      log.error(e.stack);
       res.send(e.stack);
     });
 });

@@ -1,0 +1,13 @@
+<div data-role="panel" data-position="right" data-position-fixed="true" data-display="overlay" data-theme="a" id="config-form">
+    <form class="userform" id="passwordform" method="post" action="/password">
+        <h2>Change Password</h2>
+        <label for="old-password">Old Password:</label>
+        <input type="password" name="old_pass" id="old-password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
+        <label for="new-password">New Password:</label>
+        <input type="password" name="new_pass" id="new-password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
+        <div class="ui-grid-a">
+            <div class="ui-block-a"><a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-mini">Cancel</a></div>
+            <div class="ui-block-b"><a href="#" onclick="document.getElementById('passwordform').submit()" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-mini">Submit</a></div>
+        </div>
+    </form>
+</div>

@@ -1,12 +1,14 @@
 <div data-role="panel" id="nav-panel" data-display="overlay" data-theme="b">
   <ul data-role="listview">
     <li data-icon="back"><a href="#" data-rel="close">Close</a></li>
+    <li data-icon="home"><a href="javascript:window.location.href='/'">Dashboard</a></li>
     <li><a href="javascript:window.location.href='/manager/expense'">Expense</a></li>
     <li><a href="javascript:window.location.href='/manager/property'">Property</a></li>
     <li><a href="javascript:window.location.href='/manager/unit'">Unit</a></li>
+    <li><a href="javascript:window.location.href='/manager/user'">User</a></li>
     <li>
       <form action="/logout">
-        <input type="submit" value="Logout" />
+        <input data-icon="power" type="submit" value="Logout" />
       </form>
     </li>
   </ul>
