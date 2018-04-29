@@ -23,4 +23,11 @@ router.get('/unit', function(req, res, next) {
   res.render('unit', { title: 'Unit Manager' });
 });
 
+router.get('/user', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
+  res.render('user', { title: 'User Manager' });
+});
+
 module.exports = router;
