@@ -4,6 +4,9 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
         + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id '
         + ' WHERE p.company_id = $1', [ req.session.company_id ])
@@ -19,6 +22,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:unitId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
         + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id'
         + ' WHERE u.id=$1', [ req.params.unitId ])
@@ -34,6 +40,9 @@ router.get('/:unitId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ create unit ]\n");
   log.debug(req.body['property_id']);
   log.debug(req.body['name']);
@@ -54,6 +63,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.put('/:unitId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ update unit ]\n");
   log.debug(req.body['property_id']);
   log.debug(req.body['name']);
@@ -76,6 +88,9 @@ router.put('/:unitId', function(req, res, next) {
 });
 
 router.delete('/:unitId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ delete unit ]\n");
   log.debug(req.params.unitId);
 

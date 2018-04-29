@@ -4,6 +4,9 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT p.id, t.name as type_name, p.address_street, p.address_city, p.address_state, p.address_zip, p.index_number '
          + 'FROM property AS p JOIN property_type AS t on p.type_id = t.id '
          + 'WHERE p.company_id = $1', [ req.session.company_id ])
@@ -19,6 +22,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:propertyId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT * FROM property WHERE id=$1',[ req.params.propertyId ])
       .then(rs => {
         console.log(rs.rows[0]);
@@ -32,6 +38,9 @@ router.get('/:propertyId', function(req, res, next) {
 });
 
 router.get('/:propertyId/units', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT u.id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
         + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id'
         + ' WHERE p.id=$1',[ req.params.propertyId ])
@@ -47,6 +56,9 @@ router.get('/:propertyId/units', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ create property ]\n");
   log.debug(req.body['type_id']);
   log.debug(req.body['address_street']);
@@ -74,6 +86,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.put('/:propertyId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ update property ]\n");
   log.debug(req.body['type_id']);
   log.debug(req.body['address_street']);
@@ -101,6 +116,9 @@ router.put('/:propertyId', function(req, res, next) {
 });
 
 router.delete('/:propertyId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ delete property ]\n");
   log.debug(req.params.propertyId);
 

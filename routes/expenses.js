@@ -4,6 +4,9 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
          + 'FROM expense AS e '
          + 'LEFT JOIN expense_type AS t ON t.id = e.type_id '
@@ -21,6 +24,9 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:expenseId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   db.query('SELECT * FROM expense WHERE id=$1',[ req.params.expenseId ])
       .then(rs => {
         console.log(rs.rows[0]);
@@ -34,6 +40,9 @@ router.get('/:expenseId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ create expense ]\n");
   log.debug(req.body['unit_id']);
   log.debug(req.body['pay_to']);
@@ -59,6 +68,9 @@ router.post('/', function(req, res, next) {
 });
 
 router.put('/:expenseId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ update expense ]\n");
   log.debug(req.body['unit_id']);
   log.debug(req.body['pay_to']);
@@ -88,6 +100,9 @@ router.put('/:expenseId', function(req, res, next) {
 });
 
 router.delete('/:expenseId', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   log.debug("[ delete expense ]\n");
   log.debug(req.params.expenseId);
 

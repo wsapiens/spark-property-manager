@@ -5,6 +5,9 @@ var multer = require('multer');
 var upload = multer({ dest: './public/uploads/' });
 
 router.post('/receipt', upload.single('receipt'), function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
