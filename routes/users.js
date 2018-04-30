@@ -52,7 +52,7 @@ router.post('/', function(req, res, next) {
           + ' and temporary password: '
           + random_password
           + ', please change password after login ' + config.get('app.url'),
-   from:	'SPARK PM <sparkrealestate@gmail.com>',
+   from:	'SPARK PM <' + config.get('smtp.username') + '>',
    to:		firstname + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
    subject:	'SPARK Property Manager App Account Creation',
@@ -93,7 +93,7 @@ router.put('/:userId', function(req, res, next) {
           + ' and temporary password: '
           + random_password
           + ', please change password after login ' + config.get('app.url'),
-   from:	'SPARK PM <sparkrealestate@gmail.com>',
+   from:	'SPARK PM <' + config.get('smtp.username') + '>',
    to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
    subject:	'SPARK Property Manager App Account Update',
