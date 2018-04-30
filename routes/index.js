@@ -73,7 +73,7 @@ router.post('/password', function(req, res, next) {
             log.error(e.stack);
             res.send(e.stack);
           });
-          return;
+          return res.send('password has been changed');
       }
       console.log('old password verification fail for user id: ' + req.session.user_id);
       log.info('old password verification fail for user id: ' + req.session.user_id)

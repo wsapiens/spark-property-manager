@@ -6,8 +6,13 @@
         <label for="new-password">New Password:</label>
         <input type="password" name="new_pass" id="new-password" value="" data-clear-btn="true" autocomplete="off" data-mini="true">
         <div class="ui-grid-a">
-            <div class="ui-block-a"><a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-b ui-mini">Cancel</a></div>
-            <div class="ui-block-b"><a href="#" onclick="document.getElementById('passwordform').submit()" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-mini">Submit</a></div>
+            <div class="ui-block-a">
+              <a href="#" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-b">Cancel</a>
+            </div>
+            <div class="ui-block-b">
+              <input data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a" type="submit" value="Submit">
+              <!-- <a href="#" onclick="document.getElementById('passwordform').submit()" data-rel="close" class="ui-btn ui-shadow ui-corner-all ui-btn-a ui-mini">Submit</a> -->
+            </div>
         </div>
     </form>
 </div>
