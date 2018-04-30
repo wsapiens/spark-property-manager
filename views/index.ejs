@@ -8,9 +8,11 @@
     <div class="container">
       <h1>Dashboard</h1>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
-      <input type="button" value="Property Manager" onclick="window.location.href='/manager/property'" />
-      <input type="button" value="Unit Manager" onclick="window.location.href='/manager/unit'" />
-      <input type="button" value="User Manager" onclick="window.location.href='/manager/user'" />
+      <%if (manager > 0) { %>
+        <input type="button" value="Property Manager" onclick="window.location.href='/manager/property'" />
+        <input type="button" value="Unit Manager" onclick="window.location.href='/manager/unit'" />
+        <input type="button" value="User Manager" onclick="window.location.href='/manager/user'" />
+      <% } %>
       <form action="/logout">
         <input type="submit" value="Logout" />
       </form>

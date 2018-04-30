@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  res.render('index');
+  res.render('index', { manager: req.session.is_manager });
 });
 
 router.get('/login', function(req, res, next) {
@@ -36,7 +36,7 @@ router.post('/login', function(req, res, next) {
         req.session.is_manager = rs.rows[0]['is_manager'];
         req.session.company_id = rs.rows[0]['company_id'];
         req.session.firstname = rs.rows[0]['firstname'];
-        return res.redirect('/');
+        return res.render('index', { manager: req.session.is_manager });
       }
       // res.redirect('/login');
       res.render('login', { message: 'Invalid Username or Password!' });
@@ -51,7 +51,7 @@ router.get('/password', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  res.render('index');
+  res.render('index', { message: ''});
 });
 
 router.post('/password', function(req, res, next) {

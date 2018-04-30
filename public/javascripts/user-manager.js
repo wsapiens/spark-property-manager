@@ -201,7 +201,9 @@ $(document).on('click', '#edit-button', function(){
         $('#email-text').val(data['email']);
         $('#firstname-text').val(data['firstname']);
         $('#lastname-text').val(data['lastname']);
-        $('#phone-text').val(phone.substring(phone.firstIndexOf(">")+1,phone.lastIndexOf("<")));
+        if(phone) {
+          $('#phone-text').val(phone.substring(phone.indexOf(">")+1,phone.lastIndexOf("<")));
+        }
         if($('#is-manager-checkbox').prop('checked') != data['is_manager']) {
           $('#is-manager-checkbox').click();
         }

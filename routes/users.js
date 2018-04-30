@@ -48,12 +48,12 @@ router.post('/', function(req, res, next) {
   var message	= {
    text:	'Your Account has been created with your email: '
           + req.body['email']
-          + 'and temporary password: '
+          + ' and temporary password: '
           + random_password,
-   from:	'SPARK PM <sparkrealestate@hotmail.com>',
+   from:	'SPARK PM <sparkrealestate@gmail.com>',
    to:		firstname + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
-   subject:	'SPARK PM App Account Creation',
+   subject:	'SPARK Property Manager App Account Creation',
    // attachment:
    // [
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
@@ -88,19 +88,19 @@ router.put('/:userId', function(req, res, next) {
   var message	= {
    text:	'Your Account has been updated with your email: '
           + req.body['email']
-          + 'and temporary password: '
+          + ' and temporary password: '
           + random_password,
-   from:	'SPARK PM <sparkrealestate@hotmail.com>',
-   to:		firstname + ' <' + req.body['email'] +'>',
+   from:	'SPARK PM <sparkrealestate@gmail.com>',
+   to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
-   subject:	'SPARK PM App Account Creation',
+   subject:	'SPARK Property Manager App Account Creation',
    // attachment:
    // [
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
    //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
    // ]
 };
-  db.query('UPDATE login_user SET email=$1, address_street=crypt($2, gen_salt("bf")), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7',
+  db.query("UPDATE login_user SET email=$1, password=crypt($2, gen_salt('bf')), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7",
           [ req.body['email'],
             random_password,
             req.body['firstname'],
@@ -109,6 +109,7 @@ router.put('/:userId', function(req, res, next) {
             req.body['is_manager'],
             req.params.userId ])
     .then(rs => {
+      log.info('send email to ' + req.body['email']);
       email.send(message, function(err, message) { log.info(err || message); });
       res.send(rs);
     }).catch(e => {
