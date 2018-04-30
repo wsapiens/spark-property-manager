@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  res.render('index', { manager: req.session.is_manager });
+  res.render('index', { manager: req.session.is_manager, message: ''});
 });
 
 router.get('/login', function(req, res, next) {
@@ -36,7 +36,7 @@ router.post('/login', function(req, res, next) {
         req.session.is_manager = rs.rows[0]['is_manager'];
         req.session.company_id = rs.rows[0]['company_id'];
         req.session.firstname = rs.rows[0]['firstname'];
-        return res.render('index', { manager: req.session.is_manager });
+        return res.render('index', { manager: req.session.is_manager, message: ''});
       }
       // res.redirect('/login');
       res.render('login', { message: 'Invalid Username or Password!' });
@@ -51,7 +51,7 @@ router.get('/password', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  res.render('index', { message: ''});
+  res.render('index', {  manager: req.session.is_manager, message: ''});
 });
 
 router.post('/password', function(req, res, next) {
@@ -73,10 +73,11 @@ router.post('/password', function(req, res, next) {
             log.error(e.stack);
             res.send(e.stack);
           });
-          return res.send('password has been changed');
+          return res.render('index', { manager: req.session.is_manager, message: ''});
       }
       console.log('old password verification fail for user id: ' + req.session.user_id);
-      log.info('old password verification fail for user id: ' + req.session.user_id)
+      log.info('old password verification fail for user id: ' + req.session.user_id);
+      res.render('index', { manager: req.session.is_manager, message: 'password change failed'});
     }).catch(e => {
       console.error(e.stack);
       log.error(e.stack);
