@@ -1,6 +1,7 @@
 const db = require('../db');
 const log = require('../log');
 const email = require('../email');
+const config = require('../config')
 const cryptoRandomString = require('crypto-random-string');
 var express = require('express');
 var router = express.Router();
@@ -49,7 +50,8 @@ router.post('/', function(req, res, next) {
    text:	'Your Account has been created with your email: '
           + req.body['email']
           + ' and temporary password: '
-          + random_password,
+          + random_password
+          + ', please change password after login ' + config.get('app.url'),
    from:	'SPARK PM <sparkrealestate@gmail.com>',
    to:		firstname + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
@@ -89,11 +91,12 @@ router.put('/:userId', function(req, res, next) {
    text:	'Your Account has been updated with your email: '
           + req.body['email']
           + ' and temporary password: '
-          + random_password,
+          + random_password
+          + ', please change password after login ' + config.get('app.url'),
    from:	'SPARK PM <sparkrealestate@gmail.com>',
    to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
-   subject:	'SPARK Property Manager App Account Creation',
+   subject:	'SPARK Property Manager App Account Update',
    // attachment:
    // [
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
