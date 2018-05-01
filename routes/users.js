@@ -53,7 +53,7 @@ router.post('/', function(req, res, next) {
           + random_password
           + ', please change password after login ' + config.get('app.url'),
    from:	'SPARK PM <' + config.get('smtp.username') + '>',
-   to:		firstname + ' <' + req.body['email'] +'>',
+   to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
    subject:	'SPARK Property Manager App Account Creation',
    // attachment:
@@ -62,8 +62,8 @@ router.post('/', function(req, res, next) {
    //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
    // ]
 };
-  db.query('INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)'
-           + ' VALUES ($1, crypt($2, gen_salt("bf")), $3, $4, $5, $6, $7)',
+  db.query("INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)"
+         + " VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5, $6, $7)",
             [ req.body['email'],
               random_password,
               req.body['firstname'],

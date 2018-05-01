@@ -53,7 +53,7 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/units", {
+        $.post("/users", {
                             email: loginEmail,
                             firstname: firstName,
                             lastname: lastName,
@@ -62,7 +62,7 @@ $(document).ready(function(){
                           })
          .done(function(data) {
             console.log(data);
-            table.api().ajax.url("/units").load();
+            table.api().ajax.url("/users").load();
             $('#email-text').val('');
             $('#firstname-text').val('');
             $('#lastname-text').val('');
