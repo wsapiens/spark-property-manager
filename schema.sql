@@ -81,9 +81,13 @@ CREATE TABLE work_order_expense (
 CREATE TABLE tenant (
   id bigserial primary key,
   unit_id integer REFERENCES property_unit (id),
-  name text not null,
+  company_id integer REFERENCES company (id),
+  firstname text not null,
+  lastname text,
   phone text,
-  email text
+  email text,
+  lease_start date,
+  lease_end date
 );
 
 CREATE TABLE rental_income (

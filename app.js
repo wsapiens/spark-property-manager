@@ -15,6 +15,7 @@ var propertiesRouter = require('./routes/properties');
 var unitsRouter = require('./routes/units');
 var fileRouter = require('./routes/file');
 var userRouter = require('./routes/users');
+var tenantRouter = require('./routes/tenants');
 
 var app = express();
 
@@ -52,6 +53,7 @@ app.use('/properties', propertiesRouter);
 app.use('/units', unitsRouter);
 app.use('/file', fileRouter);
 app.use('/users', userRouter);
+app.use('/tenants', tenantRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
