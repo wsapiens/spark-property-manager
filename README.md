@@ -49,6 +49,8 @@ $ npm start
 ## Open by Browser
 http://localhost:8080
 
-## Login by default admin user credential 'email'/'password'
+## Create Account by Valid Email address and it will send temporary password to your email
+
+## Login and Change password
 
 ## Setup your router with named IP address and fort forwarding
