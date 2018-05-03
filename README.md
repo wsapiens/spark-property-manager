@@ -20,7 +20,7 @@ $ createuser -P -s dbusername --createdb
 
 ## Download spark-property-Manager
 ```bash
-$git clone https://github.com/wsapiens/spark-property-manager.git
+$ git clone https://github.com/wsapiens/spark-property-manager.git
 ```
 
 ## Run schema.sql to your Database
