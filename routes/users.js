@@ -61,14 +61,14 @@ router.post('/', function(req, res, next) {
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
    //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
    // ]
-};
+  };
   db.query("INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)"
          + " VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5, $6, $7)",
-            [ req.body['email'],
+            [ '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
               random_password,
               req.body['firstname'],
               req.body['lastname'],
-              req.body['phone'],
+              '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
               req.body['is_manager'],
               req.session.company_id ])
     .then(rs => {
@@ -102,13 +102,13 @@ router.put('/:userId', function(req, res, next) {
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
    //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
    // ]
-};
+  };
   db.query("UPDATE login_user SET email=$1, password=crypt($2, gen_salt('bf')), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7",
-          [ req.body['email'],
+          [ '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
             random_password,
             req.body['firstname'],
             req.body['lastname'],
-            req.body['phone'],
+            '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
             req.body['is_manager'],
             req.params.userId ])
     .then(rs => {

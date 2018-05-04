@@ -31,8 +31,8 @@ router.post('/', function(req, res, next) {
     unit_id: req.body['unit_id'],
     firstname: req.body['firstname'],
     lastname: req.body['lastname'],
-    phone: req.body['phone'],
-    email: req.body['email'],
+    phone: '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
+    email: '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
     lease_start: req.body['lease_start'],
     lease_end: req.body['lease_end'],
     company_id: req.session.company_id
@@ -68,8 +68,8 @@ router.put('/:tenantId', function(req, res, next) {
           unit_id: req.body['unit_id'],
           firstname: req.body['firstname'],
           lastname: req.body['lastname'],
-          phone: req.body['phone'],
-          email: req.body['email'],
+          phone: '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
+          email: '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
           lease_start: req.body['lease_start'],
           lease_end: req.body['lease_end'],
         });

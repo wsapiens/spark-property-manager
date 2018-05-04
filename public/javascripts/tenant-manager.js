@@ -34,7 +34,7 @@ $(document).ready(function(){
         console.log(value['name']);
         $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
       });
-      if(data['data'].length === 0) {
+      if(data['data'] && data['data'].length === 0) {
         $('#unit-select').val($('#unit-select option:first').val()).change();
       }
     });
@@ -67,6 +67,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              $('#property-select option:selected').prop('selected', false).change();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#firstname-text').val('');
               $('#lastname-text').val('');
@@ -103,7 +104,7 @@ $(document).ready(function(){
             console.log(data);
             table.api().ajax.url("/tenants").load();
             $('#unit-select option:selected').prop('selected', false).change();
-            $('#type-select option:selected').prop('selected', false).change();
+            $('#property-select option:selected').prop('selected', false).change();
             $('#firstname-text').val('');
             $('#lastname-text').val('');
             $('#phone-text').val('');
@@ -132,7 +133,7 @@ $(document).ready(function(){
                           }
                 },
                 { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "unit_id", "width" : "10%" },
+                { "data": "unit_id", "width" : "10%", className: 'dt-body-center' },
                 { "data": "firstname", className: 'dt-body-center' },
                 { "data": "lastname", className: 'dt-body-center' },
                 { "data": "phone", className: 'dt-body-center'},
@@ -251,8 +252,14 @@ $(document).on('click', '#edit-button', function(){
             $('#property-select').val(udata['property_id']).change();
             $('#firstname-text').val(data['firstname']);
             $('#lastname-text').val(data['lastname']);
-            $('#phone-text').val(data['phone']);
-            $('#email-text').val(data['email']);
+            var phone = data['phone'];
+            if(phone) {
+              $('#phone-text').val(phone.substring(phone.indexOf(">")+1,phone.lastIndexOf("<")));
+            }
+            var email = data['email'];
+            if(email) {
+              $('#email-text').val(email.substring(email.indexOf(">")+1,email.lastIndexOf("<")));
+            }
             var startDate = data['lease_start'].split('-');
             $('#lease-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
             var endDate = data['lease_end'].split('-');

@@ -22,7 +22,7 @@ $(document).ready(function(){
                                   email: loginEmail,
                                   firstname: firstName,
                                   lastname: lastName,
-                                  phone: '<a href="tel:' + phoneNumber + '">' + phoneNumber + '</a>',
+                                  phone: phoneNumber,
                                   is_manager: isManager
                                 }),
           contentType: "application/json; charset=utf-8",
@@ -57,7 +57,7 @@ $(document).ready(function(){
                             email: loginEmail,
                             firstname: firstName,
                             lastname: lastName,
-                            phone: '<a href="tel:' + phoneNumber + '">' + phoneNumber + '</a>',
+                            phone: phoneNumber,
                             is_manager: isManager
                           })
          .done(function(data) {
@@ -197,10 +197,13 @@ $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
     $.get("/users/"+rows_selected[0]['id'], function(data, status){
       if("success" === status) {
-        var phone = data['phone'];
-        $('#email-text').val(data['email']);
+        var email = data['email'];
+        if(email) {
+          $('#email-text').val(email.substring(email.indexOf(">")+1,email.lastIndexOf("<")));
+        }
         $('#firstname-text').val(data['firstname']);
         $('#lastname-text').val(data['lastname']);
+        var phone = data['phone'];
         if(phone) {
           $('#phone-text').val(phone.substring(phone.indexOf(">")+1,phone.lastIndexOf("<")));
         }

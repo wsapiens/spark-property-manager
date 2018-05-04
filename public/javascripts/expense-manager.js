@@ -50,7 +50,7 @@ $(document).ready(function(){
         console.log(value['name']);
         $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
       });
-      if(data['data'].length === 0) {
+      if(data['data'] && data['data'].length === 0) {
         $('#unit-select').val($('#unit-select option:first').val()).change();
       }
     });
@@ -81,6 +81,7 @@ $(document).ready(function(){
             200: function() {
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
+              $('#property-select option:selected').prop('selected', false).change();
               $('#pay-amount-text').val('');
               $('#pay-to-text').val('');
               $('#pay-desc-text').val('');
