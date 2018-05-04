@@ -55,7 +55,7 @@ $(document).ready(function(){
           type: "PUT",
           data: JSON.stringify({
                   unit_id: unitId,
-                  fristname: firstName,
+                  firstname: firstName,
                   lastname: lastName,
                   phone: phoneNumber,
                   email: emailAddress,
@@ -92,7 +92,7 @@ $(document).ready(function(){
       } else {
         $.post("/tenants", {
             unit_id: unitId,
-            fristname: firstName,
+            firstname: firstName,
             lastname: lastName,
             phone: phoneNumber,
             email: emailAddress,
@@ -253,8 +253,10 @@ $(document).on('click', '#edit-button', function(){
             $('#lastname-text').val(data['lastname']);
             $('#phone-text').val(data['phone']);
             $('#email-text').val(data['email']);
-            $('#lease-start-date').datepicker('setDate', new Date(data['lease_start']));
-            $('#lease-end-date').datepicker('setDate', new Date(data['lease_end']));
+            var startDate = data['lease_start'].split('-');
+            $('#lease-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
+            var endDate = data['lease_end'].split('-');
+            $('#lease-end-date').datepicker('setDate', new Date(endDate[0], endDate[1]-1, endDate[2]));
             tenantId = rows_selected[0]['id'];
             window.setTimeout(function(){
               console.log(">>>>>" + data['unit_id']);

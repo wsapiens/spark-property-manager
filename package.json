@@ -27,7 +27,7 @@
     "http-errors": "~1.6.2",
     "jquery": "2.2.4",
     "jquery-mobile": "1.4.1",
-    "jquery-ui": "1.12.1",
+    "jquery-ui-dist": "^1.12.1",
     "jquery.cookie": "1.4.1",
     "log4js": "^2.5.3",
     "mocha": "^5.1.1",
