@@ -15,6 +15,9 @@ router.get('/', function(req, res, next) {
     },
     include: [{
         model: models.PropertyUnit,
+        include: [{
+          model: models.Property
+        }]
     }]
   }).then(function(tenants){
     log.debug(tenants);
@@ -31,8 +34,8 @@ router.post('/', function(req, res, next) {
     unit_id: req.body['unit_id'],
     firstname: req.body['firstname'],
     lastname: req.body['lastname'],
-    phone: '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
-    email: '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
+    phone: req.body['phone'],
+    email: req.body['email'],
     lease_start: req.body['lease_start'],
     lease_end: req.body['lease_end'],
     company_id: req.session.company_id
@@ -68,8 +71,8 @@ router.put('/:tenantId', function(req, res, next) {
           unit_id: req.body['unit_id'],
           firstname: req.body['firstname'],
           lastname: req.body['lastname'],
-          phone: '<a href="tel:' + req.body['phone'] + '">' + req.body['phone'] + '</a>',
-          email: '<a href="mailto:' + req.body['email'] + '">' + req.body['email'] + '</a>',
+          phone: req.body['phone'],
+          email: req.body['email'],
           lease_start: req.body['lease_start'],
           lease_end: req.body['lease_end'],
         });

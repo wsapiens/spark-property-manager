@@ -48,7 +48,7 @@ $(document).ready(function(){
     var emailAddress = $('#email-text').val();
     var startDate = $('#lease-start-date').datepicker({ dateFormat: 'yyyy-mm-dd' }).val();
     var endDate = $('#lease-end-date').datepicker({ dateFormat: 'yyyy-mm-dd' }).val();
-    if( unitId && firstName ) {
+    if( unitId && firstName && startDate && endDate ) {
       if(tenantId) {
         $.ajax({
           url:"/tenants/"+tenantId,
@@ -116,7 +116,7 @@ $(document).ready(function(){
           });
       }
     } else {
-      alert('Property Unit and Firstname are required!')
+      alert('Property Unit, Firstname, LeaseStartDate and LeaseEndDate are required!')
     }
   });
 
@@ -132,14 +132,31 @@ $(document).ready(function(){
                             return '<input type="checkbox">';
                           }
                 },
-                { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "unit_id", "width" : "10%", className: 'dt-body-center' },
-                { "data": "firstname", className: 'dt-body-center' },
-                { "data": "lastname", className: 'dt-body-center' },
-                { "data": "phone", className: 'dt-body-center'},
-                { "data": "email", "width" : "10%" },
-                { "data": "lease_start", className: 'dt-body-center' },
-                { "data": "lease_end", className: 'dt-body-center' }
+                { data: 'id', width: '8%', className: 'dt-body-center' },
+                { data: 'PropertyUnit',
+                  width: '10%',
+                  className: 'dt-body-center',
+                  render: function (PropertyUnit) {
+                            return PropertyUnit['Property']['address_street'] + ' ' + PropertyUnit['name'];
+                          }
+                 },
+                { data: 'firstname', className: 'dt-body-center' },
+                { data: 'lastname', className: 'dt-body-center' },
+                { data: 'phone',
+                  className: 'dt-body-center',
+                  render: function (phone) {
+                            return '<a href="tel:' + phone + '">' + phone + '</a>';
+                          }
+                },
+                { data: 'email',
+                  width : '10%',
+                  className: 'dt-body-center',
+                  render: function (email) {
+                            return '<a href="mailto:' + email + '">' + email + '</a>';
+                          }
+                },
+                { data: 'lease_start', className: 'dt-body-center' },
+                { data: 'lease_end', className: 'dt-body-center' }
             ],
             "order": [[ 1, "desc" ]],
             "processing": true,
@@ -252,14 +269,8 @@ $(document).on('click', '#edit-button', function(){
             $('#property-select').val(udata['property_id']).change();
             $('#firstname-text').val(data['firstname']);
             $('#lastname-text').val(data['lastname']);
-            var phone = data['phone'];
-            if(phone) {
-              $('#phone-text').val(phone.substring(phone.indexOf(">")+1,phone.lastIndexOf("<")));
-            }
-            var email = data['email'];
-            if(email) {
-              $('#email-text').val(email.substring(email.indexOf(">")+1,email.lastIndexOf("<")));
-            }
+            $('#phone-text').val(data['phone']);
+            $('#email-text').val(data['email']);
             var startDate = data['lease_start'].split('-');
             $('#lease-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
             var endDate = data['lease_end'].split('-');

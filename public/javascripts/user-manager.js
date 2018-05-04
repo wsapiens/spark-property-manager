@@ -90,12 +90,22 @@ $(document).ready(function(){
                             return '<input type="checkbox">';
                           }
                 },
-                { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "email", className: 'dt-body-center' },
-                { "data": "firstname", className: 'dt-body-center'},
-                { "data": "lastname", className: 'dt-body-center'},
-                { "data": "phone", className: 'dt-body-center'},
-                { "data": "is_manager", className: 'dt-body-center', "width" : "10%" }
+                { data: 'id', width : '8%', className: 'dt-body-center' },
+                { data: 'email',
+                  className: 'dt-body-center',
+                  render: function (email) {
+                            return '<a href="mailto:' + email + '">' + email + '</a>';
+                          }
+                 },
+                { data: 'firstname', className: 'dt-body-center'},
+                { data: 'lastname', className: 'dt-body-center'},
+                { data: 'phone',
+                  className: 'dt-body-center',
+                  render: function (phone) {
+                            return '<a href="tel:' + phone + '">' + phone + '</a>';
+                          }
+                },
+                { data: 'is_manager', className: 'dt-body-center', width : '10%' }
             ],
             order: [[ 1, "desc" ]],
             processing: true,
@@ -197,16 +207,10 @@ $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
     $.get("/users/"+rows_selected[0]['id'], function(data, status){
       if("success" === status) {
-        var email = data['email'];
-        if(email) {
-          $('#email-text').val(email.substring(email.indexOf(">")+1,email.lastIndexOf("<")));
-        }
+        $('#email-text').val(data['email']);
         $('#firstname-text').val(data['firstname']);
         $('#lastname-text').val(data['lastname']);
-        var phone = data['phone'];
-        if(phone) {
-          $('#phone-text').val(phone.substring(phone.indexOf(">")+1,phone.lastIndexOf("<")));
-        }
+        $('#phone-text').val(data['phone']);
         if($('#is-manager-checkbox').prop('checked') != data['is_manager']) {
           $('#is-manager-checkbox').click();
         }
