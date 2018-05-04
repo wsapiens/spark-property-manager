@@ -36,8 +36,9 @@ https://nodejs.org/en/
 $ npm install
 ```
 
-## Update properties
+## Copy app.properties.TEMPLATE to app.properties and update app.properties accordingly to your environment
 ```bash
+$ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
 ```
 

@@ -30,4 +30,11 @@ router.get('/user', function(req, res, next) {
   res.render('user', { title: 'User Manager', manager: req.session.is_manager });
 });
 
+router.get('/tenant', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
+  res.render('tenant', { title: 'Tenant Manager', manager: req.session.is_manager });
+});
+
 module.exports = router;

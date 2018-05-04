@@ -11,9 +11,15 @@
       <h1><%= title %></h1>
       <br>
       <form>
-        <label for="email-text">Email:</label>
-        <input type="text" data-clear-btn="true" name="email-text" id="email-text" value="">
+        <label for="property-select" class="select ui-select">Property:</label>
+        <select name="select-native-1" id="property-select">
+          <option value="1">Select Property</option>
+        </select>
         <br>
+        <label for="unit-select" class="select ui-select">Unit:</label>
+        <select name="select-native-1" id="unit-select">
+          <option value="1">Select Unit</option>
+        </select>
         <label for="firstname-text">Firstname:</label>
         <input type="text" data-clear-btn="true" name="firstname-text" id="firstname-text" value="">
         <br>
@@ -23,8 +29,13 @@
         <label for="phone-text">Phone:</label>
         <input type="text" data-clear-btn="true" name="phone-text" id="phone-text" value="">
         <br>
-        <label for="is-manager-checkbox">This User Is Manager</label>
-        <input type="checkbox" name="is-manager-checkbox" id="is-manager-checkbox">
+        <label for="email-text">Email:</label>
+        <input type="text" data-clear-btn="true" name="email-text" id="email-text" value="">
+        <br>
+        <label for="lease-start-date">Lease Start Date</label>
+        <input type="text" data-role="date" id="lease-start-date">
+        <label for="lease-start-date">Lease End Date</label>
+        <input type="text" data-role="date" id="lease-end-date">
         <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
       </form>
       <br><br><br>
@@ -37,27 +48,31 @@
       <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
       <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
       <br><br>
-      <table id="users" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+      <table id="tenants" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
         <thead>
           <tr>
             <th><input name="select_all" value="1" type="checkbox"></th>
             <th>Id</th>
-            <th>email</th>
-            <th>firstname</th>
-            <th>lastname</th>
-            <th>phone</th>
-            <th>isManager</th>
+            <th>PropertyUnit</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>LeaseStartDate</th>
+            <th>LeaseEndDate</th>
           </tr>
         </thead>
         <tfoot>
           <tr>
             <th></th>
             <th>Id</th>
-            <th>email</th>
-            <th>firstname</th>
-            <th>lastname</th>
-            <th>phone</th>
-            <th>isManager</th>
+            <th>PropertyUnit</th>
+            <th>Firstname</th>
+            <th>Lastname</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>LeaseStartDate</th>
+            <th>LeaseEndDate</th>
           </tr>
         </tfoot>
       </table>

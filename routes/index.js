@@ -26,9 +26,8 @@ router.get('/login', function(req, res, next) {
 
 router.post('/login', function(req, res, next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-  console.log(req.body.username);
-  console.log(req.body.password);
   console.log('request-ip: ' + ip);
+  log.info('request-ip: ' + ip);
   if(!(req.body.username && req.body.password)) {
     return res.render('login', { message: '' });
   }
