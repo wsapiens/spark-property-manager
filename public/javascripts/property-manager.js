@@ -106,13 +106,19 @@ $(document).ready(function(){
                             return '<input type="checkbox">';
                           }
                 },
-                { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "address_street", className: 'dt-body-center' },
-                { "data": "address_city", className: 'dt-body-center'},
-                { "data": "address_state", className: 'dt-body-center', "width" : "10%" },
-                { "data": "address_zip", className: 'dt-body-center' },
-                { "data": "type_name", "width" : "10%", className: 'dt-body-center'  },
-                { "data": "index_number", className: 'dt-body-center' }
+                { data: 'id', width : '8%', className: 'dt-body-center' },
+                { data: 'address_street', className: 'dt-body-center' },
+                { data: 'address_city', className: 'dt-body-center'},
+                { data: 'address_state', className: 'dt-body-center', "width" : "10%" },
+                { data: 'address_zip', className: 'dt-body-center' },
+                { data: 'PropertyType',
+                  width : '10%',
+                  className: 'dt-body-center',
+                  render: function (PropertyType) {
+                            return PropertyType['name'];
+                          }
+                },
+                { data: 'index_number', className: 'dt-body-center' }
             ],
             order: [[ 1, "desc" ]],
             processing: true,

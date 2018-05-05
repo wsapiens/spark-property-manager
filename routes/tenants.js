@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
           model: models.Property
         }]
     }]
-  }).then(function(tenants){
+  }).then(tenants => {
     log.debug(tenants);
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({"data": tenants}));
@@ -39,7 +39,7 @@ router.post('/', function(req, res, next) {
     lease_start: req.body['lease_start'],
     lease_end: req.body['lease_end'],
     company_id: req.session.company_id
-  }).then(function(tenant) {
+  }).then(tenant => {
     res.send(tenant);
   });
 });
@@ -52,7 +52,7 @@ router.get('/:tenantId', function(req, res, next) {
     where: {
       id: req.params.tenantId
     }
-  }).then(function(tenant) {
+  }).then(tenant => {
     log.debug(tenant);
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(tenant));
@@ -65,7 +65,7 @@ router.put('/:tenantId', function(req, res, next) {
   }
   models.Tenant
     .findById(req.params.tenantId)
-    .then(function(tenant){
+    .then(tenant => {
       if(tenant) {
         tenant.updateAttributes({
           unit_id: req.body['unit_id'],
