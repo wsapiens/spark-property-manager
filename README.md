@@ -33,7 +33,7 @@ spark-property-manager$ psql -U username -d Database -a -f schema.sql
 ```
 
 ## Install Nodejs
-https://nodejs.org/en/download/package-manager/
+[nodejs install guide] (https://nodejs.org/en/download/package-manager/)
 
 ## Download dependencies
 ```bash
@@ -48,6 +48,38 @@ $ vi app.properties
 Generate self-signed cert and key to run on https
 ```bash
 $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
+```
+
+* app.properties
+```
+# contents of properties file
+[db]
+hostname = postgresql.host.com
+port = 5432
+name = dbname
+dialect = postgres
+username = dbuser
+password = dbpass
+
+[app]
+hostname = localhost
+port = 8080
+https = false
+serverkey = /path/to/server.key
+servercert = /path/to/server.crt
+url = http://localhost:8080
+
+[log]
+file = app.log
+level = error
+
+[smtp]
+username = smtpUsername
+password = smtpPassword
+hostname = smtpHostname
+port = 465
+ssl = true
+tls = false
 ```
 
 ## Run application
