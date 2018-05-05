@@ -81,6 +81,8 @@ port = 465
 ssl = true
 tls = false
 ```
+If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app
+```url = http://your.domain.com:8080```
 
 ## Run application
 ```bash
@@ -91,7 +93,19 @@ $ npm start
 http://localhost:8080
 
 ## Create Account by Valid Email address and it will send temporary password to your email
+![alt text][account_creation]
 
-## Login and Change password
+## Login by temporary password sent to your email
+![alt text][login]
 
-## Setup your router with named IP address and fort forwarding
+## Change password
+![alt text][password_change]
+
+
+[account_creation]: https://github.com/wsapiens/spark-property-manager/blob/master/doc/account_creation.png
+
+[login]:
+https://github.com/wsapiens/spark-property-manager/blob/master/doc/login.png
+
+[password_change]:
+https://github.com/wsapiens/spark-property-manager/blob/master/doc/password_change.png
