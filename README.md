@@ -19,7 +19,7 @@ If that doesn't create user with creating db
 $ sudo -u postgres psql
 # CREATE USER username WITH PASSWORD 'password';
 # ALTER USER username SUPERUSER;
-# CREATE DATABASE dbname OWNER username
+# CREATE DATABASE dbname OWNER username;
 ```
 
 ## Download spark-property-Manager
@@ -44,6 +44,10 @@ $ npm install
 ```bash
 $ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
+```
+Generate self-signed cert and key to run on https
+```bash
+$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
 ```
 
 ## Run application
