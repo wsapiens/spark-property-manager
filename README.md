@@ -1,5 +1,5 @@
 # Spark Property Manager
-A Realestate Property Management WebApplication to manage BooKeeping and WorkOrder easy
+A Realestate Property Management WebApplication to manage Bookkeeping and WorkOrder easy
 
 - Technologies: Nodejs, postgresql
 
