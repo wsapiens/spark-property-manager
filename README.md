@@ -45,7 +45,7 @@ $ npm install
 $ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
 ```
-Generate self-signed cert and key to run on https
+* Generate self-signed cert and key to run on https
 ```bash
 $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
 ```
