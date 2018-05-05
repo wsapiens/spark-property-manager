@@ -12,10 +12,14 @@ $ sudo apt-get install postgresql postgresql-contrib
 
 ## Create User and Database
 ```bash
-$ sudo -u postgres psql
-```
-```bash
 $ createuser -P -s dbusername --createdb
+```
+If that doesn't create user with creating db
+```bash
+$ sudo -u postgres psql
+# CREATE USER username WITH PASSWORD 'password';
+# ALTER USER username SUPERUSER;
+# CREATE DATABASE dbname OWNER username
 ```
 
 ## Download spark-property-Manager
