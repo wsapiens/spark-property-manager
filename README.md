@@ -33,7 +33,7 @@ spark-property-manager$ psql -U username -d Database -a -f schema.sql
 ```
 
 ## Install Nodejs
-https://nodejs.org/en/
+https://nodejs.org/en/download/package-manager/
 
 ## Download dependencies
 ```bash
