@@ -25,6 +25,7 @@
     "fs": "0.0.1-security",
     "grunt": "^1.0.2",
     "http-errors": "~1.6.2",
+    "https": "^1.0.0",
     "jquery": "2.2.4",
     "jquery-mobile": "1.4.1",
     "jquery-ui-dist": "^1.12.1",

@@ -3,11 +3,12 @@
 /**
  * Module dependencies.
  */
-
+var fs = require('fs')
 var config = require('../config');
 var app = require('../app');
 var debug = require('debug')('spark-property-manager:server');
 var http = require('http');
+var https = require('https');
 
 /**
  * Get port from environment and store in Express.
@@ -21,6 +22,12 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+if(config.get('app.https')) {
+  server = https.createServer({
+    key: fs.readFileSync(config.get('app.serverkey')),
+    cert: fs.readFileSync(config.get('app.servercert'))
+  }, app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.
