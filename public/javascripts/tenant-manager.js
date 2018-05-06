@@ -27,11 +27,7 @@ $(document).ready(function(){
     $('#unit-select').find('option').remove();
     $('#unit-select').append('<option>Select Unit</option>');
     $.get("/properties/" + $(this).val() + "/units", function(data, status){
-      console.log(data['data']);
-      $.each(data['data'], function(key, value){
-        console.log(value);
-        console.log(value['id']);
-        console.log(value['name']);
+      $.each(data['data'][0]['PropertyUnits'], function(key, value){
         $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
       });
       if(data['data'] && data['data'].length === 0) {

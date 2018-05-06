@@ -78,7 +78,7 @@ router.put('/:tenantId', function(req, res, next) {
         });
       }
     });
-    res.send();
+  res.send();
 });
 
 router.delete('/:tenantId', function(req, res, next) {

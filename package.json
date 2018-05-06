@@ -1,8 +1,8 @@
 {
   "name": "spark-property-manager",
   "version": "0.0.1",
-  "description": "Spark Realestate Property Management Application",
-  "main": "server.js",
+  "description": "Spark Real Estate Management Application",
+  "main": "./bin/www",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node ./bin/www"

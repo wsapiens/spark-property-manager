@@ -54,7 +54,9 @@ $(document).ready(function(){
               $('#address-zip-text').val('');
               $('#index-text').val('');
               propertyId = null;
-              refreshTable(table, false);
+              // refreshTable(table, false);
+              table.api().clear();
+              table.api().ajax.reload();
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {

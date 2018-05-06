@@ -1,6 +1,7 @@
 const db = require('../db');
 const log = require('../log');
 const email = require('../email');
+const models = require('../models');
 const config = require('../config');
 const cryptoRandomString = require('crypto-random-string')
 var express = require('express');
@@ -31,22 +32,26 @@ router.post('/login', function(req, res, next) {
   if(!(req.body.username && req.body.password)) {
     return res.render('login', { message: '' });
   }
-  db.query('SELECT id, company_id, email, firstname, phone, is_admin, is_manager FROM login_user WHERE email=$1 AND password = crypt($2, password)', [req.body.username, req.body.password])
-    .then(rs => {
-      if(rs.rows.length > 0) {
-        req.session.user_id  = rs.rows[0]['id'];
-        req.session.is_manager = rs.rows[0]['is_manager'];
-        req.session.company_id = rs.rows[0]['company_id'];
-        req.session.firstname = rs.rows[0]['firstname'];
-        return res.render('index', { manager: req.session.is_manager, message: ''});
-      }
-      // res.redirect('/login');
-      res.render('login', { message: 'Invalid Username or Password!' });
-    }).catch(e => {
-      console.error(e.stack);
-      log.error(e.stack);
-      res.send(e.stack);
-    });
+  models.sequelize
+        .query('SELECT id, company_id, email, firstname, phone, is_admin, is_manager FROM login_user WHERE email=$1 AND password = crypt($2, password)',
+        {
+          bind: [
+            req.body.username,
+            req.body.password
+          ],
+          type: models.sequelize.QueryTypes.SELECT
+        })
+        .then(users => {
+          if(users.length > 0) {
+            req.session.user_id  = users[0]['id'];
+            req.session.is_manager = users[0]['is_manager'];
+            req.session.company_id = users[0]['company_id'];
+            req.session.firstname = users[0]['firstname'];
+            return res.render('index', { manager: req.session.is_manager, message: ''});
+          }
+          // res.redirect('/login');
+          res.render('login', { message: 'Invalid Username or Password!' });
+        });
 });
 
 router.get('/password', function(req, res, next) {
@@ -60,31 +65,39 @@ router.post('/password', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  db.query('SELECT * FROM login_user WHERE id=$1 AND password = crypt($2, password)', [req.session.user_id, req.body.old_pass])
-    .then(rs => {
-      if(rs.rows.length > 0) {
-        console.log('old password is verified');
-        log.debug('old password is verified');
-        db.query("UPDATE login_user SET password = crypt($2, gen_salt('bf')) WHERE id=$1", [req.session.user_id, req.body.new_pass])
-          .then(rs => {
-              if(rs.rows.length > 0) {
-                log.info('password has been changed for user id: ' + req.session.user_id);
-              }
-          }).catch(e => {
-            console.error(e.stack);
-            log.error(e.stack);
-            res.send(e.stack);
-          });
-          return res.render('index', { manager: req.session.is_manager, message: ''});
-      }
-      console.log('old password verification fail for user id: ' + req.session.user_id);
-      log.info('old password verification fail for user id: ' + req.session.user_id);
-      res.render('index', { manager: req.session.is_manager, message: 'password change failed'});
-    }).catch(e => {
-      console.error(e.stack);
-      log.error(e.stack);
-      res.send(e.stack);
-    });
+  models.sequelize
+        .transaction(function (t) {
+    models.sequelize
+          .query('SELECT * FROM login_user WHERE id=$1 AND password = crypt($2, password)',
+          {
+            bind: [
+              req.session.user_id,
+              req.body.old_pass
+            ],
+            type: models.sequelize.QueryTypes.SELECT
+          }).then(users => {
+            if(users.length > 0) {
+              console.log('old password is verified');
+              log.debug('old password is verified');
+              models.sequelize
+                    .query("UPDATE login_user SET password = crypt($2, gen_salt('bf')) WHERE id=$1",
+                    {
+                      bind: [
+                        req.session.user_id,
+                        req.body.new_pass
+                      ],
+                      type: models.sequelize.QueryTypes.UPDATE
+                    })
+                    .then(function() {
+                      log.info('password has been changed for user id: ' + req.session.user_id);
+                    });
+            return res.render('index', { manager: req.session.is_manager, message: ''});
+        }
+        console.log('old password verification fail for user id: ' + req.session.user_id);
+        log.info('old password verification fail for user id: ' + req.session.user_id);
+        res.render('index', { manager: req.session.is_manager, message: 'password change failed'});
+      })
+  });
 });
 
 // GET /logout
