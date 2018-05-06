@@ -85,7 +85,10 @@ $(document).ready(function(){
               $('#uploaded').val('');
               expenseId = null;
               payTime = null;
-              refreshTable(table, false);
+              // refreshTable(table, false);
+              rows_selected=[];
+              table.api().clear();
+              table.api().ajax.reload();
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {
@@ -102,7 +105,6 @@ $(document).ready(function(){
       } else {
         $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile})
          .done(function(data) {
-            console.log(data);
             table.api().ajax.url("/expenses").load();
             $('#unit-select option:selected').prop('selected', false).change();
             $('#type-select option:selected').prop('selected', false).change();
@@ -274,6 +276,7 @@ $(document).on('click', '#delete-button', function(){
         dataType: "json",
         statusCode: {
           200: function() {
+                rows_selected=[];
                 refreshTable(table, true);
                },
           400: function(response) {

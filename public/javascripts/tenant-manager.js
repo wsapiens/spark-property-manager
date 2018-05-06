@@ -72,7 +72,10 @@ $(document).ready(function(){
               $('#lease-start-date').datepicker('setDate', null);
               $('#lease-end-date').datepicker('setDate', null);
               tenantId = null;
-              refreshTable(table, false);
+              // refreshTable(table, false);
+              rows_selected=[];
+              table.api().clear();
+              table.api().ajax.reload();
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {
@@ -97,7 +100,6 @@ $(document).ready(function(){
             lease_end: endDate
          })
          .done(function(data) {
-            console.log(data);
             table.api().ajax.url("/tenants").load();
             $('#unit-select option:selected').prop('selected', false).change();
             $('#property-select option:selected').prop('selected', false).change();
@@ -239,6 +241,7 @@ $(document).on('click', '#delete-button', function(){
         dataType: "json",
         statusCode: {
           200: function() {
+                rows_selected=[];
                 refreshTable(table, true);
                },
           400: function(response) {

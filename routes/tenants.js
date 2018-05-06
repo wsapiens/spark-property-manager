@@ -48,15 +48,13 @@ router.get('/:tenantId', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  models.Tenant.find({
-    where: {
-      id: req.params.tenantId
-    }
-  }).then(tenant => {
-    log.debug(tenant);
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(tenant));
-  });
+  models.Tenant
+        .findById(req.params.tenantId)
+        .then(tenant => {
+          log.debug(tenant);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(tenant));
+        });
 });
 
 router.put('/:tenantId', function(req, res, next) {

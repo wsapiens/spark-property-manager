@@ -1,5 +1,6 @@
 const db = require('../db');
 const log = require('../log');
+const models = require('../models');
 var express = require('express');
 var router = express.Router();
 
@@ -7,113 +8,84 @@ router.get('/', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  db.query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
-         + 'FROM expense AS e '
-         + 'LEFT JOIN expense_type AS t ON t.id = e.type_id '
-         + 'LEFT JOIN property_unit AS u ON e.unit_id = u.id '
-         + 'LEFT JOIN property AS p ON p.id = u.property_id AND p.company_id = $1', [ req.session.company_id ])
-      .then(rs => {
-        console.log(rs.rows);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify({"data": rs.rows}));
-      }).catch(e => {
-        console.error(e.stack);
-        log.error(e.stack);
-        res.send(e.stack);
-      });
+  models.sequelize
+        .query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
+             + 'FROM expense AS e '
+             + 'LEFT JOIN expense_type AS t ON t.id = e.type_id '
+             + 'LEFT JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'LEFT JOIN property AS p ON p.id = u.property_id AND p.company_id = $1',
+             {
+               bind: [ req.session.company_id ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({"data": expenses}));
+        });
 });
 
 router.get('/:expenseId', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  db.query('SELECT * FROM expense WHERE id=$1',[ req.params.expenseId ])
-      .then(rs => {
-        console.log(rs.rows[0]);
-        res.setHeader('Content-Type', 'application/json');
-        res.send(JSON.stringify(rs.rows[0]));
-      }).catch(e => {
-        console.error(e.stack);
-        log.error(e.stack);
-        res.send(e.stack);
-      });
+  models.Expense
+        .findById(req.params.expenseId)
+        .then(exponse =>{
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify(exponse));
+        });
 });
 
 router.post('/', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  log.debug("[ create expense ]\n");
-  log.debug(req.body['unit_id']);
-  log.debug(req.body['pay_to']);
-  log.debug(req.body['description']);
-  log.debug(req.body['type_id']);
-  log.debug(req.body['amount']);
-  log.debug(req.body['file']);
-
-  db.query('INSERT INTO expense(unit_id, pay_to, description, type_id, amount, file) VALUES ($1, $2, $3, $4, $5, $6)',
-            [ req.body['unit_id'],
-              req.body['pay_to'],
-              req.body['description'],
-              req.body['type_id'],
-              req.body['amount'],
-              req.body['file'] ])
-    .then(rs => {
-      res.send(rs);
-    }).catch(e => {
-      console.error(e.stack);
-      log.error(e.stack);
-      res.send(e.stack);
-    });
+  models.Expense.create({
+    unit_id: req.body['unit_id'],
+    pay_to: req.body['pay_to'],
+    description: req.body['description'],
+    type_id: req.body['type_id'],
+    amount: req.body['amount'],
+    file: req.body['file'],
+  }).then(expense => {
+    res.send(expense);
+  });
 });
 
 router.put('/:expenseId', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  log.debug("[ update expense ]\n");
-  log.debug(req.body['unit_id']);
-  log.debug(req.body['pay_to']);
-  log.debug(req.body['type_id']);
-  log.debug(req.body['description']);
-  log.debug(req.body['amount']);
-  log.debug(req.body['pay_time']);
-  log.debug(req.body['file']);
-  log.debug(req.params.expenseId);
-
-  db.query('UPDATE expense SET unit_id=$1, pay_to=$2, description=$3, type_id=$4, amount=$5, pay_time=$6, file=$7 WHERE id=$8',
-            [ req.body['unit_id'],
-              req.body['pay_to'],
-              req.body['description'],
-              req.body['type_id'],
-              req.body['amount'],
-              req.body['pay_time'],
-              req.body['file'],
-              req.params.expenseId ])
-    .then(rs => {
-      res.send(rs);
-    }).catch(e => {
-      console.error(e.stack);
-      log.error(e.stack);
-      res.send(e.stack);
-    });
+  models.Expense
+        .findById(req.params.expenseId)
+        .then(expense => {
+          if(expense) {
+            expense.updateAttributes({
+              unit_id: req.body['unit_id'],
+              pay_to: req.body['pay_to'],
+              type_id: req.body['type_id'],
+              description: req.body['description'],
+              amount: req.body['amount'],
+              pay_time: req.body['pay_time'],
+              file: req.body['file'],
+            });
+          }
+        });
+  res.send();
 });
 
 router.delete('/:expenseId', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });
   }
-  log.debug("[ delete expense ]\n");
-  log.debug(req.params.expenseId);
-
-  db.query('DELETE FROM expense WHERE id=$1',[ req.params.expenseId ])
-    .then(rs => {
-      res.send(rs);
-    }).catch(e => {
-      console.error(e.stack);
-      log.error(e.stack);
-      res.send(e.stack);
-    });
+  models.Expense.destroy({
+    where: {
+      id: req.params.expenseId
+    }
+  }).then(function() {
+    res.send();
+  });
 });
 
 module.exports = router;

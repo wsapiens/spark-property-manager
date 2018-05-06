@@ -55,6 +55,7 @@ $(document).ready(function(){
               $('#index-text').val('');
               propertyId = null;
               // refreshTable(table, false);
+              rows_selected=[];
               table.api().clear();
               table.api().ajax.reload();
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
@@ -80,7 +81,6 @@ $(document).ready(function(){
                                 index_number: indexNumber
                               })
          .done(function(data) {
-            console.log(data);
             table.api().ajax.url("/properties").load();
             $('#property-type-select option:selected').prop('selected', false).change();
             $('#address-street-text').val('');
@@ -201,6 +201,7 @@ $(document).on('click', '#delete-button', function(){
         dataType: "json",
         statusCode: {
           200: function() {
+                rows_selected=[];
                 refreshTable(table, true);
                },
           400: function(response) {
