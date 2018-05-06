@@ -74,7 +74,7 @@ router.post('/password', function(req, res, next) {
               req.body.old_pass
             ],
             type: models.sequelize.QueryTypes.SELECT
-          }).then(users => {
+          }, {transaction: t}).then(users => {
             if(users.length > 0) {
               console.log('old password is verified');
               log.debug('old password is verified');
@@ -86,7 +86,7 @@ router.post('/password', function(req, res, next) {
                         req.body.new_pass
                       ],
                       type: models.sequelize.QueryTypes.UPDATE
-                    })
+                    }, {transaction: t})
                     .then(function() {
                       log.info('password has been changed for user id: ' + req.session.user_id);
                     });
@@ -122,56 +122,52 @@ router.post('/subscribe', function(req, res, next) {
   if(!req.body.email) {
     return res.render('subscribe', { message: '', error_message: 'email address is missing!'});
   }
-  models.sequelize
-        .transaction(function (t) {
-    models.User.find({
-      where: {
-        email: req.body.email
-      }
-    }).then(user => {
-      if(user) {
-        return res.render('subscribe', { message: '', error_message: 'The email is already registered!'});
-      } else {
-        models.Company.create({
-          name: req.body.email
-        }).then(company => {
-          var company_id = company.id; //['id'];
-          var random_password = cryptoRandomString(5);
-          var message	= {
-            text:	'Your Account has been created with your email: '
-                + req.body.email
-                + ' and temporary password: '
-                + random_password
-                + ', please change password after login ' + config.get('app.url'),
-                from:	'SPARK PM <' + config.get('smtp.username') + '>',
-                to:		' <' + req.body.email +'>',
-                //cc:		"else <else@your-email.com>",
-                subject:	'SPARK Real Estate Manager Account Creation',
-                // attachment:
-                // [
-                //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
-                //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
-                // ]
-          };
-          models.sequelize
-                .query("INSERT INTO login_user (email, password, is_manager, company_id) VALUES ($1, crypt($2, gen_salt('bf')), $3, $4)",
-                  {
-                    bind: [
-                      req.body.email,
-                      random_password,
-                      true,
-                      company_id
-                    ],
-                    type: models.sequelize.QueryTypes.INSERT
-                  }
-                )
-                .then(function() {
-                  email.send(message, function(err, message) { log.info(err || message); });
-                  res.render('subscribe', { message: 'Account has been created and password sent to your email', error_message: ''});
-                });
+  models.User.find({
+    where: {
+      email: req.body.email
+    }
+  }).then(user => {
+    if(user) {
+      return res.render('subscribe', { message: '', error_message: 'The email is already registered!'});
+    }
+    models.Company
+          .create({
+              name: req.body.email
+          }).then(company => {
+              var company_id = company.id; //['id'];
+              var random_password = cryptoRandomString(5);
+              var message	= {
+                text:	'Your Account has been created with your email: '
+                      + req.body.email
+                      + ' and temporary password: '
+                      + random_password
+                      + ', please change password after login ' + config.get('app.url'),
+                      from:	'SPARK PM <' + config.get('smtp.username') + '>',
+                      to:		' <' + req.body.email +'>',
+                      //cc:		"else <else@your-email.com>",
+                      subject:	'SPARK Real Estate Manager Account Creation',
+                      // attachment:
+                      // [
+                      //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
+                      //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
+                      // ]
+              };
+              models.sequelize
+                    .query("INSERT INTO login_user (email, password, is_manager, company_id) VALUES ($1, crypt($2, gen_salt('bf')), $3, $4)",
+                    {
+                      bind: [
+                        req.body.email,
+                        random_password,
+                        true,
+                        company_id
+                      ],
+                      type: models.sequelize.QueryTypes.INSERT
+                    })
+                    .then(function() {
+                      email.send(message, function(err, message) { log.info(err || message); });
+                      res.render('subscribe', { message: 'Account has been created and password sent to your email', error_message: ''});
+                    });
         });
-      }
-    });
   });
 });
 
