@@ -1,4 +1,3 @@
-const db = require('../db');
 const log = require('../log');
 const models = require('../models');
 var express = require('express');
