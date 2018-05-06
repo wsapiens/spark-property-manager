@@ -4,6 +4,10 @@ const fs        = require('fs');
 const path      = require('path');
 const config    = require('../config');
 const Sequelize = require('sequelize');
+const cls = require('continuation-local-storage');
+var namespace = cls.createNamespace('spark-property-manager-namespace');
+Sequelize.useCLS(namespace);
+
 var db        = {};
 var basename  = path.basename(__filename);
 var sequelize = new Sequelize(config.get('db.name'),
@@ -25,7 +29,6 @@ var sequelize = new Sequelize(config.get('db.name'),
   // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
   operatorsAliases: false
 });
-
 
 fs.readdirSync(__dirname)
   .filter(file => {

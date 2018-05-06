@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "continuation-local-storage": "^3.2.1",
     "cookie-parser": "~1.4.3",
     "crypto-random-string": "^1.0.0",
     "datatables": "1.10.13",
