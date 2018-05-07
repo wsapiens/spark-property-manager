@@ -147,7 +147,7 @@ router.post('/subscribe', function(req, res, next) {
                             from:	'SPARK REM <' + config.get('smtp.username') + '>',
                             to:		' <' + req.body.email +'>',
                             //cc:		"else <else@your-email.com>",
-                            subject:	'SPARK Real Estate Management APP Account Creation',
+                            subject:	'SPARK Property Manager APP Account Creation',
                             // attachment:
                             // [
                             //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
