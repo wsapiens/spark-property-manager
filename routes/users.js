@@ -45,10 +45,10 @@ router.post('/', function(req, res, next) {
           + ' and temporary password: '
           + random_password
           + ', please change password after login ' + config.get('app.url'),
-   from:	'SPARK PM <' + config.get('smtp.username') + '>',
+   from:	'SPARK REM <' + config.get('smtp.username') + '>',
    to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
    //cc:		"else <else@your-email.com>",
-   subject:	'SPARK Property Manager App Account Creation',
+   subject:	'SPARK Real Estate Management App Account Creation',
    // attachment:
    // [
    //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
