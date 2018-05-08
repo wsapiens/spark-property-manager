@@ -111,6 +111,19 @@ CREATE TABLE login_user (
   is_manager boolean default false
 );
 
+CREATE TABLE import_statement_config (
+  id bigserial primary key,
+  company_id integer REFERENCES company (id),
+  filter_column_num integer not null,
+  filter_keyword text,
+  date_column_num integer not null,
+  date_format text,
+  pay_to_column_num integer,
+  amount_column_num integer not null,
+  category_column_num integer,
+  description_column_num integer
+);
+
 -- IMPORT BASIC APPLICATION DATA
 INSERT INTO expense_type (name) VALUES ('Advertising');
 INSERT INTO expense_type (name) VALUES ('Auto and Travel');

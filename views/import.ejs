@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include head %>
+    <script type="text/javascript" src="/javascripts/commons.js"></script>
+    <script type="text/javascript" src="/javascripts/import-manager.js"></script>
+  </head>
+  <body>
+    <% include header %>
+    <div class="container">
+      <h1><%= title %></h1>
+      <br>
+      <form id="file-upload-form" enctype="multipart/form-data">
+        <label>Upload CSV format Bank / CreditCard Statement:</label>
+        <input type="file" id="file-select" name="statement" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+        <input type="button" id="upload-button" value="Upload Statement">
+      </form>
+      <input type="hidden" id="uploaded" value="">
+      <br><br><br>
+      <hr>
+      <br><br>
+    </div>
+    <% include panel %>
+    <% include config %>
+    <% include footer %>
+  </body>
+</html>
