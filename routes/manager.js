@@ -9,6 +9,13 @@ router.get('/expense', function(req, res, next) {
   res.render('expense', { title: 'Expense Manager', manager: req.session.is_manager });
 });
 
+router.get('/import', function(req, res, next) {
+  if(!req.session.user_id) {
+    return res.render('login', { message: '' });
+  }
+  res.render('import', { title: 'Import Manager', manager: req.session.is_manager });
+});
+
 router.get('/property', function(req, res, next) {
   if(!req.session.user_id) {
     return res.render('login', { message: '' });

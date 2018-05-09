@@ -38,5 +38,6 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
+  //file.path => full path
 });
 module.exports = router;

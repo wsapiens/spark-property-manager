@@ -135,16 +135,23 @@ $(document).ready(function(){
                             return '<input type="checkbox">';
                           }
                 },
-                { "data": "id", "width" : "8%", className: 'dt-body-center' },
-                { "data": "address_street", "width" : "10%" },
-                { "data": "name", className: 'dt-body-center' },
-                { "data": "address_city", className: 'dt-body-center' },
-                { "data": "pay_to", className: 'dt-body-center'},
-                { "data": "description", "width" : "10%" },
-                { "data": "pay_type", className: 'dt-body-center' },
-                { "data": "amount", className: 'dt-body-right' },
-                { "data": "pay_time", "width" : "10%", className: 'dt-body-center' },
-                { "data": "file", "width" : "10%", className: 'dt-body-center' }
+                { data: 'id', width : '8%', className: 'dt-body-center' },
+                { data: 'address_street', "width" : "10%" },
+                { data: 'name', className: 'dt-body-center' },
+                { data: 'address_city', className: 'dt-body-center' },
+                { data: 'pay_to', className: 'dt-body-center'},
+                { data: 'description', "width" : "10%" },
+                { data: 'pay_type', className: 'dt-body-center' },
+                { data: 'amount', className: 'dt-body-right' },
+                { data: 'pay_time', width : '10%', className: 'dt-body-center' },
+                {
+                  data: 'file',
+                  width : '10%',
+                  className: 'dt-body-center',
+                  render: function (file) {
+                            return '<a href="/uploads/' + file + '" target="_blank">' + file + '</a>';
+                          }
+                }
             ],
             "order": [[ 1, "desc" ]],
             "processing": true,
@@ -225,7 +232,7 @@ $(document).ready(function(){
         statusCode: {
           200: function(response) {
                 console.log(response);
-                $('#uploaded').val('<a href="/uploads/' + response + '" target="_blank">' + response + '</a>');
+                $('#uploaded').val(response);
                 $.mobile.loading( "hide" );
                }
         },
