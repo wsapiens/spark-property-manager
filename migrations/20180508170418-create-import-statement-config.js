@@ -8,45 +8,40 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      CompanyId: {
+      company_id: {
         type: Sequelize.INTEGER,
-        references: { model: 'company', key: 'id' }
+        references: {
+          model: 'company',
+          key: 'id'
+        }
       },
-      FilterColumnNumber: {
+      filter_column_number: {
         type: Sequelize.INTEGER
       },
-      FilterKeyword: {
+      filter_keyword: {
         type: Sequelize.STRING
       },
-      DateColumnNumber: {
+      date_column_number: {
         type: Sequelize.INTEGER
       },
-      DateFormat: {
+      date_format: {
         type: Sequelize.STRING
       },
-      PayToColumnNumber: {
+      pay_to_column_number: {
         type: Sequelize.INTEGER
       },
-      AmountColumnNumber: {
+      amount_column_number: {
         type: Sequelize.INTEGER
       },
-      CategoryColumnNumber: {
+      category_column_number: {
         type: Sequelize.INTEGER
       },
-      DescriptionColumnNumber: {
+      description_column_number: {
         type: Sequelize.INTEGER
-      },
-      createdAt: {
-        allowNull: false,
-        type: Sequelize.DATE
-      },
-      updatedAt: {
-        allowNull: false,
-        type: Sequelize.DATE
       }
     });
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('ImportStatementConfigs');
+    return queryInterface.dropTable('import_statement_config');
   }
 };

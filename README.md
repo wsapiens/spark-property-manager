@@ -14,12 +14,21 @@ $ sudo apt-get install postgresql postgresql-contrib
 ```bash
 $ createuser -P -s dbusername --createdb
 ```
+
 If that doesn't create user with creating db
 ```bash
 $ sudo -u postgres psql
 # CREATE USER username WITH PASSWORD 'password';
 # ALTER USER username SUPERUSER;
 # CREATE DATABASE dbname OWNER username;
+# \q
+```
+
+Login by the created user and create pgcrypto extension for password encryption
+```bash
+$ psql -U username -d dbname
+# CREATE EXTENSION pgcrypto;
+# \q
 ```
 
 ## Download spark-property-Manager
@@ -27,7 +36,31 @@ $ sudo -u postgres psql
 $ git clone https://github.com/wsapiens/spark-property-manager.git
 ```
 
-## Run schema.sql to your Database
+## Run database migration
+First, setup sequelize CLI config.json
+```bash
+$ vi config/config.json
+```
+```json
+{
+  "development": {
+    "username": "dbuser",
+    "password": "dbpass",
+    "database": "dbname",
+    "host": "127.0.0.1",
+    "dialect": "postgres"
+  },
+
+}
+```
+
+```bash
+$ node_modules/.bin/sequelize db:migrate
+$ node_modules/.bin/sequelize db:seed:all
+```
+
+
+if sequelize db migration doesn't work, then load up from schema.sql
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
 ```

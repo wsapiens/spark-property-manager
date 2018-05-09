@@ -114,14 +114,14 @@ CREATE TABLE login_user (
 CREATE TABLE import_statement_config (
   id bigserial primary key,
   company_id integer REFERENCES company (id),
-  filter_column_num integer not null,
+  filter_column_number integer not null,
   filter_keyword text,
-  date_column_num integer not null,
+  date_column_number integer not null,
   date_format text,
-  pay_to_column_num integer,
-  amount_column_num integer not null,
-  category_column_num integer,
-  description_column_num integer
+  pay_to_column_number integer,
+  amount_column_number integer not null,
+  category_column_number integer,
+  description_column_number integer
 );
 
 -- IMPORT BASIC APPLICATION DATA

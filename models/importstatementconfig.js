@@ -1,14 +1,14 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   var ImportStatementConfig = sequelize.define('ImportStatementConfig', {
-    FilterColumnNumber: DataTypes.INTEGER,
-    FilterKeyword: DataTypes.STRING,
-    DateColumnNumber: DataTypes.INTEGER,
-    DateFormat: DataTypes.STRING,
-    PayToColumnNumber: DataTypes.INTEGER,
-    AmountColumnNumber: DataTypes.INTEGER,
-    CategoryColumnNumber: DataTypes.INTEGER,
-    DescriptionColumnNumber: DataTypes.INTEGER,
+    filter_column_number: DataTypes.INTEGER,
+    filter_keyword: DataTypes.STRING,
+    date_column_number: DataTypes.INTEGER,
+    date_format: DataTypes.STRING,
+    pay_to_column_number: DataTypes.INTEGER,
+    amount_column_number: DataTypes.INTEGER,
+    category_column_number: DataTypes.INTEGER,
+    description_column_number: DataTypes.INTEGER,
     company_id: {
       type: DataTypes.INTEGER,
       references: 'company', // <<< Note, its table's name, not object name
