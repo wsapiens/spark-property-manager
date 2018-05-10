@@ -33,7 +33,7 @@ module.exports = {
       type_id: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'property_type',
+          model: 'expense_type',
           key: 'id'
         }
       }

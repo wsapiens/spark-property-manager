@@ -1,5 +1,7 @@
 const log = require('../log');
 const models = require('../models');
+const csv = require("fast-csv");
+// var fs = require('fs');
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
@@ -38,6 +40,69 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
   if (!req.file) {
     return res.status(400).send('No files were uploaded.');
   }
-  //file.path => full path
+  var row = 0;
+  var importConfig;
+  var defaultUnitId;
+  var expenseTypes;
+  var expenses = [];
+  models.ImportStatementConfig.findAll({
+    where: {
+      company_id: req.session.company_id
+    },
+    limit: 1
+  }).then(importStatementConfig => {
+    importConfig = importStatementConfig[0];
+    models.ExpenseType
+          .findAll()
+          .then(types => {
+            expenseTypes = types;
+            models.Property.findAll({
+              where: {
+                company_id: req.session.company_id
+              },
+              include: [{
+                  model: models.PropertyUnit
+              }]
+            }).then(properties => {
+              defaultUnitId = properties[0]['PropertyUnits'][0]['id'];
+
+              csv.fromPath(req.file.path)
+                 .on("data", function(data){
+                   console.log(data);
+                   row++;
+                   if(row === 1) {
+                     // skip first row as header
+                     return;
+                   }
+                   var filter = data[importConfig['filter_column_number']];
+                   if(importConfig['filter_keyword'].includes(filter)) {
+                     var expense_type_id = 9;
+                     for(i = 0; i < expenseTypes.length; i++) {
+                       if(data[importConfig['category_column_number']].includes(expenseTypes[i]['name'])) {
+                         expense_type_id = expenseTypes[i]['id'];
+                       }
+                     }
+                     expenses.push({
+                       unit_id: defaultUnitId,
+                       pay_to: data[importConfig['pay_to_column_number']],
+                       type_id: expense_type_id,
+                       description: data[importConfig['description_column_number']],
+                       amount: Math.abs(parseFloat(data[importConfig['amount_column_number']])),
+                       pay_time: new Date(data[importConfig['date_column_number']]),
+                       file: ''
+                     });
+                   }
+                 })
+                 .on("end", function(){
+                   console.log(expenses);
+                   models.Expense
+                         .bulkCreate(expenses, {returning: true});
+                   log.info('import done for user_id: ' + req.session.user_id);
+                   console.log('import done for user_id: ' + req.session.user_id);
+                 });
+            });
+          });
+  });
+  res.send(req.file.originalname);
 });
 module.exports = router;

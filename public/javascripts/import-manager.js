@@ -18,7 +18,7 @@ $(document).ready(function(){
         statusCode: {
           200: function(response) {
                 console.log(response);
-                $('#uploaded').val('<a href="/uploads/' + response + '" target="_blank">' + response + '</a>');
+                window.location.href = '/manager/expense';
                 $.mobile.loading( "hide" );
                }
         },

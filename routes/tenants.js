@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
     log.debug(tenants);
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({"data": tenants}));
-  })
+  });
 });
 
 router.post('/', function(req, res, next) {
