@@ -24,6 +24,69 @@
       <br><br>
       <hr>
       <br><br>
+      <label for="filter-column-number">Filter Column Number:</label>
+      <input type="number" data-clear-btn="true" name="filter-column-number" id="filter-column-number" value="">
+      <br>
+      <label for="filter-keyword-text">Filter Keyword:</label>
+      <input type="text" data-clear-btn="true" name="filter-keyword-text" id="filter-keyword-text" value="">
+      <br>
+      <label for="date-column-number">Date Column Number:</label>
+      <input type="number" data-clear-btn="true" name="date-column-number" id="date-column-number" value="">
+      <br>
+      <label for="date-format-text">Date Format:</label>
+      <input type="text" data-clear-btn="true" name="date-format-text" id="date-format-text" value="">
+      <br>
+      <label for="pay-to-column-number">PayTo Column:</label>
+      <input type="number" data-clear-btn="true" name="pay-to-column-number" id="pay-to-column-number" value="">
+      <br>
+      <label for="amount-column-number">Amount Column:</label>
+      <input type="number" data-clear-btn="true" name="amount-column-number" id="amount-column-number" value="">
+      <br>
+      <label for="category-column-number">Category Column:</label>
+      <input type="number" data-clear-btn="true" name="category-column-number" id="category-column-number" value="">
+      <br>
+      <label for="description-column-number">Description Column:</label>
+      <input type="number" data-clear-btn="true" name="description-column-number" id="description-column-number" value="">
+      <br>
+      <br><br><br>
+      <form align="right">
+        <input type="button" data-inline="true" id="submit-button" value="Submit">
+      </form>
+      <br><br><br><br>
+      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
+      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
+      <br><br>
+      <table id="configs" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+        <thead>
+          <tr>
+            <th><input name="select_all" value="1" type="checkbox"></th>
+            <th>Id</th>
+            <th>FilterColumn</th>
+            <th>FilterKeyword</th>
+            <th>DateColumn</th>
+            <th>DateFormat</th>
+            <th>PayToColumn</th>
+            <th>AmountColumn</th>
+            <th>CategoryColumn</th>
+            <th>DescriptionColumn</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Id</th>
+            <th>FilterColumn</th>
+            <th>FilterKeyword</th>
+            <th>DateColumn</th>
+            <th>DateFormat</th>
+            <th>PayToColumn</th>
+            <th>AmountColumn</th>
+            <th>CategoryColumn</th>
+            <th>DescriptionColumn</th>
+          </tr>
+        </tfoot>
+      </table>
+      <br><br>
     </div>
     <% include panel %>
     <% include config %>
