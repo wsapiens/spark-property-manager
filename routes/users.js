@@ -7,12 +7,12 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.User.findAll({
     where: {
-      company_id: req.session.company_id
+      company_id: req.user.company_id
     }
   }).then(users => {
     res.setHeader('Content-Type', 'application/json');
@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:userId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.User.find({
@@ -35,7 +35,7 @@ router.get('/:userId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   var random_password = cryptoRandomString(5);
@@ -65,7 +65,7 @@ router.post('/', function(req, res, next) {
                 req.body['lastname'],
                 req.body['phone'],
                 req.body['is_manager'],
-                req.session.company_id
+                req.user.company_id
               ],
               type: models.sequelize.QueryTypes.INSERT
             })
@@ -76,7 +76,7 @@ router.post('/', function(req, res, next) {
 })
 
 router.put('/:userId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   var random_password = cryptoRandomString(5);
@@ -118,7 +118,7 @@ router.put('/:userId', function(req, res, next) {
 });
 
 router.delete('/:userId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.User.destroy({

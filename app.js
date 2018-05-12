@@ -4,8 +4,12 @@ var session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+var flash    = require('connect-flash');
 var ipfilter = require('express-ipfilter').IpFilter;
+const LocalStrategy = require('passport-local').Strategy;
 const log = require('./log');
+const models = require('./models')
 
 var indexRouter = require('./routes/index');
 var managerRouter = require('./routes/manager');
@@ -19,6 +23,15 @@ var tenantRouter = require('./routes/tenants');
 var importRouter = require('./routes/import');
 
 var app = express();
+
+function isLoggedIn(req, res, next) {
+    // if user is authenticated in the session, carry on
+    // if (req.isAuthenticated()) {
+        return next();
+    // }
+    // if they aren't redirect them to the home page
+    // res.redirect('/login');
+}
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,12 +47,57 @@ app.use(
   express.static(path.join(__dirname, 'node_modules')),
   express.static(path.join(__dirname, 'public'))
 );
+app.use('/uploads', isLoggedIn, express.static(path.join(__dirname, 'uploads')));
 app.use(session({
   secret: 's3C537',
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // change this to true when run as https
 }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(flash());
+
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
+});
+
+passport.deserializeUser(function(id, cb) {
+  models.User
+        .findById(id)
+        .then(user => {
+          cb(null, user);
+        });
+});
+
+
+passport.use(new LocalStrategy({
+    // by default, local strategy uses username and password, we will override with email
+    usernameField : 'username',
+    passwordField : 'password',
+    passReqToCallback : true // allows us to pass back the entire request to the callback
+  },
+  function(req, username, password, done) {
+    models.sequelize
+          .query('SELECT id, company_id, email, firstname, phone, is_admin, is_manager FROM login_user WHERE email=$1 AND password = crypt($2, password)',
+          {
+            bind: [
+              username,
+              password
+            ],
+            type: models.sequelize.QueryTypes.SELECT
+          })
+          .then(users => {
+            if(users.length > 0) {
+              return done(null, users[0]);
+            } else {
+              return done(null, false, req.flash('errorMessage', 'Login Failure'));
+            }
+          });
+  }
+));
+
 
 // IP list to block or allow
 var ips = [];

@@ -4,14 +4,15 @@ const models = require('../models');
 const config = require('../config');
 const cryptoRandomString = require('crypto-random-string')
 var express = require('express');
+var passport = require('passport');
 var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('index', { manager: req.session.is_manager, message: ''});
+  res.render('index', { manager: req.user.is_manager, message: ''});
 });
 
 router.get('/login', function(req, res, next) {
@@ -21,47 +22,27 @@ router.get('/login', function(req, res, next) {
   var hour = 3600000
   req.session.cookie.expires = new Date(Date.now() + hour)
   req.session.cookie.maxAge = hour
-  res.render('login', { message: '' });
+  res.render('login', { message: req.flash('errorMessage') });
 });
 
-router.post('/login', function(req, res, next) {
+router.post('/login',
+            passport.authenticate('local', { failureRedirect: '/login'}),
+            function(req, res, next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log('request-ip: ' + ip);
   log.info('request-ip: ' + ip);
-  if(!(req.body.username && req.body.password)) {
-    return res.render('login', { message: '' });
-  }
-  models.sequelize
-        .query('SELECT id, company_id, email, firstname, phone, is_admin, is_manager FROM login_user WHERE email=$1 AND password = crypt($2, password)',
-        {
-          bind: [
-            req.body.username,
-            req.body.password
-          ],
-          type: models.sequelize.QueryTypes.SELECT
-        })
-        .then(users => {
-          if(users.length > 0) {
-            req.session.user_id  = users[0]['id'];
-            req.session.is_manager = users[0]['is_manager'];
-            req.session.company_id = users[0]['company_id'];
-            req.session.firstname = users[0]['firstname'];
-            return res.render('index', { manager: req.session.is_manager, message: ''});
-          }
-          // res.redirect('/login');
-          res.render('login', { message: 'Invalid Username or Password!' });
-        });
+  return res.render('index', { manager: req.user.is_manager, message: ''});
 });
 
 router.get('/password', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('index', {  manager: req.session.is_manager, message: ''});
+  res.render('index', {  manager: req.user.is_manager, message: ''});
 });
 
 router.post('/password', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.sequelize
@@ -70,7 +51,7 @@ router.post('/password', function(req, res, next) {
           .query('SELECT * FROM login_user WHERE id=$1 AND password = crypt($2, password)',
           {
             bind: [
-              req.session.user_id,
+              req.user.id,
               req.body.old_pass
             ],
             type: models.sequelize.QueryTypes.SELECT
@@ -82,19 +63,19 @@ router.post('/password', function(req, res, next) {
                     .query("UPDATE login_user SET password = crypt($2, gen_salt('bf')) WHERE id=$1",
                     {
                       bind: [
-                        req.session.user_id,
+                        req.user.id,
                         req.body.new_pass
                       ],
                       type: models.sequelize.QueryTypes.UPDATE
                     }, {transaction: t})
                     .then(function() {
-                      log.info('password has been changed for user id: ' + req.session.user_id);
+                      log.info('password has been changed for user id: ' + req.user.id);
                     });
-            return res.render('index', { manager: req.session.is_manager, message: ''});
+            return res.render('index', { manager: req.user.is_manager, message: ''});
         }
-        console.log('old password verification fail for user id: ' + req.session.user_id);
-        log.info('old password verification fail for user id: ' + req.session.user_id);
-        res.render('index', { manager: req.session.is_manager, message: 'password change failed'});
+        console.log('old password verification fail for user id: ' + req.user.id);
+        log.info('old password verification fail for user id: ' + req.user.id);
+        res.render('index', { manager: req.user.is_manager, message: 'password change failed'});
       })
   });
 });
@@ -108,6 +89,7 @@ router.get('/logout', function(req, res, next) {
         log.error(err);
         return next(err);
       } else {
+        req.logout();
         return res.redirect('/');
       }
     });

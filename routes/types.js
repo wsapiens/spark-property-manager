@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/expense', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ExpenseType
@@ -17,7 +17,7 @@ router.get('/expense', function(req, res, next) {
 });
 
 router.get('/property', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.PropertyType

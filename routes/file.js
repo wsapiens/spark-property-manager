@@ -10,7 +10,7 @@ var storage = multer.diskStorage({
     cb(null, './uploads/')
   },
   filename: function (req, file, cb) {
-    cb(null, req.session.company_id
+    cb(null, req.user.company_id
               + '-'
               + file.fieldname
               + '-'
@@ -22,7 +22,7 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage });
 
 router.post('/receipt', upload.single('receipt'), function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   if (!req.file) {
@@ -34,7 +34,7 @@ router.post('/receipt', upload.single('receipt'), function(req, res, next) {
 });
 
 router.post('/statement', upload.single('statement'), function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   if (!req.file) {
@@ -47,7 +47,7 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
   var expenses = [];
   models.ImportStatementConfig.findAll({
     where: {
-      company_id: req.session.company_id
+      company_id: req.user.company_id
     },
     limit: 1
   }).then(importStatementConfig => {
@@ -58,7 +58,7 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
             expenseTypes = types;
             models.Property.findAll({
               where: {
-                company_id: req.session.company_id
+                company_id: req.user.company_id
               },
               include: [{
                   model: models.PropertyUnit
@@ -97,8 +97,8 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                    console.log(expenses);
                    models.Expense
                          .bulkCreate(expenses, {returning: true});
-                   log.info('import done for user_id: ' + req.session.user_id);
-                   console.log('import done for user_id: ' + req.session.user_id);
+                   log.info('import done for user_id: ' + req.user.id);
+                   console.log('import done for user_id: ' + req.user.id);
                  });
             });
           });

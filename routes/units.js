@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.sequelize
@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
              + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id '
              + ' WHERE p.company_id = $1',
              {
-               bind: [ req.session.company_id ],
+               bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
              })
         .then(units => {
@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:unitId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.sequelize
@@ -42,7 +42,7 @@ router.get('/:unitId', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.sequelize
@@ -62,7 +62,7 @@ router.post('/', function(req, res, next) {
 });
 
 router.put('/:unitId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.sequelize
@@ -83,7 +83,7 @@ router.put('/:unitId', function(req, res, next) {
 });
 
 router.delete('/:unitId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.PropertyUnit.destroy({

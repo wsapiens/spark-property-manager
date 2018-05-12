@@ -5,13 +5,13 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/configs', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
         .findAll({
     where: {
-      company_id: req.session.company_id
+      company_id: req.user.company_id
     }
   }).then(importConfig => {
     res.setHeader('Content-Type', 'application/json');
@@ -20,7 +20,7 @@ router.get('/configs', function(req, res, next) {
 });
 
 router.post('/configs', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
@@ -33,14 +33,14 @@ router.post('/configs', function(req, res, next) {
           amount_column_number: req.body['amount_column_number'],
           category_column_number: req.body['category_column_number'],
           description_column_number: req.body['description_column_number'],
-          company_id: req.session.company_id
+          company_id: req.user.company_id
         }).then(importConfig => {
           res.send(importConfig);
         });
 });
 
 router.get('/configs/:configId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
@@ -52,7 +52,7 @@ router.get('/configs/:configId', function(req, res, next) {
 });
 
 router.put('/configs/:configId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
@@ -75,7 +75,7 @@ router.put('/configs/:configId', function(req, res, next) {
 });
 
 router.delete('/configs/:configId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig.destroy({

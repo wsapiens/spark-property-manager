@@ -6,12 +6,12 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Tenant.findAll({
     where: {
-      company_id: req.session.company_id
+      company_id: req.user.company_id
     },
     include: [{
         model: models.PropertyUnit,
@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Tenant.create({
@@ -38,14 +38,14 @@ router.post('/', function(req, res, next) {
     email: req.body['email'],
     lease_start: req.body['lease_start'],
     lease_end: req.body['lease_end'],
-    company_id: req.session.company_id
+    company_id: req.user.company_id
   }).then(tenant => {
     res.send(tenant);
   });
 });
 
 router.get('/:tenantId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Tenant
@@ -58,7 +58,7 @@ router.get('/:tenantId', function(req, res, next) {
 });
 
 router.put('/:tenantId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Tenant
@@ -80,7 +80,7 @@ router.put('/:tenantId', function(req, res, next) {
 });
 
 router.delete('/:tenantId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Tenant.destroy({

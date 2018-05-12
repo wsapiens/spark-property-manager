@@ -4,12 +4,12 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property.findAll({
     where: {
-      company_id: req.session.company_id
+      company_id: req.user.company_id
     },
     include: [{
         model: models.PropertyType
@@ -21,7 +21,7 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/:propertyId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property.find({
@@ -35,7 +35,7 @@ router.get('/:propertyId', function(req, res, next) {
 });
 
 router.get('/:propertyId/units', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property.findAll({
@@ -52,7 +52,7 @@ router.get('/:propertyId/units', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property.create({
@@ -62,14 +62,14 @@ router.post('/', function(req, res, next) {
     address_state: req.body['address_state'],
     address_zip: req.body['address_zip'],
     index_number: req.body['index_number'],
-    company_id:req.session.company_id
+    company_id:req.user.company_id
   }).then(property => {
     res.send(property);
   });
 });
 
 router.put('/:propertyId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property
@@ -90,7 +90,7 @@ router.put('/:propertyId', function(req, res, next) {
 });
 
 router.delete('/:propertyId', function(req, res, next) {
-  if(!req.session.user_id) {
+  if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   models.Property.destroy({
