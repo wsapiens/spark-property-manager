@@ -4,4 +4,5 @@
 /bin/app.log
 /bin/uploads
 /app.log
+/uploads
 .DS_Store
