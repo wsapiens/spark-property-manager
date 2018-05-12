@@ -2,7 +2,6 @@
 /node_modules
 /bin/app.properties
 /bin/app.log
-/bin/public
-/public/uploads
+/bin/uploads
 /app.log
 .DS_Store
