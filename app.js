@@ -27,11 +27,13 @@ var app = express();
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
-    // if (req.isAuthenticated()) {
+    if (req.session
+        && req.session.passport
+        && req.session.passport.user) {
         return next();
-    // }
+    }
     // if they aren't redirect them to the home page
-    // res.redirect('/login');
+    res.redirect('/login');
 }
 
 // view engine setup
@@ -48,14 +50,14 @@ app.use(
   express.static(path.join(__dirname, 'node_modules')),
   express.static(path.join(__dirname, 'public'))
 );
-app.use('/uploads', isLoggedIn, express.static(path.join(__dirname, 'uploads')));
 app.use(session({
   secret: config.get('app.sessionSecret'),
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // change this to true when run as https
 }));
-
+// uploads static should be after setting session
+app.use('/uploads', isLoggedIn, express.static(path.join(__dirname, 'uploads')));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
