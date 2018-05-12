@@ -127,7 +127,7 @@ CREATE TABLE import_statement_config (
 -- IMPORT BASIC APPLICATION DATA
 INSERT INTO expense_type (name) VALUES ('Advertising');
 INSERT INTO expense_type (name) VALUES ('Auto and Travel');
-INSERT INTO expense_type (name) VALUES ('Cleaning and Manitenance');
+INSERT INTO expense_type (name) VALUES ('Cleaning and Maintenance');
 INSERT INTO expense_type (name) VALUES ('Commissions');
 INSERT INTO expense_type (name) VALUES ('Insurance');
 INSERT INTO expense_type (name) VALUES ('Legal and other professional fees');

@@ -5,7 +5,7 @@ module.exports = {
     return queryInterface.bulkInsert('expense_type', [
       { name: 'Advertising' },
       { name: 'Auto and Travel' },
-      { name: 'Cleaning and Manitenance' },
+      { name: 'Cleaning and Maintenance' },
       { name: 'Commissions' },
       { name: 'Insurance' },
       { name: 'Legal and other professional fees' },

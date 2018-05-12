@@ -9,7 +9,8 @@ var flash    = require('connect-flash');
 var ipfilter = require('express-ipfilter').IpFilter;
 const LocalStrategy = require('passport-local').Strategy;
 const log = require('./log');
-const models = require('./models')
+const models = require('./models');
+const config = require('./config');
 
 var indexRouter = require('./routes/index');
 var managerRouter = require('./routes/manager');
@@ -49,7 +50,7 @@ app.use(
 );
 app.use('/uploads', isLoggedIn, express.static(path.join(__dirname, 'uploads')));
 app.use(session({
-  secret: 's3C537',
+  secret: config.get('app.sessionSecret'),
   resave: false,
   saveUninitialized: true,
   cookie: { secure: false } // change this to true when run as https
