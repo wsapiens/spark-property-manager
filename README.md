@@ -98,6 +98,7 @@ password = dbpass
 [app]
 hostname = localhost
 port = 8080
+sessionSecret = secret
 https = false
 serverkey = /path/to/server.key
 servercert = /path/to/server.crt
