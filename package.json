@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/www",
   "scripts": {

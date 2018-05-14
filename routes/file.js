@@ -86,8 +86,8 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                        unit_id: defaultUnitId,
                        pay_to: data[importConfig['pay_to_column_number']],
                        type_id: expense_type_id,
-                       description: data[importConfig['description_column_number']],
-                       amount: Math.abs(parseFloat(data[importConfig['amount_column_number']])),
+                       description: (0 > parseFloat(data[importConfig['amount_column_number']])) ? data[importConfig['description_column_number']] : data[importConfig['description_column_number']] + '<mark>[Return]</mark>',
+                       amount: -1.0 * (parseFloat(data[importConfig['amount_column_number']])),
                        pay_time: new Date(data[importConfig['date_column_number']]),
                        file: ''
                      });
