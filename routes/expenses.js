@@ -10,9 +10,9 @@ router.get('/', function(req, res, next) {
   models.sequelize
         .query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
              + 'FROM expense AS e '
-             + 'LEFT JOIN expense_type AS t ON t.id = e.type_id '
-             + 'LEFT JOIN property_unit AS u ON e.unit_id = u.id '
-             + 'LEFT JOIN property AS p ON p.id = u.property_id AND p.company_id = $1',
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id AND p.company_id = $1',
              {
                bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
