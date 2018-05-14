@@ -1,5 +1,5 @@
 # Spark Property Manager
-A Realestate Property Management WebApplication to manage Bookkeeping and WorkOrder easy. Write Up expense to each property unit with uploading receipt image or bulk upload your bank account statement as flat file with configuring columns
+A Real Estate Property Management WebApplication to manage Bookkeeping and WorkOrder easy. Write Up expense to each property unit with uploading receipt image or bulk upload your bank account statement as flat file with configuring columns
 
 - Technologies: Nodejs, postgresql
 
