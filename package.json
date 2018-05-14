@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/www",
   "scripts": {
@@ -52,5 +52,23 @@
   "bugs": {
     "url": "https://github.com/wsapiens/spark-property-manager/issues"
   },
-  "homepage": "https://github.com/wsapiens/spark-property-manager#readme"
+  "homepage": "https://github.com/wsapiens/spark-property-manager#readme",
+  "keywords": [
+    "real estate",
+    "bookkeeping",
+    "rental property management",
+    "bank statement import",
+    "web",
+    "app",
+    "application",
+    "express",
+    "sequelize",
+    "pg",
+    "multer",
+    "fast-csv",
+    "passport",
+    "emailjs",
+    "log4js",
+    "ejs"
+  ]
 }
