@@ -144,14 +144,14 @@ router.get('/times', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.sequelize
-        .query('SELECT  extract(year from e.pay_time) as year, extract(month from e.pay_time) as month, SUM(e.amount) '
+        .query('SELECT to_char(e.pay_time, \'YYYY-MM\') AS time, SUM(e.amount) '
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
              + 'WHERE p.company_id = $1 '
-             + 'GROUP BY 1,2 '
-             + 'ORDER BY 1,2 ',
+             + 'GROUP BY time '
+             + 'ORDER BY time ',
              {
                bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
@@ -162,7 +162,7 @@ router.get('/times', function(req, res, next) {
           var label = [];
           var color = [];
           expenses.forEach(function(expense){
-            label.push(expense['year']+"-"+expense['month']);
+            label.push(expense['time']);
             data.push(expense['sum']);
             color.push("rgb("
                       + Math.floor(Math.random() * 255)
