@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/www",
   "scripts": {
@@ -11,6 +11,7 @@
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.18.2",
+    "chart.js": "^2.7.2",
     "connect-flash": "^0.1.1",
     "continuation-local-storage": "^3.2.1",
     "cookie-parser": "~1.4.3",

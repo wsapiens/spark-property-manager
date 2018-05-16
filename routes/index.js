@@ -31,7 +31,7 @@ router.post('/login',
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log('request-ip: ' + ip);
   log.info('request-ip: ' + ip);
-  return res.render('index', { manager: req.user.is_manager, message: ''});
+  return res.redirect('/');
 });
 
 router.get('/password', function(req, res, next) {

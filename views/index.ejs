@@ -2,11 +2,20 @@
 <html>
   <head>
     <% include head %>
+    <!-- <script type="text/javascript" src="/javascripts/commons.js"></script> -->
+    <script type="text/javascript" src="/javascripts/index-chart.js"></script>
   </head>
   <body>
     <% include header %>
     <div class="container">
       <h1>Dashboard</h1>
+      <br><br>
+      <canvas id="chartByType" width="50" height="50"></canvas>
+      <br><br><br><br>
+      <canvas id="chartByUnit" width="50" height="50"></canvas>
+      <br><br><br><br>
+      <canvas id="chartByTime" width="50" height="50"></canvas>
+      <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
       <input type="button" value="Import Manager" onclick="window.location.href='/manager/import'" />
       <input type="button" value="Tenant Manager" onclick="window.location.href='/manager/tenant'" />

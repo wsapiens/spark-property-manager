@@ -12,7 +12,8 @@ router.get('/', function(req, res, next) {
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
-             + 'INNER JOIN property AS p ON p.id = u.property_id AND p.company_id = $1',
+             + 'INNER JOIN property AS p ON p.id = u.property_id  '
+             + 'WHERE p.company_id = $1',
              {
                bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
@@ -21,6 +22,159 @@ router.get('/', function(req, res, next) {
         .then(expenses => {
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({"data": expenses}));
+        });
+});
+
+router.get('/types', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT t.name AS pay_type, SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id  '
+             + 'WHERE p.company_id = $1 '
+             + 'GROUP BY pay_type',
+             {
+               bind: [ req.user.company_id ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          expenses.forEach(function(expense){
+            label.push(expense['pay_type']);
+            data.push(expense['sum']);
+            color.push("rgb("
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ")"
+                      );
+          })
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+        });
+});
+
+router.get('/properties', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT p.address_street, SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id '
+             + 'WHERE p.company_id = $1 '
+             + 'GROUP BY p.id ',
+             {
+               bind: [ req.user.company_id ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          expenses.forEach(function(expense){
+            label.push(expense['address_street']);
+            data.push(expense['sum']);
+            color.push("rgb("
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ")"
+                      );
+          })
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+        });
+});
+
+router.get('/units', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT p.address_street, u.name, SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id '
+             + 'WHERE p.company_id = $1 '
+             + 'GROUP BY p.id, u.id',
+             {
+               bind: [ req.user.company_id ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          expenses.forEach(function(expense){
+            label.push(expense['address_street']+", "+expense['name']);
+            data.push(expense['sum']);
+            color.push("rgb("
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ")"
+                      );
+          })
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+        });
+});
+
+router.get('/times', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT  extract(year from e.pay_time) as year, extract(month from e.pay_time) as month, SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id '
+             + 'WHERE p.company_id = $1 '
+             + 'GROUP BY 1,2 '
+             + 'ORDER BY 1,2 ',
+             {
+               bind: [ req.user.company_id ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          expenses.forEach(function(expense){
+            label.push(expense['year']+"-"+expense['month']);
+            data.push(expense['sum']);
+            color.push("rgb("
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ","
+                      + Math.floor(Math.random() * 255)
+                      + ")"
+                      );
+          })
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
         });
 });
 
