@@ -10,7 +10,7 @@ var router = express.Router();
 /* GET home page. */
 router.get('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+    return res.render('login', { message: req.flash('errorMessage') });
   }
   res.render('index', { manager: req.user.is_manager, message: ''});
 });
@@ -19,9 +19,6 @@ router.get('/login', function(req, res, next) {
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log('request-ip: ' + ip);
   log.info('login-ip: ' + ip);
-  var hour = 3600000
-  req.session.cookie.expires = new Date(Date.now() + hour)
-  req.session.cookie.maxAge = hour
   res.render('login', { message: req.flash('errorMessage') });
 });
 
@@ -31,7 +28,10 @@ router.post('/login',
   var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
   console.log('request-ip: ' + ip);
   log.info('request-ip: ' + ip);
-  return res.redirect('/');
+  var hour = 3600000;
+  req.session.cookie.expires = new Date(Date.now() + hour);
+  req.session.cookie.maxAge = hour;
+  res.redirect('/');
 });
 
 router.get('/password', function(req, res, next) {
