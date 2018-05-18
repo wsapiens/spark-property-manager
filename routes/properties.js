@@ -64,6 +64,14 @@ router.post('/', function(req, res, next) {
     index_number: req.body['index_number'],
     company_id:req.user.company_id
   }).then(property => {
+    if(property.type_id !== 3) {
+      models.PropertyUnit.create({
+        property_id: property.id,
+        name: 'Building'
+      }).then(unit => {
+        log.info('default unit has been created for propertyId: ' + property.id);
+      });
+    }
     res.send(property);
   });
 });
