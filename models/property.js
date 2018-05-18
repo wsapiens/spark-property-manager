@@ -32,7 +32,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Property.associate = function(models) {
-    models.Property.hasMany(models.PropertyUnit, { foreignKey: 'property_id' });
+    models.Property.hasMany(models.PropertyUnit, { foreignKey: 'property_id', onDelete: 'cascade' });
 
     models.Property.belongsTo(models.PropertyType, {
       onDelete: 'CASCADE',

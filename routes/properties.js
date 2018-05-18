@@ -67,7 +67,8 @@ router.post('/', function(req, res, next) {
     if(property.type_id !== 3) {
       models.PropertyUnit.create({
         property_id: property.id,
-        name: 'Building'
+        name: 'Building',
+        is_building: true
       }).then(unit => {
         log.info('default unit has been created for propertyId: ' + property.id);
       });
@@ -101,6 +102,11 @@ router.delete('/:propertyId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
+  models.PropertyUnit.destroy({
+    where: {
+      property_id: req.params.propertyId
+    }
+  });
   models.Property.destroy({
     where: {
       id: req.params.propertyId
