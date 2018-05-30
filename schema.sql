@@ -46,7 +46,7 @@ CREATE TABLE work_order (
  id bigserial primary key,
  unit_id integer REFERENCES property_unit (id),
  description text not null,
- estimated_cost money,
+ estimation money,
  assignee_name text,
  assignee_phone text,
  assignee_email text,
