@@ -200,6 +200,7 @@ router.post('/', function(req, res, next) {
     description: req.body['description'],
     type_id: req.body['type_id'],
     amount: req.body['amount'],
+    pay_time: new Date(),
     file: req.body['file'],
   }).then(expense => {
     res.send(expense);
