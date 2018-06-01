@@ -41,8 +41,14 @@ router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  var startDate = req.body['start_date'] ==! "" ? req.body['start_date'] : new Date();
-  var endDate = req.body['end_date'] ==! "" ? req.body['end_date'] : new Date();
+  var startDate = new Date();
+  if(req.body['start_date']) {
+    startDate = req.body['start_date'];
+  }
+  var endDate = new Date();
+  if(req.body['end_date']) {
+    endDate = req.body['end_date'];
+  }
   models.WorkOrder.create({
     unit_id: req.body['unit_id'],
     description: req.body['description'],
@@ -64,8 +70,14 @@ router.put('/:workId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  var startDate = req.body['start_date'] ==! "" ? req.body['start_date'] : new Date();
-  var endDate = req.body['end_date'] ==! "" ? req.body['end_date'] : new Date();
+  var startDate = new Date();
+  if(req.body['start_date']) {
+    startDate = req.body['start_date'];
+  }
+  var endDate = new Date();
+  if(req.body['end_date']) {
+    endDate = req.body['end_date'];
+  }
   models.WorkOrder
         .findById(req.params.workId)
         .then(work => {

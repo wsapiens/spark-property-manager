@@ -26,14 +26,16 @@ $(document).ready(function(){
   $('#property-select').on('change', function() {
     $('#unit-select').find('option').remove();
     $('#unit-select').append('<option>Select Unit</option>');
-    $.get("/properties/" + $(this).val() + "/units", function(data, status){
-      $.each(data['data'][0]['PropertyUnits'], function(key, value){
-        $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+    if($(this).val() !== 'Select Property') {
+      $.get("/properties/" + $(this).val() + "/units", function(data, status){
+        $.each(data['data'][0]['PropertyUnits'], function(key, value){
+          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        });
+        if(data['data'] && data['data'].length === 0) {
+          $('#unit-select').val($('#unit-select option:first').val()).change();
+        }
       });
-      if(data['data'] && data['data'].length === 0) {
-        $('#unit-select').val($('#unit-select option:first').val()).change();
-      }
-    });
+    }
   });
 
   $('#submit-button').on('click', function() {
@@ -270,9 +272,9 @@ $(document).on('click', '#edit-button', function(){
             $('#lastname-text').val(data['lastname']);
             $('#phone-text').val(data['phone']);
             $('#email-text').val(data['email']);
-            var startDate = data['lease_start'].split('-');
+            var startDate = data['lease_start'].split('T')[0].split('-');
             $('#lease-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
-            var endDate = data['lease_end'].split('-');
+            var endDate = data['lease_end'].split('T')[0].split('-');
             $('#lease-end-date').datepicker('setDate', new Date(endDate[0], endDate[1]-1, endDate[2]));
             tenantId = rows_selected[0]['id'];
             window.setTimeout(function(){

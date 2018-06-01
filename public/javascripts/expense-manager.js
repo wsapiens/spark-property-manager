@@ -42,14 +42,16 @@ $(document).ready(function(){
   $('#property-select').on('change', function() {
     $('#unit-select').find('option').remove();
     $('#unit-select').append('<option>Select Unit</option>');
-    $.get("/properties/" + $(this).val() + "/units", function(data, status){
-      $.each(data['data'][0]['PropertyUnits'], function(key, value){
-        $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+    if($(this).val() !== 'Select Property') {
+      $.get("/properties/" + $(this).val() + "/units", function(data, status){
+        $.each(data['data'][0]['PropertyUnits'], function(key, value){
+          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        });
+        if(data['data'] && data['data'].length === 0) {
+          $('#unit-select').val($('#unit-select option:first').val()).change();
+        }
       });
-      if(data['data'] && data['data'].length === 0) {
-        $('#unit-select').val($('#unit-select option:first').val()).change();
-      }
-    });
+    }
   });
 
   $('#submit-button').on('click', function() {

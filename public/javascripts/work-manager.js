@@ -26,14 +26,16 @@ $(document).ready(function(){
   $('#property-select').on('change', function() {
     $('#unit-select').find('option').remove();
     $('#unit-select').append('<option>Select Unit</option>');
-    $.get("/properties/" + $(this).val() + "/units", function(data, status){
-      $.each(data['data'][0]['PropertyUnits'], function(key, value){
-        $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+    if($(this).val() !== 'Select Property') {
+      $.get("/properties/" + $(this).val() + "/units", function(data, status){
+        $.each(data['data'][0]['PropertyUnits'], function(key, value){
+          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        });
+        if(data['data'] && data['data'].length === 0) {
+          $('#unit-select').val($('#unit-select option:first').val()).change();
+        }
       });
-      if(data['data'] && data['data'].length === 0) {
-        $('#unit-select').val($('#unit-select option:first').val()).change();
-      }
-    });
+    }
   });
 
   $('#submit-button').on('click', function() {
@@ -285,11 +287,11 @@ $(document).on('click', '#edit-button', function(){
             $('#phone-text').val(data['assignee_phone']);
             $('#email-text').val(data['assignee_email']);
             if(data['start_date']) {
-              var startDate = data['start_date'].split('-');
+              var startDate = data['start_date'].split('T')[0].split('-');
               $('#work-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
             }
             if(data['end_date']) {
-              var endDate = data['end_date'].split('-');
+              var endDate = data['end_date'].split('T')[0].split('-');
               $('#work-end-date').datepicker('setDate', new Date(endDate[0], endDate[1]-1, endDate[2]));
             }
             workId = rows_selected[0]['id'];
