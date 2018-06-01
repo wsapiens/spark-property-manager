@@ -8,8 +8,17 @@ router.get('/', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.WorkOrder
-        .findAll()
-        .then(works => {
+        .findAll({
+          where: {
+            company_id: req.user.company_id
+          },
+          include: [{
+              model: models.PropertyUnit,
+              include: [{
+                model: models.Property
+              }]
+          }]
+        }).then(works => {
           log.debug(works);
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({"data": works}));
@@ -32,17 +41,20 @@ router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
+  var startDate = req.body['start_date'] ==! "" ? req.body['start_date'] : new Date();
+  var endDate = req.body['end_date'] ==! "" ? req.body['end_date'] : new Date();
   models.WorkOrder.create({
     unit_id: req.body['unit_id'],
     description: req.body['description'],
     status: req.body['status'],
     estimation: req.body['estimation'],
-    scheduled_date: req.body['scheduled_date'],
-    start_date: req.body['start_date'],
-    end_date: req.body['end_date'],
+    scheduled_date: new Date(),
+    start_date: startDate,
+    end_date: endDate,
     assignee_name: req.body['assignee_name'],
     assignee_phone: req.body['assignee_phone'],
-    assignee_email: req.body['assignee_email']
+    assignee_email: req.body['assignee_email'],
+    company_id: req.user.company_id
   }).then(work => {
     res.send(work);
   });
@@ -52,6 +64,8 @@ router.put('/:workId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
+  var startDate = req.body['start_date'] ==! "" ? req.body['start_date'] : new Date();
+  var endDate = req.body['end_date'] ==! "" ? req.body['end_date'] : new Date();
   models.WorkOrder
         .findById(req.params.workId)
         .then(work => {
@@ -61,9 +75,9 @@ router.put('/:workId', function(req, res, next) {
               description: req.body['description'],
               status: req.body['status'],
               estimation: req.body['estimation'],
-              scheduled_date: req.body['scheduled_date'],
-              start_date: req.body['start_date'],
-              end_date: req.body['end_date'],
+              //scheduled_date: req.body['scheduled_date'],
+              start_date: startDate,
+              end_date: endDate,
               assignee_name: req.body['assignee_name'],
               assignee_phone: req.body['assignee_phone'],
               assignee_email: req.body['assignee_email']

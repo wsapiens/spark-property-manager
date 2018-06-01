@@ -35,6 +35,11 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'unit_id',
       targetKey: 'id'
     });
+    models.WorkOrder.belongsTo(models.Company, {
+      onDelete: 'CASCADE',
+      foreignKey: 'company_id',
+      targetKey: 'id'
+    });
   };
 
   return WorkOrder;

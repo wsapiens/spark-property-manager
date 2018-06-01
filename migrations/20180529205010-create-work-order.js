@@ -36,6 +36,13 @@ module.exports = {
       assignee_email: {
         type: Sequelize.TEXT
       },
+      company_id: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'company',
+          key: 'id'
+        }
+      },
       unit_id: {
         type: Sequelize.INTEGER,
         references: {

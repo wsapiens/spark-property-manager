@@ -44,6 +44,7 @@ CREATE TABLE property_tax (
 
 CREATE TABLE work_order (
  id bigserial primary key,
+ company_id integer REFERENCES company (id),
  unit_id integer REFERENCES property_unit (id),
  description text not null,
  estimation money,

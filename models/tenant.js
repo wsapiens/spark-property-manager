@@ -34,11 +34,13 @@ module.exports = (sequelize, DataTypes) => {
   Tenant.associate = function (models) {
     models.Tenant.belongsTo(models.PropertyUnit, {
       onDelete: 'CASCADE',
-      foreignKey: 'unit_id'
+      foreignKey: 'unit_id',
+      targetKey: 'id'
     });
     models.Tenant.belongsTo(models.Company, {
       onDelete: 'CASCADE',
-      foreignKey: 'company_id'
+      foreignKey: 'company_id',
+      targetKey: 'id'
     });
   };
 

@@ -51,4 +51,11 @@ router.get('/tenant', function(req, res, next) {
   res.render('tenant', { title: 'Tenant Manager', manager: req.user.is_manager });
 });
 
+router.get('/work', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  res.render('work', { title: 'Work Manager', manager: req.user.is_manager });
+});
+
 module.exports = router;
