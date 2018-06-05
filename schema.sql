@@ -57,6 +57,16 @@ CREATE TABLE work_order (
  end_date date
 );
 
+CREATE TABLE vendor (
+ id bigserial primary key,
+ company_id integer REFERENCES company (id),
+ category text not null,
+ name text,
+ phone text,
+ email text,
+ note text
+);
+
 CREATE TABLE expense_type (
   id bigserial primary key,
   name text not null

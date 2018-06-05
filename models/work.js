@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
       references: 'property_unit', // <<< Note, its table's name, not object name
       referencesKey: 'id' // <<< Note, its a column name
     },
+    company_id: {
+      type: DataTypes.INTEGER,
+      references: 'company', // <<< Note, its table's name, not object name
+      referencesKey: 'id'
+    }
   },
   {
     // don't add the timestamp attributes (updatedAt, createdAt)
