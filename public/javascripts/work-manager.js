@@ -3,6 +3,7 @@ var workId;
 $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
+  $('#vendor-select').find('option').remove();
   $.get("/properties", function(data, status){
     console.log(data['data']);
     $('#property-select').append('<option>Select Property</option>');
@@ -38,8 +39,34 @@ $(document).ready(function(){
     }
   });
 
+  $.get("/vendors", function(data, status){
+    console.log(data['data']);
+    $('#vendor-select').append('<option>Select Vendor</option>');
+    $.each(data['data'], function(key, value){
+      console.log(value);
+      console.log(value['id']);
+      $('#vendor-select').append('<option value=' + value['id'] + '>'
+                                  + value['name']
+                                  + '</option>');
+    });
+    if(data['data'].length > 0) {
+      $('#vendor-select option:first').attr("selected",true);
+    }
+  });
+
+  $('#vendor-select').on('change', function() {
+    if($(this).val() !== 'Select Vendor') {
+      $.get("/vendors/" + $(this).val(), function(data, status){
+        $('#name-text').val(data['name']);
+        $('#phone-text').val(data['phone']);
+        $('#email-text').val(data['email']);
+      });
+    }
+  });
+
   $('#submit-button').on('click', function() {
     var unitId = $('#unit-select').val();
+    var vendorId = $('#vendor-select').val();
     var descriptionText = $('#description-text').val();
     var statusText = $('#status-select').val();
     var estimationAmount = $('#estimation-text').val();
@@ -48,6 +75,9 @@ $(document).ready(function(){
     var emailAddress = $('#email-text').val();
     var startDate = $('#work-start-date').datepicker({ dateFormat: 'yyyy-mm-dd' }).val();
     var endDate = $('#work-end-date').datepicker({ dateFormat: 'yyyy-mm-dd' }).val();
+    if(vendorId === 'Select Vendor') {
+      vendorId = null;
+    }
     if( unitId && estimationAmount && descriptionText ) {
       if(workId) {
         $.ajax({
@@ -55,12 +85,13 @@ $(document).ready(function(){
           type: "PUT",
           data: JSON.stringify({
                   unit_id: unitId,
+                  vendor_id: vendorId,
                   description: descriptionText,
                   status: statusText,
                   estimation: estimationAmount,
-                  assignee_name: name,
-                  assignee_phone: phoneNumber,
-                  assignee_email: emailAddress,
+                  vendor_name: name,
+                  vendor_phone: phoneNumber,
+                  vendor_email: emailAddress,
                   start_date: startDate,
                   end_date: endDate
                }),
@@ -72,6 +103,7 @@ $(document).ready(function(){
               $('#property-select option:selected').prop('selected', false).change();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#status-select option:selected').prop('selected', false).change();
+              $('#vendor-select option:selected').prop('selected', false).change();
               $('#description-text').val('');
               $('#estimation-text').val('');
               $('#name-text').val('');
@@ -100,12 +132,13 @@ $(document).ready(function(){
       } else {
         $.post("/works", {
           unit_id: unitId,
+          vendor_id: vendorId,
           description: descriptionText,
           status: statusText,
           estimation: estimationAmount,
-          assignee_name: name,
-          assignee_phone: phoneNumber,
-          assignee_email: emailAddress,
+          vendor_name: name,
+          vendor_phone: phoneNumber,
+          vendor_email: emailAddress,
           start_date: startDate,
           end_date: endDate
          })
@@ -114,6 +147,7 @@ $(document).ready(function(){
             $('#property-select option:selected').prop('selected', false).change();
             $('#unit-select option:selected').prop('selected', false).change();
             $('#status-select option:selected').prop('selected', false).change();
+            $('#vendor-select option:selected').prop('selected', false).change();
             $('#description-text').val('');
             $('#estimation-text').val('');
             $('#name-text').val('');
@@ -127,6 +161,21 @@ $(document).ready(function(){
     } else {
       alert('Property Unit, Description and Estimation are required!')
     }
+    $('#vendor-select').find('option').remove();
+    $.get("/vendors", function(data, status){
+      console.log(data['data']);
+      $('#vendor-select').append('<option>Select Vendor</option>');
+      $.each(data['data'], function(key, value){
+        console.log(value);
+        console.log(value['id']);
+        $('#vendor-select').append('<option value=' + value['id'] + '>'
+                                    + value['name']
+                                    + '</option>');
+      });
+      if(data['data'].length > 0) {
+        $('#vendor-select option:first').attr("selected",true);
+      }
+    });
   });
 
   table = $('#works').dataTable({
@@ -155,18 +204,35 @@ $(document).ready(function(){
                 { data: 'scheduled_date', className: 'dt-body-center' },
                 { data: 'start_date', className: 'dt-body-center' },
                 { data: 'end_date', className: 'dt-body-center' },
-                { data: 'assignee_name', className: 'dt-body-center' },
-                { data: 'assignee_phone',
+                { data: 'Vendor',
                   className: 'dt-body-center',
-                  render: function (assignee_phone) {
-                            return '<a href="tel:' + assignee_phone + '">' + assignee_phone + '</a>';
+                  render: function(Vendor) {
+                            if(Vendor && Vendor['name']) {
+                              return Vendor['name'];
+                            } else {
+                              return '';
+                            }
                           }
                 },
-                { data: 'assignee_email',
+                { data: 'Vendor',
+                  className: 'dt-body-center',
+                  render: function (Vendor) {
+                            if(Vendor && Vendor['phone']){
+                              return '<a href="tel:' + Vendor['phone'] + '">' + Vendor['phone'] + '</a>';
+                            } else {
+                              return '';
+                            }
+                          }
+                },
+                { data: 'Vendor',
                   width : '10%',
                   className: 'dt-body-center',
-                  render: function (assignee_email) {
-                            return '<a href="mailto:' + assignee_email + '">' + assignee_email + '</a>';
+                  render: function (Vendor) {
+                            if(Vendor && Vendor['email']) {
+                              return '<a href="mailto:' + Vendor['email'] + '">' + Vendor['email'] + '</a>';
+                            } else {
+                              return '';
+                            }
                           }
                 }
             ],
@@ -283,9 +349,6 @@ $(document).on('click', '#edit-button', function(){
             $('#status-select').val(data['status']).change();
             $('#description-text').val(data['description']);
             $('#estimation-text').val(data['estimation']);
-            $('#name-text').val(data['assignee_name']);
-            $('#phone-text').val(data['assignee_phone']);
-            $('#email-text').val(data['assignee_email']);
             if(data['start_date']) {
               var startDate = data['start_date'].split('T')[0].split('-');
               $('#work-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
@@ -298,6 +361,9 @@ $(document).on('click', '#edit-button', function(){
             window.setTimeout(function(){
               console.log(">>>>>" + data['unit_id']);
               $('#unit-select').val(data['unit_id']).change();
+              if(data['Vendor']) {
+                $('#vendor-select').val(data['vendor_id']).change();
+              }
             }, 500);
           }
         });

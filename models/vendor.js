@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   Vendor.associate = function (models) {
+    models.Vendor.hasMany(models.WorkOrder, { foreignKey: 'vendor_id' });
     models.Vendor.belongsTo(models.Company, {
       onDelete: 'CASCADE',
       foreignKey: 'company_id',

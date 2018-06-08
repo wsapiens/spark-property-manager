@@ -35,13 +35,18 @@
         <label for="estimation-text">Estimation:</label>
         <input type="number" data-clear-btn="true" name="estimation-text" id="estimation-text" value="">
         <br>
-        <label for="name-text">Assignee Name:</label>
+        <label for="vendor-select" class="select ui-select">Vendor:</label>
+        <select name="select-native-1" id="vendor-select">
+          <option value="1">Select Vendor</option>
+        </select>
+        <br>
+        <label for="name-text">Vendor Name:</label>
         <input type="text" data-clear-btn="true" name="name-text" id="name-text" value="">
         <br>
-        <label for="phone-text">Assignee Phone:</label>
+        <label for="phone-text">Vendor Phone:</label>
         <input type="text" data-clear-btn="true" name="phone-text" id="phone-text" value="">
         <br>
-        <label for="email-text">Assignee Email:</label>
+        <label for="email-text">Vendor Email:</label>
         <input type="text" data-clear-btn="true" name="email-text" id="email-text" value="">
         <br>
         <label for="work-start-date">Work Start Date</label>
@@ -72,9 +77,9 @@
             <th>ScheduleDate</th>
             <th>StartDate</th>
             <th>EndDate</th>
-            <th>AssigneeName</th>
-            <th>AssigneePhone</th>
-            <th>AssigneeEmail</th>
+            <th>VendorName</th>
+            <th>VendorPhone</th>
+            <th>VendorEmail</th>
           </tr>
         </thead>
         <tfoot>
@@ -88,9 +93,9 @@
             <th>ScheduleDate</th>
             <th>StartDate</th>
             <th>EndDate</th>
-            <th>AssigneeName</th>
-            <th>AssigneePhone</th>
-            <th>AssigneeEmail</th>
+            <th>VendorName</th>
+            <th>VendorPhone</th>
+            <th>VendorEmail</th>
           </tr>
         </tfoot>
       </table>

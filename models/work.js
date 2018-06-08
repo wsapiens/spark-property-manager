@@ -7,9 +7,11 @@ module.exports = (sequelize, DataTypes) => {
     scheduled_date: DataTypes.DATE,
     start_date: DataTypes.DATE,
     end_date: DataTypes.DATE,
-    assignee_name: DataTypes.TEXT,
-    assignee_phone: DataTypes.TEXT,
-    assignee_email: DataTypes.TEXT,
+    vendor_id: {
+      type: DataTypes.INTEGER,
+      references: 'vendor', // <<< Note, its table's name, not object name
+      referencesKey: 'id' // <<< Note, its a column name
+    },
     unit_id: {
       type: DataTypes.INTEGER,
       references: 'property_unit', // <<< Note, its table's name, not object name
@@ -35,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   WorkOrder.associate = function (models) {
+    models.WorkOrder.belongsTo(models.Vendor, {
+      onDelete: 'CASCADE',
+      foreignKey: 'vendor_id',
+      targetKey: 'id'
+    });
     models.WorkOrder.belongsTo(models.PropertyUnit, {
       onDelete: 'CASCADE',
       foreignKey: 'unit_id',
