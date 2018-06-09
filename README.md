@@ -31,6 +31,15 @@ $ psql -U username -d dbname
 # \q
 ```
 
+## Memcached
+Install and start Memcached
+```bash
+$ sudo apt-get update
+$ sudo apt-get install memcached
+$ sudo apt-get install libmemcached-tools
+$ sudo systemctl restart memcached
+```
+
 ## Download spark-property-Manager
 ```bash
 $ git clone https://github.com/wsapiens/spark-property-manager.git

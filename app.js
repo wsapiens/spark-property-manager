@@ -1,6 +1,7 @@
 var createError = require('http-errors');
 var express = require('express');
 var session = require('express-session');
+var memcachedStore = require('connect-memcached')(session);
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -56,7 +57,11 @@ app.use(session({
   secret: config.get('app.sessionSecret'),
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false } // change this to true when run as https
+  cookie: { secure: false }, // change this to true when run as https
+  store: new memcachedStore({
+    hosts: [ config.get('app.memcachedHost') ],
+    secret: config.get('app.memcachedSecret'), // Optionally use transparent encryption for memcache session data
+  })
 }));
 // uploads static should be after setting session
 app.use('/uploads', isLoggedIn, express.static(path.join(__dirname, 'uploads')));
