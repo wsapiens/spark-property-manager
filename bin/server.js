@@ -32,10 +32,19 @@ if(config.get('app.https')) {
 /**
  * Listen on provided port, on all network interfaces.
  */
+function startServer() {
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+}
 
-server.listen(port);
-server.on('error', onError);
-server.on('listening', onListening);
+if(!module.parent) {
+  // Start server if file is run directly
+  startServer();
+} else {
+  // Export server, if file is referenced via cluster
+  module.exports = startServer;
+}
 
 /**
  * Normalize a port into a number, string, or false.
