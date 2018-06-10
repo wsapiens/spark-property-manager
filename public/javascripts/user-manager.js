@@ -1,8 +1,8 @@
 var table;
 var userId;
 $(document).ready(function(){
-
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var loginEmail = $('#email-text').val();
     var firstName = $('#firstname-text').val();
     var lastName = $('#lastname-text').val();
@@ -26,7 +26,7 @@ $(document).ready(function(){
                                   is_manager: isManager
                                 }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -56,24 +56,42 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/users", {
-                            email: loginEmail,
-                            firstname: firstName,
-                            lastname: lastName,
-                            phone: phoneNumber,
-                            is_manager: isManager
-                          })
-         .done(function(data) {
-            table.api().ajax.url("/users").load();
-            $('#email-text').val('');
-            $('#firstname-text').val('');
-            $('#lastname-text').val('');
-            $('#phone-text').val('');
-            if($('#is-manager-checkbox').prop('checked')) {
-              $('#is-manager-checkbox').click();
+        $.ajax({
+          url:"/users/",
+          type: "POST",
+          data: JSON.stringify({
+                  email: loginEmail,
+                  firstname: firstName,
+                  lastname: lastName,
+                  phone: phoneNumber,
+                  is_manager: isManager
+                }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/users").load();
+              $('#email-text').val('');
+              $('#firstname-text').val('');
+              $('#lastname-text').val('');
+              $('#phone-text').val('');
+              if($('#is-manager-checkbox').prop('checked')) {
+                $('#is-manager-checkbox').click();
+              }
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
             }
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-          });
+          }
+        });
       }
     } else {
       alert('Email and Firstname are required!')
@@ -178,13 +196,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/users/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

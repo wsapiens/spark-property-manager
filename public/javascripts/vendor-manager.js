@@ -1,8 +1,8 @@
 var table;
 var vendorId;
 $(document).ready(function(){
-
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var categoryText = $('#category-text').val();
     var noteText = $('#note-text').val();
     var nameText = $('#name-text').val();
@@ -22,7 +22,7 @@ $(document).ready(function(){
                   email: emailAddress
                }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -50,22 +50,40 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/vendors", {
-          note: noteText,
-          category: categoryText,
-          name: nameText,
-          phone: phoneNumber,
-          email: emailAddress
-         })
-         .done(function(data) {
-            table.api().ajax.url("/vendors").load();
-            $('#category-text').val('');
-            $('#note-text').val('');
-            $('#name-text').val('');
-            $('#phone-text').val('');
-            $('#email-text').val('');
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-          });
+        $.ajax({
+          url:"/vendors/",
+          type: "POST",
+          data: JSON.stringify({
+                  note: noteText,
+                  category: categoryText,
+                  name: nameText,
+                  phone: phoneNumber,
+                  email: emailAddress
+               }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/vendors").load();
+              $('#category-text').val('');
+              $('#note-text').val('');
+              $('#name-text').val('');
+              $('#phone-text').val('');
+              $('#email-text').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('Vendor Name is required!')
@@ -168,13 +186,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/vendors/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

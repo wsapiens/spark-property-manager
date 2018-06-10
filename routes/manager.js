@@ -1,68 +1,98 @@
 const log = require('../log');
 var express = require('express');
+var csrf = require('csurf');
+var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
-router.get('/expense', function(req, res, next) {
+router.get('/expense', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('expense', { title: 'Expense Manager', manager: req.user.is_manager });
+  console.log(req.csrfToken());
+  res.render('expense', {
+    title: 'Expense Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/import', function(req, res, next) {
+router.get('/import', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
   res.render('import', {
-                        title: 'Import Manager',
-                        message: '',
-                        error_message: '',
-                        manager: req.user.is_manager
-                      }
-            );
-
+    title: 'Import Manager',
+    message: '',
+    error_message: '',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/property', function(req, res, next) {
+router.get('/property', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('property', { title: 'Property Manager', manager: req.user.is_manager });
+  res.render('property', {
+    title: 'Property Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+ });
 });
 
-router.get('/unit', function(req, res, next) {
+router.get('/unit', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('unit', { title: 'Unit Manager', manager: req.user.is_manager });
+  res.render('unit', {
+    title: 'Unit Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/user', function(req, res, next) {
+router.get('/user', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('user', { title: 'User Manager', manager: req.user.is_manager });
+  res.render('user', {
+    title: 'User Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/tenant', function(req, res, next) {
+router.get('/tenant', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('tenant', { title: 'Tenant Manager', manager: req.user.is_manager });
+  res.render('tenant', {
+    title: 'Tenant Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/work', function(req, res, next) {
+router.get('/work', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('work', { title: 'Work Manager', manager: req.user.is_manager });
+  res.render('work', {
+    title: 'Work Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
-router.get('/vendor', function(req, res, next) {
+router.get('/vendor', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  res.render('vendor', { title: 'Vendor Manager', manager: req.user.is_manager });
+  res.render('vendor', {
+    title: 'Vendor Manager',
+    manager: req.user.is_manager,
+    csrfToken: req.csrfToken()
+  });
 });
 
 module.exports = router;

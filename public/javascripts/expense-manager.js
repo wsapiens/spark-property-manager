@@ -55,6 +55,7 @@ $(document).ready(function(){
   });
 
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var unitId = $('#unit-select').val();
     var typeId = $('#type-select').val();
     var payAmount = $('#pay-amount-text').val();
@@ -71,9 +72,9 @@ $(document).ready(function(){
         $.ajax({
           url:"/expenses/"+expenseId,
           type: "PUT",
+          headers: { "CSRF-Token": token },
           data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime, file: receiptFile}),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
           statusCode: {
             200: function() {
@@ -105,20 +106,39 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/expenses", {unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile})
-         .done(function(data) {
-            table.api().ajax.url("/expenses").load();
-            $('#unit-select option:selected').prop('selected', false).change();
-            $('#type-select option:selected').prop('selected', false).change();
-            $('#property-select option:selected').prop('selected', false).change();
-            $('#pay-amount-text').val('');
-            $('#pay-to-text').val('');
-            $('#pay-desc-text').val('');
-            $('#file-select').val('');
-            $('#uploaded').val('');
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-            receiptFile = '';
-          });
+        $.ajax({
+          url:"/expenses/",
+          type: "POST",
+          headers: { "CSRF-Token": token },
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile}),
+          contentType: "application/json; charset=utf-8",
+          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/expenses").load();
+              $('#unit-select option:selected').prop('selected', false).change();
+              $('#type-select option:selected').prop('selected', false).change();
+              $('#property-select option:selected').prop('selected', false).change();
+              $('#pay-amount-text').val('');
+              $('#pay-to-text').val('');
+              $('#pay-desc-text').val('');
+              $('#file-select').val('');
+              $('#uploaded').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+              receiptFile = '';
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('Property Unit, Expense Type and Amount are required!')
@@ -275,13 +295,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/expenses/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

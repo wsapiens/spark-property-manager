@@ -2,6 +2,7 @@ var table;
 var configId;
 $(document).ready(function(){
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var filterColumn = $('#filter-column-number').val();
     var filterKeyword = $('#filter-keyword-text').val();
     var dateColumn = $('#date-column-number').val();
@@ -26,7 +27,7 @@ $(document).ready(function(){
                   description_column_number: descriptionColumn
                }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -58,29 +59,47 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/import/configs", {
-          filter_column_number: filterColumn,
-          filter_keyword: filterKeyword,
-          date_column_number: dateColumn,
-          date_format: dateFormat,
-          pay_to_column_number: payToColumn,
-          amount_column_number: amountColumn,
-          category_column_number: categoryColumn,
-          description_column_number: descriptionColumn
-         })
-         .done(function(data) {
-            table.api().ajax.url("/import/configs").load();
-            $('#filter-column-number').val('');
-            $('#filter-keyword-text').val('');
-            $('#date-column-number').val('');
-            $('#date-format-text').val('');
-            $('#pay-to-column-number').val('');
-            $('#amount-column-number').val('');
-            $('#category-column-number').val('');
-            $('#description-column-number').val('');
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-            receiptFile = '';
-          });
+        $.ajax({
+          url:"/import/configs/",
+          type: "POST",
+          data: JSON.stringify({
+                  filter_column_number: filterColumn,
+                  filter_keyword: filterKeyword,
+                  date_column_number: dateColumn,
+                  date_format: dateFormat,
+                  pay_to_column_number: payToColumn,
+                  amount_column_number: amountColumn,
+                  category_column_number: categoryColumn,
+                  description_column_number: descriptionColumn
+               }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/import/configs").load();
+              $('#filter-column-number').val('');
+              $('#filter-keyword-text').val('');
+              $('#date-column-number').val('');
+              $('#date-format-text').val('');
+              $('#pay-to-column-number').val('');
+              $('#amount-column-number').val('');
+              $('#category-column-number').val('');
+              $('#description-column-number').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+              receiptFile = '';
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('FilterColumnNumber, FilterKeyword, AmoutColumnNumber and PayToColumnNumber are required!')
@@ -229,13 +248,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/import/configs/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

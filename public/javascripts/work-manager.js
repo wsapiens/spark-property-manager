@@ -65,6 +65,7 @@ $(document).ready(function(){
   });
 
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var unitId = $('#unit-select').val();
     var vendorId = $('#vendor-select').val();
     var descriptionText = $('#description-text').val();
@@ -96,7 +97,7 @@ $(document).ready(function(){
                   end_date: endDate
                }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -130,33 +131,51 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/works", {
-          unit_id: unitId,
-          vendor_id: vendorId,
-          description: descriptionText,
-          status: statusText,
-          estimation: estimationAmount,
-          vendor_name: name,
-          vendor_phone: phoneNumber,
-          vendor_email: emailAddress,
-          start_date: startDate,
-          end_date: endDate
-         })
-         .done(function(data) {
-            table.api().ajax.url("/works").load();
-            $('#property-select option:selected').prop('selected', false).change();
-            $('#unit-select option:selected').prop('selected', false).change();
-            $('#status-select option:selected').prop('selected', false).change();
-            $('#vendor-select option:selected').prop('selected', false).change();
-            $('#description-text').val('');
-            $('#estimation-text').val('');
-            $('#name-text').val('');
-            $('#phone-text').val('');
-            $('#email-text').val('');
-            $('#work-start-date').datepicker('setDate', null);
-            $('#work-end-date').datepicker('setDate', null);
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-          });
+        $.ajax({
+          url:"/works/",
+          type: "POST",
+          data: JSON.stringify({
+                  unit_id: unitId,
+                  vendor_id: vendorId,
+                  description: descriptionText,
+                  status: statusText,
+                  estimation: estimationAmount,
+                  vendor_name: name,
+                  vendor_phone: phoneNumber,
+                  vendor_email: emailAddress,
+                  start_date: startDate,
+                  end_date: endDate
+               }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/works").load();
+              $('#property-select option:selected').prop('selected', false).change();
+              $('#unit-select option:selected').prop('selected', false).change();
+              $('#status-select option:selected').prop('selected', false).change();
+              $('#vendor-select option:selected').prop('selected', false).change();
+              $('#description-text').val('');
+              $('#estimation-text').val('');
+              $('#name-text').val('');
+              $('#phone-text').val('');
+              $('#email-text').val('');
+              $('#work-start-date').datepicker('setDate', null);
+              $('#work-end-date').datepicker('setDate', null);
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('Property Unit, Description and Estimation are required!')
@@ -311,13 +330,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/works/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

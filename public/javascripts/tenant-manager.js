@@ -39,6 +39,7 @@ $(document).ready(function(){
   });
 
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var unitId = $('#unit-select').val();
     var firstName = $('#firstname-text').val();
     var lastName = $('#lastname-text').val();
@@ -61,7 +62,7 @@ $(document).ready(function(){
                   lease_end: endDate
                }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -92,28 +93,46 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/tenants", {
-            unit_id: unitId,
-            firstname: firstName,
-            lastname: lastName,
-            phone: phoneNumber,
-            email: emailAddress,
-            lease_start: startDate,
-            lease_end: endDate
-         })
-         .done(function(data) {
-            table.api().ajax.url("/tenants").load();
-            $('#unit-select option:selected').prop('selected', false).change();
-            $('#property-select option:selected').prop('selected', false).change();
-            $('#firstname-text').val('');
-            $('#lastname-text').val('');
-            $('#phone-text').val('');
-            $('#email-text').val('');
-            $('#lease-start-date').datepicker('setDate', null);
-            $('#lease-end-date').datepicker('setDate', null);
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-            receiptFile = '';
-          });
+        $.ajax({
+          url:"/tenants/",
+          type: "POST",
+          data: JSON.stringify({
+                  unit_id: unitId,
+                  firstname: firstName,
+                  lastname: lastName,
+                  phone: phoneNumber,
+                  email: emailAddress,
+                  lease_start: startDate,
+                  lease_end: endDate
+               }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/tenants").load();
+              $('#unit-select option:selected').prop('selected', false).change();
+              $('#property-select option:selected').prop('selected', false).change();
+              $('#firstname-text').val('');
+              $('#lastname-text').val('');
+              $('#phone-text').val('');
+              $('#email-text').val('');
+              $('#lease-start-date').datepicker('setDate', null);
+              $('#lease-end-date').datepicker('setDate', null);
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+              receiptFile = '';
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('Property Unit, Firstname, LeaseStartDate and LeaseEndDate are required!')
@@ -233,13 +252,14 @@ $(document).ready(function(){
 
 $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
         url:"/tenants/"+value['id'],
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {

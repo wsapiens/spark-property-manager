@@ -17,6 +17,7 @@ $(document).ready(function(){
   });
 
   $('#submit-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var typeId = $('#property-type-select').val();
     var addressStreet = $('#address-street-text').val();
     var addressCity = $('#address-city-text').val();
@@ -43,7 +44,7 @@ $(document).ready(function(){
                                   index_number: indexNumber
                                 }),
           contentType: "application/json; charset=utf-8",
-          // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+          headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
@@ -72,24 +73,42 @@ $(document).ready(function(){
           }
         });
       } else {
-        $.post("/properties", {
-                                type_id: typeId,
-                                address_street: addressStreet,
-                                address_city: addressCity,
-                                address_state: addressState,
-                                address_zip: addressZip,
-                                index_number: indexNumber
-                              })
-         .done(function(data) {
-            table.api().ajax.url("/properties").load();
-            $('#property-type-select option:selected').prop('selected', false).change();
-            $('#address-street-text').val('');
-            $('#address-city-text').val('');
-            $('#address-state-text').val('');
-            $('#address-zip-text').val('');
-            $('#index-text').val('');
-            $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-          });
+        $.ajax({
+          url:"/properties/",
+          type: "POST",
+          data: JSON.stringify({
+                  type_id: typeId,
+                  address_street: addressStreet,
+                  address_city: addressCity,
+                  address_state: addressState,
+                  address_zip: addressZip,
+                  index_number: indexNumber
+                }),
+          contentType: "application/json; charset=utf-8",
+          headers: { "CSRF-Token": token },
+          dataType: "json",
+          statusCode: {
+            200: function() {
+              table.api().ajax.url("/properties").load();
+              $('#property-type-select option:selected').prop('selected', false).change();
+              $('#address-street-text').val('');
+              $('#address-city-text').val('');
+              $('#address-state-text').val('');
+              $('#address-zip-text').val('');
+              $('#index-text').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+            },
+            400: function(response) {
+              resultPopup(response);
+            },
+            401: function() {
+              location.reload();
+            },
+            500: function(response) {
+              resultPopup(response);
+            }
+          }
+        });
       }
     } else {
       alert('Property Type and Street Address are required!')
@@ -190,6 +209,7 @@ $(document).ready(function(){
 });
 
 $(document).on('click', '#delete-button', function(){
+  var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   if(0 !== rows_selected.length) {
     $.each(rows_selected, function(key, value){
       $.ajax({
@@ -197,7 +217,7 @@ $(document).on('click', '#delete-button', function(){
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
-        // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
+        headers: { "CSRF-Token": token },
         dataType: "json",
         statusCode: {
           200: function() {
