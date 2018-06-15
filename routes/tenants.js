@@ -33,13 +33,13 @@ router.post('/', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Tenant.create({
-    unit_id: req.body['unit_id'],
-    firstname: req.body['firstname'],
-    lastname: req.body['lastname'],
-    phone: req.body['phone'],
-    email: req.body['email'],
-    lease_start: req.body['lease_start'],
-    lease_end: req.body['lease_end'],
+    unit_id: req.body.unit_id,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    phone: req.body.phone,
+    email: req.body.email,
+    lease_start: req.body.lease_start,
+    lease_end: req.body.lease_end,
     company_id: req.user.company_id
   }).then(tenant => {
     res.send(tenant);
@@ -68,13 +68,13 @@ router.put('/:tenantId', csrfProtection, function(req, res, next) {
     .then(tenant => {
       if(tenant) {
         tenant.updateAttributes({
-          unit_id: req.body['unit_id'],
-          firstname: req.body['firstname'],
-          lastname: req.body['lastname'],
-          phone: req.body['phone'],
-          email: req.body['email'],
-          lease_start: req.body['lease_start'],
-          lease_end: req.body['lease_end'],
+          unit_id: req.body.unit_id,
+          firstname: req.body.firstname,
+          lastname: req.body.lastname,
+          phone: req.body.phone,
+          email: req.body.email,
+          lease_start: req.body.lease_start,
+          lease_end: req.body.lease_end,
         });
       }
     });
@@ -94,4 +94,4 @@ router.delete('/:tenantId', csrfProtection, function(req, res, next) {
   });
 });
 
-module.exports = router
+module.exports = router;

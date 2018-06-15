@@ -31,7 +31,7 @@ router.post('/login',
   var hour = 3600000;
   req.session.cookie.expires = new Date(Date.now() + hour);
   req.session.cookie.maxAge = hour;
-  res.redirect('/');
+  res.redirect(301, '/');
 });
 
 router.get('/password', function(req, res, next) {
@@ -76,7 +76,7 @@ router.post('/password', function(req, res, next) {
         console.log('old password verification fail for user id: ' + req.user.id);
         log.info('old password verification fail for user id: ' + req.user.id);
         res.render('index', { manager: req.user.is_manager, message: 'password change failed'});
-      })
+      });
   });
 });
 

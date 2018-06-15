@@ -40,6 +40,14 @@ $ sudo apt-get install libmemcached-tools
 $ sudo systemctl restart memcached
 ```
 
+## Install Nodejs
+[nodejs install guide](https://nodejs.org/en/download/package-manager/)
+
+## Download dependencies
+```bash
+$ npm install
+```
+
 ## Download spark-property-Manager
 ```bash
 $ git clone https://github.com/wsapiens/spark-property-manager.git
@@ -73,14 +81,6 @@ $ node_modules/.bin/sequelize db:seed:all
 if sequelize db migration doesn't work, then load up from schema.sql
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
-```
-
-## Install Nodejs
-[nodejs install guide](https://nodejs.org/en/download/package-manager/)
-
-## Download dependencies
-```bash
-$ npm install
 ```
 
 ## Copy app.properties.TEMPLATE to app.properties and update app.properties accordingly to your environment

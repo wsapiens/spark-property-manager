@@ -27,14 +27,14 @@ router.post('/configs', csrfProtection, function(req, res, next) {
   }
   models.ImportStatementConfig
         .create({
-          filter_column_number: req.body['filter_column_number'],
-          filter_keyword: req.body['filter_keyword'],
-          date_column_number: req.body['date_column_number'],
-          date_format: req.body['date_format'],
-          pay_to_column_number: req.body['pay_to_column_number'],
-          amount_column_number: req.body['amount_column_number'],
-          category_column_number: req.body['category_column_number'],
-          description_column_number: req.body['description_column_number'],
+          filter_column_number: req.body.filter_column_number,
+          filter_keyword: req.body.filter_keyword,
+          date_column_number: req.body.date_column_number,
+          date_format: req.body.date_format,
+          pay_to_column_number: req.body.pay_to_column_number,
+          amount_column_number: req.body.amount_column_number,
+          category_column_number: req.body.category_column_number,
+          description_column_number: req.body.description_column_number,
           company_id: req.user.company_id
         }).then(importConfig => {
           res.send(importConfig);
@@ -62,14 +62,14 @@ router.put('/configs/:configId', csrfProtection, function(req, res, next) {
         .then(importConfig => {
           if(importConfig) {
             importConfig.updateAttributes({
-              filter_column_number: req.body['filter_column_number'],
-              filter_keyword: req.body['filter_keyword'],
-              date_column_number: req.body['date_column_number'],
-              date_format: req.body['date_format'],
-              pay_to_column_number: req.body['pay_to_column_number'],
-              amount_column_number: req.body['amount_column_number'],
-              category_column_number: req.body['category_column_number'],
-              description_column_number: req.body['description_column_number']
+              filter_column_number: req.body.filter_column_number,
+              filter_keyword: req.body.filter_keyword,
+              date_column_number: req.body.date_column_number,
+              date_format: req.body.date_format,
+              pay_to_column_number: req.body.pay_to_column_number,
+              amount_column_number: req.body.amount_column_number,
+              category_column_number: req.body.category_column_number,
+              description_column_number: req.body.description_column_number
             });
           }
         });
@@ -89,4 +89,4 @@ router.delete('/configs/:configId', csrfProtection, function(req, res, next) {
   });
 });
 
-module.exports = router
+module.exports = router;

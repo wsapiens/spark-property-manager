@@ -11,7 +11,8 @@
       var chartByType;
       var chartByUnit;
       var chartByMonth;
-      $(document).ready(function(){
+
+      function expenseByType() {
         $.get("/expenses/types", function(data, status){
           var ctx = document.getElementById('chartByType').getContext('2d');
           chartByType = new Chart(ctx,{
@@ -25,7 +26,9 @@
             }
           });
         });
+      }
 
+      function expenseByUnit() {
         $.get("/expenses/units", function(data, status){
           var ctx = document.getElementById('chartByUnit').getContext('2d');
           chartByUnit = new Chart(ctx,{
@@ -39,7 +42,9 @@
             }
           });
         });
+      }
 
+      function expenseByTime() {
         $.get("/expenses/times", function(data, status){
           var ctx = document.getElementById('chartByTime').getContext('2d');
           chartByMonth = new Chart(ctx,{
@@ -53,6 +58,26 @@
             }
           });
         });
+      }
+
+      $(document).ready(function(){
+        // $('#start-date' ).datepicker({
+        //   onSelect: function (date, instance) {
+        //   }
+        // });
+        //
+        // $('#end-date' ).datepicker({
+        //   onSelect: function (date, instance) {
+        //   }
+        // });
+        //
+        // $( "#start-date" ).datepicker( "setDate", new Date(new Date().getFullYear(), 0, 1));
+        // $( "#end-date" ).datepicker( "setDate", new Date());
+
+        expenseByType();
+        expenseByUnit();
+        expenseByTime();
+
       });
       </script>
       <h1>Dashboard</h1>
@@ -62,6 +87,15 @@
       <canvas id="chartByUnit" width="50" height="50"></canvas>
       <br><br><br><br>
       <canvas id="chartByTime" width="50" height="50"></canvas>
+      <br><br><br><br>
+      <!-- <h3>Draw Expense Charts Between Dates</h3>
+      <label for="start-date">Start Date:</label>
+      <input type="text" data-role="date" id="start-date">
+      <label for="end-date">End Date:</label>
+      <input type="text" data-role="date" id="end-date">
+      <form>
+        <input type="button" data-inline="true" id="submit-button" value="Draw">
+      </form> -->
       <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
       <input type="button" value="Import Manager" onclick="window.location.href='/manager/import'" />

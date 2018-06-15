@@ -52,25 +52,25 @@ router.post('/', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   var startDate = new Date();
-  if(req.body['start_date']) {
-    startDate = req.body['start_date'];
+  if(req.body.start_date) {
+    startDate = req.body.start_date;
   }
   var endDate = new Date();
-  if(req.body['end_date']) {
-    endDate = req.body['end_date'];
+  if(req.body.end_date) {
+    endDate = req.body.end_date;
   }
-  if(!req.body['vendor_id'] && req.body['vendor_name']) {
+  if(!req.body.vendor_id && req.body.vendor_name) {
     models.Vendor.create({
-      name: req.body['vendor_name'],
-      phone: req.body['vendor_phone'],
-      email: req.body['vendor_email'],
+      name: req.body.vendor_name,
+      phone: req.body.vendor_phone,
+      email: req.body.vendor_email,
       company_id: req.user.company_id
     }).then(vendor => {
       models.WorkOrder.create({
-        unit_id: req.body['unit_id'],
-        description: req.body['description'],
-        status: req.body['status'],
-        estimation: req.body['estimation'],
+        unit_id: req.body.unit_id,
+        description: req.body.description,
+        status: req.body.status,
+        estimation: req.body.estimation,
         scheduled_date: new Date(),
         start_date: startDate,
         end_date: endDate,
@@ -82,14 +82,14 @@ router.post('/', csrfProtection, function(req, res, next) {
     });
   } else {
     models.WorkOrder.create({
-      unit_id: req.body['unit_id'],
-      description: req.body['description'],
-      status: req.body['status'],
-      estimation: req.body['estimation'],
+      unit_id: req.body.unit_id,
+      description: req.body.description,
+      status: req.body.status,
+      estimation: req.body.estimation,
       scheduled_date: new Date(),
       start_date: startDate,
       end_date: endDate,
-      vendor_id: req.body['vendor_id'],
+      vendor_id: req.body.vendor_id,
       company_id: req.user.company_id
     }).then(work => {
       res.send(work);
@@ -102,18 +102,18 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   var startDate = new Date();
-  if(req.body['start_date']) {
-    startDate = req.body['start_date'];
+  if(req.body.start_date) {
+    startDate = req.body.start_date;
   }
   var endDate = new Date();
-  if(req.body['end_date']) {
-    endDate = req.body['end_date'];
+  if(req.body.end_date) {
+    endDate = req.body.end_date;
   }
-  if(!req.body['vendor_id'] && req.body['vendor_name']) {
+  if(!req.body.vendor_id && req.body.vendor_name) {
     models.Vendor.create({
-      name: req.body['vendor_name'],
-      phone: req.body['vendor_phone'],
-      email: req.body['vendor_email'],
+      name: req.body.vendor_name,
+      phone: req.body.vendor_phone,
+      email: req.body.vendor_email,
       company_id: req.user.company_id
     }).then(vendor => {
       models.WorkOrder
@@ -121,10 +121,10 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
             .then(work => {
               if(work) {
                 work.updateAttributes({
-                  unit_id: req.body['unit_id'],
-                  description: req.body['description'],
-                  status: req.body['status'],
-                  estimation: req.body['estimation'],
+                  unit_id: req.body.unit_id,
+                  description: req.body.description,
+                  status: req.body.status,
+                  estimation: req.body.estimation,
                   //scheduled_date: req.body['scheduled_date'],
                   start_date: startDate,
                   end_date: endDate,
@@ -139,14 +139,14 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
           .then(work => {
             if(work) {
               work.updateAttributes({
-                unit_id: req.body['unit_id'],
-                description: req.body['description'],
-                status: req.body['status'],
-                estimation: req.body['estimation'],
+                unit_id: req.body.unit_id,
+                description: req.body.description,
+                status: req.body.status,
+                estimation: req.body.estimation,
                 //scheduled_date: req.body['scheduled_date'],
                 start_date: startDate,
                 end_date: endDate,
-                vendor_id: req.body['vendor_id']
+                vendor_id: req.body.vendor_id
               });
             }
           });

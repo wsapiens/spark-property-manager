@@ -43,12 +43,12 @@ router.post('/', csrfProtection, function(req, res, next) {
   var random_password = cryptoRandomString(5);
   var message	= {
    text:	'Your Account has been created with your email: '
-          + req.body['email']
+          + req.body.email
           + ' and temporary password: '
           + random_password
           + ', please change password after login ' + config.get('app.url'),
    from:	'SPARK REM <' + config.get('smtp.username') + '>',
-   to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
+   to:		req.body.firstname + ' <' + req.body.email +'>',
    //cc:		"else <else@your-email.com>",
    subject:	'SPARK Property Manager App Account Creation',
    // attachment:
@@ -61,12 +61,12 @@ router.post('/', csrfProtection, function(req, res, next) {
         .query("INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)"
              + " VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5, $6, $7)",
             { bind: [
-                req.body['email'],
+                req.body.email,
                 random_password,
-                req.body['firstname'],
-                req.body['lastname'],
-                req.body['phone'],
-                req.body['is_manager'],
+                req.body.firstname,
+                req.body.lastname,
+                req.body.phone,
+                req.body.is_manager,
                 req.user.company_id
               ],
               type: models.sequelize.QueryTypes.INSERT
@@ -84,12 +84,12 @@ router.put('/:userId', csrfProtection, function(req, res, next) {
   var random_password = cryptoRandomString(5);
   var message	= {
    text:	'Your Account has been updated with your email: '
-          + req.body['email']
+          + req.body.email
           + ' and temporary password: '
           + random_password
           + ', please change password after login ' + config.get('app.url'),
    from:	'SPARK PM <' + config.get('smtp.username') + '>',
-   to:		req.body['firstname'] + ' <' + req.body['email'] +'>',
+   to:		req.body.firstname + ' <' + req.body.email +'>',
    //cc:		"else <else@your-email.com>",
    subject:	'SPARK Property Manager App Account Update',
    // attachment:
@@ -102,18 +102,18 @@ router.put('/:userId', csrfProtection, function(req, res, next) {
         .query("UPDATE login_user SET email=$1, password=crypt($2, gen_salt('bf')), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7",
           {
             bind: [
-              req.body['email'],
+              req.body.email,
               random_password,
-              req.body['firstname'],
-              req.body['lastname'],
-              req.body['phone'],
-              req.body['is_manager'],
+              req.body.firstname,
+              req.body.lastname,
+              req.body.phone,
+              req.body.is_manager,
               req.params.userId
             ],
             type: models.sequelize.QueryTypes.UPDATE
           })
     .then(function() {
-      log.info('send email to ' + req.body['email']);
+      log.info('send email to ' + req.body.email);
       email.send(message, function(err, message) { log.info(err || message); });
       res.send();
     });

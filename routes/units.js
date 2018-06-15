@@ -52,9 +52,9 @@ router.post('/', csrfProtection, function(req, res, next) {
            + ' VALUES ($1, $2, $3)',
             {
               bind: [
-                req.body['property_id'],
-                req.body['name'],
-                req.body['is_building']
+                req.body.property_id,
+                req.body.name,
+                req.body.is_building
               ],
               type: models.sequelize.QueryTypes.INSERT
             })
@@ -72,9 +72,9 @@ router.put('/:unitId', csrfProtection, function(req, res, next) {
              + ' WHERE id=$4',
              {
                bind: [
-                 req.body['property_id'],
-                 req.body['name'],
-                 req.body['is_building'],
+                 req.body.property_id,
+                 req.body.name,
+                 req.body.is_building,
                  req.params.unitId
                ],
                type: models.sequelize.QueryTypes.UPDATE

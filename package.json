@@ -1,10 +1,10 @@
 {
   "name": "spark-property-manager",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "start": "node ./bin/cluster.js"
   },
   "author": "Steve Park",

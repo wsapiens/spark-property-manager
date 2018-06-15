@@ -58,12 +58,12 @@ router.post('/', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Property.create({
-    type_id: req.body['type_id'],
-    address_street: req.body['address_street'],
-    address_city: req.body['address_city'],
-    address_state: req.body['address_state'],
-    address_zip: req.body['address_zip'],
-    index_number: req.body['index_number'],
+    type_id: req.body.type_id,
+    address_street: req.body.address_street,
+    address_city: req.body.address_city,
+    address_state: req.body.address_state,
+    address_zip: req.body.address_zip,
+    index_number: req.body.index_number,
     company_id:req.user.company_id
   }).then(property => {
     if(property.type_id !== 3) {
@@ -88,12 +88,12 @@ router.put('/:propertyId', csrfProtection, function(req, res, next) {
         .then(property => {
           if(property) {
             property.updateAttributes({
-              type_id: req.body['type_id'],
-              address_street: req.body['address_street'],
-              address_city: req.body['address_city'],
-              address_state: req.body['address_state'],
-              address_zip: req.body['address_zip'],
-              index_number: req.body['index_number']
+              type_id: req.body.type_id,
+              address_street: req.body.address_street,
+              address_city: req.body.address_city,
+              address_state: req.body.address_state,
+              address_zip: req.body.address_zip,
+              index_number: req.body.index_number
             });
           }
         });

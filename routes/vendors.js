@@ -38,11 +38,11 @@ router.post('/', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Vendor.create({
-    name: req.body['name'],
-    phone: req.body['phone'],
-    email: req.body['email'],
-    category: req.body['category'],
-    note: req.body['note'],
+    name: req.body.name,
+    phone: req.body.phone,
+    email: req.body.email,
+    category: req.body.category,
+    note: req.body.note,
     company_id: req.user.company_id
   }).then(vendor => {
     res.send(vendor);
@@ -58,11 +58,11 @@ router.put('/:vendorId', csrfProtection, function(req, res, next) {
         .then(vendor => {
           if(vendor) {
             vendor.updateAttributes({
-              name: req.body['name'],
-              phone: req.body['phone'],
-              email: req.body['email'],
-              category: req.body['category'],
-              note: req.body['note']
+              name: req.body.name,
+              phone: req.body.phone,
+              email: req.body.email,
+              category: req.body.category,
+              note: req.body.note
             });
           }
         });
