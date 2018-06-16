@@ -1,4 +1,5 @@
 const log = require('../log');
+const util = require('../util');
 const models = require('../models');
 const csv = require("fast-csv");
 // var fs = require('fs');
@@ -7,7 +8,7 @@ var router = express.Router();
 var multer = require('multer');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/')
+    cb(null, './uploads/');
   },
   filename: function (req, file, cb) {
     cb(null, req.user.company_id
@@ -18,7 +19,7 @@ var storage = multer.diskStorage({
               + '-'
               + file.originalname)
   }
-})
+});
 var upload = multer({ storage: storage });
 
 router.post('/receipt', upload.single('receipt'), function(req, res, next) {
@@ -64,7 +65,7 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                   model: models.PropertyUnit
               }]
             }).then(properties => {
-              defaultUnitId = properties[0]['PropertyUnits'][0]['id'];
+              defaultUnitId = properties[0].PropertyUnits[0].id;
 
               csv.fromPath(req.file.path)
                  .on("data", function(data){
@@ -74,21 +75,21 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                      // skip first row as header
                      return;
                    }
-                   var filter = data[importConfig['filter_column_number']];
-                   if(importConfig['filter_keyword'].includes(filter)) {
+                   var filter = data[importConfig.filter_column_number];
+                   if(importConfig.filter_keyword.includes(filter)) {
                      var expense_type_id = 9;
                      for(i = 0; i < expenseTypes.length; i++) {
-                       if(data[importConfig['category_column_number']].includes(expenseTypes[i]['name'])) {
-                         expense_type_id = expenseTypes[i]['id'];
+                       if(data[importConfig.category_column_number].includes(expenseTypes[i].name)) {
+                         expense_type_id = expenseTypes[i].id;
                        }
                      }
                      expenses.push({
                        unit_id: defaultUnitId,
-                       pay_to: data[importConfig['pay_to_column_number']],
+                       pay_to: data[importConfig.pay_to_column_number],
                        type_id: expense_type_id,
-                       description: (0 > parseFloat(data[importConfig['amount_column_number']])) ? data[importConfig['description_column_number']] : data[importConfig['description_column_number']] + '<mark>[Return]</mark>',
-                       amount: -1.0 * (parseFloat(data[importConfig['amount_column_number']])),
-                       pay_time: new Date(data[importConfig['date_column_number']]),
+                       description: util.getImportDescription(data[importConfig.description_column_number], data[importConfig.filter_column_number]),
+                       amount: util.getImportAmount(parseFloat(data[importConfig.amount_column_number]), data[importConfig.filter_column_number]),
+                       pay_time: new Date(data[importConfig.date_column_number]),
                        file: ''
                      });
                    }

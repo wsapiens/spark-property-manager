@@ -3,7 +3,7 @@
 /**
  * Module dependencies.
  */
-var fs = require('fs')
+var fs = require('fs');
 var config = require('../config');
 var app = require('../app');
 var debug = require('debug')('spark-property-manager:server');
