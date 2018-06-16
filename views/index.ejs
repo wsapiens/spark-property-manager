@@ -8,76 +8,91 @@
     <% include header %>
     <div class="container">
       <script>
-      var chartByType;
-      var chartByUnit;
-      var chartByMonth;
-
       function expenseByType() {
-        $.get("/expenses/types", function(data, status){
-          var ctx = document.getElementById('chartByType').getContext('2d');
-          chartByType = new Chart(ctx,{
-            type: 'doughnut',
-            data: data,
-            options: {
-              title: {
-                 display: true,
-                 text: 'Expense By Type'
+        var startDate = $('#start-date').datepicker("getDate");
+        var endDate = $('#end-date').datepicker("getDate");
+        $.get("/expenses/types?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            var ctx = document.getElementById('chartByType').getContext('2d');
+            window.chartByType = new Chart(ctx,{
+              type: 'doughnut',
+              data: data,
+              options: {
+                title: {
+                   display: true,
+                   text: 'Expense By Type'
+                },
+                legend: {
+                  display: true,
+                }
               }
-            }
-          });
+            });
         });
       }
 
       function expenseByUnit() {
-        $.get("/expenses/units", function(data, status){
-          var ctx = document.getElementById('chartByUnit').getContext('2d');
-          chartByUnit = new Chart(ctx,{
-            type: 'doughnut',
-            data: data,
-            options: {
-              title: {
-                 display: true,
-                 text: 'Expense By Unit'
+        var startDate = $('#start-date').datepicker("getDate");
+        var endDate = $('#end-date').datepicker("getDate");
+        $.get("/expenses/units?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            var ctx = document.getElementById('chartByUnit').getContext('2d');
+            window.chartByUnit = new Chart(ctx,{
+              type: 'doughnut',
+              data: data,
+              options: {
+                title: {
+                   display: true,
+                   text: 'Expense By Unit'
+                }
               }
-            }
-          });
+            });
         });
       }
 
       function expenseByTime() {
-        $.get("/expenses/times", function(data, status){
-          var ctx = document.getElementById('chartByTime').getContext('2d');
-          chartByMonth = new Chart(ctx,{
-            type: 'bar',
-            data: data,
-            options: {
-              title: {
-                 display: true,
-                 text: 'Expense By Month'
+        var startDate = $('#start-date').datepicker("getDate");
+        var endDate = $('#end-date').datepicker("getDate");
+        $.get("/expenses/times?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            var ctx = document.getElementById('chartByTime').getContext('2d');
+            window.chartByMonth = new Chart(ctx,{
+              type: 'bar',
+              data: data,
+              options: {
+                title: {
+                   display: true,
+                   text: 'Expense By Month'
+                }
               }
-            }
-          });
+            });
         });
       }
 
       $(document).ready(function(){
-        // $('#start-date' ).datepicker({
-        //   onSelect: function (date, instance) {
-        //   }
-        // });
-        //
-        // $('#end-date' ).datepicker({
-        //   onSelect: function (date, instance) {
-        //   }
-        // });
-        //
-        // $( "#start-date" ).datepicker( "setDate", new Date(new Date().getFullYear(), 0, 1));
-        // $( "#end-date" ).datepicker( "setDate", new Date());
+        $('#start-date' ).datepicker({
+          onSelect: function (date, instance) {
+          }
+        });
 
+        $('#end-date' ).datepicker({
+          onSelect: function (date, instance) {
+          }
+        });
+
+        $( "#start-date" ).datepicker( "setDate", new Date(new Date().getFullYear(), 0, 1));
+        $( "#end-date" ).datepicker( "setDate", new Date());
         expenseByType();
         expenseByUnit();
         expenseByTime();
-
+      });
+      $(document).on('click', '#draw-button', function() {
+        expenseByType();
+        expenseByUnit();
+        expenseByTime();
+        $("html, body").animate({ scrollTop: 0 }, "slow");
       });
       </script>
       <h1>Dashboard</h1>
@@ -88,14 +103,14 @@
       <br><br><br><br>
       <canvas id="chartByTime" width="50" height="50"></canvas>
       <br><br><br><br>
-      <!-- <h3>Draw Expense Charts Between Dates</h3>
+      <h3>Draw Expense Charts Between Dates</h3>
       <label for="start-date">Start Date:</label>
       <input type="text" data-role="date" id="start-date">
       <label for="end-date">End Date:</label>
       <input type="text" data-role="date" id="end-date">
       <form>
-        <input type="button" data-inline="true" id="submit-button" value="Draw">
-      </form> -->
+        <input type="button" data-inline="true" id="draw-button" value="Draw">
+      </form>
       <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
       <input type="button" value="Import Manager" onclick="window.location.href='/manager/import'" />

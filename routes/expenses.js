@@ -20,8 +20,7 @@ router.get('/', function(req, res, next) {
                bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
              }
-        )
-        .then(expenses => {
+        ).then(expenses => {
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({"data": expenses}));
         });
@@ -37,20 +36,19 @@ router.get('/types', function(req, res, next) {
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id  '
-             + 'WHERE p.company_id = $1 '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
              + 'GROUP BY pay_type',
              {
-               bind: [ req.user.company_id ],
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
                type: models.sequelize.QueryTypes.SELECT
              }
-        )
-        .then(expenses => {
+        ).then(expenses => {
           var data = [];
           var label = [];
           var color = [];
           expenses.forEach(function(expense){
-            label.push(expense['pay_type']);
-            data.push(expense['sum']);
+            label.push(expense.pay_type);
+            data.push(expense.sum);
             color.push("rgb("
                       + Math.floor(Math.random() * 255)
                       + ","
@@ -59,7 +57,7 @@ router.get('/types', function(req, res, next) {
                       + Math.floor(Math.random() * 255)
                       + ")"
                       );
-          })
+          });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
         });
@@ -87,8 +85,8 @@ router.get('/properties', function(req, res, next) {
           var label = [];
           var color = [];
           expenses.forEach(function(expense){
-            label.push(expense['address_street']);
-            data.push(expense['sum']);
+            label.push(expense.address_street);
+            data.push(expense.sum);
             color.push("rgb("
                       + Math.floor(Math.random() * 255)
                       + ","
@@ -97,7 +95,7 @@ router.get('/properties', function(req, res, next) {
                       + Math.floor(Math.random() * 255)
                       + ")"
                       );
-          })
+          });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
         });
@@ -113,20 +111,19 @@ router.get('/units', function(req, res, next) {
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
-             + 'WHERE p.company_id = $1 '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
              + 'GROUP BY p.id, u.id',
              {
-               bind: [ req.user.company_id ],
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
                type: models.sequelize.QueryTypes.SELECT
              }
-        )
-        .then(expenses => {
+        ).then(expenses => {
           var data = [];
           var label = [];
           var color = [];
           expenses.forEach(function(expense){
-            label.push(expense['address_street']+", "+expense['name']);
-            data.push(expense['sum']);
+            label.push(expense.address_street+", "+expense.name);
+            data.push(expense.sum);
             color.push("rgb("
                       + Math.floor(Math.random() * 255)
                       + ","
@@ -135,7 +132,7 @@ router.get('/units', function(req, res, next) {
                       + Math.floor(Math.random() * 255)
                       + ")"
                       );
-          })
+          });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
         });
@@ -151,11 +148,11 @@ router.get('/times', function(req, res, next) {
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
-             + 'WHERE p.company_id = $1 '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
              + 'GROUP BY time '
              + 'ORDER BY time ',
              {
-               bind: [ req.user.company_id ],
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
                type: models.sequelize.QueryTypes.SELECT
              }
         )
@@ -164,8 +161,8 @@ router.get('/times', function(req, res, next) {
           var label = [];
           var color = [];
           expenses.forEach(function(expense){
-            label.push(expense['time']);
-            data.push(expense['sum']);
+            label.push(expense.time);
+            data.push(expense.sum);
             color.push("rgb("
                       + Math.floor(Math.random() * 255)
                       + ","
@@ -197,13 +194,13 @@ router.post('/', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Expense.create({
-    unit_id: req.body['unit_id'],
-    pay_to: req.body['pay_to'],
-    description: req.body['description'],
-    type_id: req.body['type_id'],
-    amount: req.body['amount'],
+    unit_id: req.body.unit_id,
+    pay_to: req.body.pay_to,
+    description: req.body.description,
+    type_id: req.body.type_id,
+    amount: req.body.amount,
     pay_time: new Date(),
-    file: req.body['file'],
+    file: req.body.file,
   }).then(expense => {
     res.send(expense);
   });
