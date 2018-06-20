@@ -25,4 +25,10 @@ describe('util', function() {
       assert.equal(util.getImportDescription('description', 'Sale'), 'description');
     });
   });
+
+  describe('getRandomRGB()', function() {
+    it('get RGB string', function() {
+      assert(util.getRandomRGB().match('[rgb(]{1}[0-9]+[,]{1}[0-9]+[,]{1}[0-9]+[)]{1}'), 'it should be rgb([number],[number],[number])');
+    });
+  });
 });

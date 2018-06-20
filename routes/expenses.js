@@ -1,5 +1,6 @@
 const log = require('../log');
 const models = require('../models');
+const util = require('../util');
 var express = require('express');
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
@@ -49,14 +50,7 @@ router.get('/types', function(req, res, next) {
           expenses.forEach(function(expense){
             label.push(expense.pay_type);
             data.push(expense.sum);
-            color.push("rgb("
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ")"
-                      );
+            color.push(util.getRandomRGB());
           });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
@@ -87,14 +81,7 @@ router.get('/properties', function(req, res, next) {
           expenses.forEach(function(expense){
             label.push(expense.address_street);
             data.push(expense.sum);
-            color.push("rgb("
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ")"
-                      );
+            color.push(util.getRandomRGB());
           });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
@@ -124,14 +111,7 @@ router.get('/units', function(req, res, next) {
           expenses.forEach(function(expense){
             label.push(expense.address_street+", "+expense.name);
             data.push(expense.sum);
-            color.push("rgb("
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ")"
-                      );
+            color.push(util.getRandomRGB());
           });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
@@ -163,15 +143,8 @@ router.get('/times', function(req, res, next) {
           expenses.forEach(function(expense){
             label.push(expense.time);
             data.push(expense.sum);
-            color.push("rgb("
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ","
-                      + Math.floor(Math.random() * 255)
-                      + ")"
-                      );
-          })
+            color.push(util.getRandomRGB());
+          });
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
         });
@@ -215,13 +188,13 @@ router.put('/:expenseId', csrfProtection, function(req, res, next) {
         .then(expense => {
           if(expense) {
             expense.updateAttributes({
-              unit_id: req.body['unit_id'],
-              pay_to: req.body['pay_to'],
-              type_id: req.body['type_id'],
-              description: req.body['description'],
-              amount: req.body['amount'],
-              pay_time: req.body['pay_time'],
-              file: req.body['file'],
+              unit_id: req.body.unit_id,
+              pay_to: req.body.pay_to,
+              type_id: req.body.type_id,
+              description: req.body.description,
+              amount: req.body.amount,
+              pay_time: req.body.pay_time,
+              file: req.body.file,
             });
           }
         });

@@ -19,3 +19,10 @@ function getImportDescription(description, filter) {
   }
   return description;
 };
+
+module.exports.getRandomRGB =
+function getRandomRGB() {
+  return ["rgb(" + Math.floor(Math.random() * 255),
+            Math.floor(Math.random() * 255),
+            Math.floor(Math.random() * 255) + ")"].join(",");
+};
