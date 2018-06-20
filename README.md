@@ -77,20 +77,19 @@ $ node_modules/.bin/sequelize db:migrate
 $ node_modules/.bin/sequelize db:seed:all
 ```
 
-
 if sequelize db migration doesn't work, then load up from schema.sql
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
+```
+## Generate self-signed cert and key to run on https
+```bash
+$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
 ```
 
 ## Copy app.properties.TEMPLATE to app.properties and update app.properties accordingly to your environment
 ```bash
 $ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
-```
-* Generate self-signed cert and key to run on https
-```bash
-$ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
 ```
 
 * app.properties
@@ -127,12 +126,79 @@ port = 465
 ssl = true
 tls = false
 ```
-If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app
-```url = http://your.domain.com:8080```
+If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
-## Run application
+## Run Application
 ```bash
 $ npm start
+```
+
+## Run Application by using Process Manager PM2
+PM2 is provide production level process management
+[pm2 install guide](https://www.npmjs.com/package/pm2)
+
+* install pm2
+```bash
+$ npm install pm2 -g
+```
+
+* run application by pm2
+```bash
+$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8
+[PM2] Starting /Users/spark/workspace3/spark-property-manager/bin/server.js in cluster_mode (8 instances)
+[PM2] Done.
+┌────────────────────────┬────┬─────────┬───────┬────────┬─────────┬────────┬──────┬───────────┬───────┬──────────┐
+│ App name               │ id │ mode    │ pid   │ status │ restart │ uptime │ cpu  │ mem       │ user  │ watching │
+├────────────────────────┼────┼─────────┼───────┼────────┼─────────┼────────┼──────┼───────────┼───────┼──────────┤
+│ spark-property-manager │ 0  │ cluster │ 35491 │ online │ 0       │ 2s     │ 0%   │ 83.1 MB   │ spark │ disabled │
+│ spark-property-manager │ 1  │ cluster │ 35494 │ online │ 0       │ 2s     │ 1%   │ 83.5 MB   │ spark │ disabled │
+│ spark-property-manager │ 2  │ cluster │ 35511 │ online │ 0       │ 2s     │ 3%   │ 83.6 MB   │ spark │ disabled │
+│ spark-property-manager │ 3  │ cluster │ 35528 │ online │ 0       │ 1s     │ 13%  │ 83.5 MB   │ spark │ disabled │
+│ spark-property-manager │ 4  │ cluster │ 35547 │ online │ 0       │ 1s     │ 55%  │ 82.1 MB   │ spark │ disabled │
+│ spark-property-manager │ 5  │ cluster │ 35564 │ online │ 0       │ 1s     │ 104% │ 75.2 MB   │ spark │ disabled │
+│ spark-property-manager │ 6  │ cluster │ 35581 │ online │ 0       │ 0s     │ 95%  │ 54.8 MB   │ spark │ disabled │
+│ spark-property-manager │ 7  │ cluster │ 35602 │ online │ 0       │ 0s     │ 77%  │ 35.8 MB   │ spark │ disabled │
+└────────────────────────┴────┴─────────┴───────┴────────┴─────────┴────────┴──────┴───────────┴───────┴──────────┘
+ Use `pm2 show <id|name>` to get more details about an app
+
+$ pm2 stop spark-property-manager
+[PM2] Applying action stopProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
+[PM2] [spark-property-manager](0) ✓
+[PM2] [spark-property-manager](1) ✓
+[PM2] [spark-property-manager](2) ✓
+[PM2] [spark-property-manager](3) ✓
+[PM2] [spark-property-manager](4) ✓
+[PM2] [spark-property-manager](5) ✓
+[PM2] [spark-property-manager](6) ✓
+[PM2] [spark-property-manager](7) ✓
+┌────────────────────────┬────┬─────────┬─────┬─────────┬─────────┬────────┬─────┬────────┬───────┬──────────┐
+│ App name               │ id │ mode    │ pid │ status  │ restart │ uptime │ cpu │ mem    │ user  │ watching │
+├────────────────────────┼────┼─────────┼─────┼─────────┼─────────┼────────┼─────┼────────┼───────┼──────────┤
+│ spark-property-manager │ 0  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 1  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 2  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 3  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 4  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 5  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 6  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+│ spark-property-manager │ 7  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
+└────────────────────────┴────┴─────────┴─────┴─────────┴─────────┴────────┴─────┴────────┴───────┴──────────┘
+ Use `pm2 show <id|name>` to get more details about an app
+
+$ pm2 delete spark-property-manager
+[PM2] Applying action deleteProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
+[PM2] [spark-property-manager](0) ✓
+[PM2] [spark-property-manager](1) ✓
+[PM2] [spark-property-manager](2) ✓
+[PM2] [spark-property-manager](3) ✓
+[PM2] [spark-property-manager](4) ✓
+[PM2] [spark-property-manager](5) ✓
+[PM2] [spark-property-manager](6) ✓
+[PM2] [spark-property-manager](7) ✓
+┌──────────┬────┬──────┬─────┬────────┬─────────┬────────┬─────┬─────┬──────┬──────────┐
+│ App name │ id │ mode │ pid │ status │ restart │ uptime │ cpu │ mem │ user │ watching │
+└──────────┴────┴──────┴─────┴────────┴─────────┴────────┴─────┴─────┴──────┴──────────┘
+Use `pm2 show <id|name>` to get more details about an app
 ```
 
 ## Open by Browser
