@@ -17,7 +17,7 @@ var storage = multer.diskStorage({
               + '-'
               + Date.now()
               + '-'
-              + file.originalname)
+              + file.originalname);
   }
 });
 var upload = multer({ storage: storage });

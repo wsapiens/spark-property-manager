@@ -1,4 +1,4 @@
-const config = require('../config')
+const config = require('../config');
 const email 	= require("../node_modules/emailjs/email");
 const server 	= email.server.connect({
    user: config.get('smtp.username'),

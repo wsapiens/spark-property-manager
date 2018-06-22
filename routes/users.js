@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
   }).then(users => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify({"data": users}));
-  })
+  });
 });
 
 router.get('/:userId', function(req, res, next) {
@@ -33,7 +33,7 @@ router.get('/:userId', function(req, res, next) {
   }).then(user => {
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(user));
-  })
+  });
 });
 
 router.post('/', csrfProtection, function(req, res, next) {
@@ -75,7 +75,7 @@ router.post('/', csrfProtection, function(req, res, next) {
       email.send(message, function(err, message) { log.info(err || message); });
       res.send();
     });
-})
+});
 
 router.put('/:userId', csrfProtection, function(req, res, next) {
   if(!req.isAuthenticated()) {

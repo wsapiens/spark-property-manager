@@ -128,6 +128,15 @@ tls = false
 ```
 If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
+## Static code analysis by jshint and grunt
+```bash
+$ grunt
+Running "jshint:files" (jshint) task
+>> 46 files lint free.
+
+Done.
+```
+
 ## Run Application
 ```bash
 $ npm start
@@ -160,7 +169,10 @@ $ pm2 start ./bin/server.js --name "spark-property-manager" -i 8
 │ spark-property-manager │ 7  │ cluster │ 35602 │ online │ 0       │ 0s     │ 77%  │ 35.8 MB   │ spark │ disabled │
 └────────────────────────┴────┴─────────┴───────┴────────┴─────────┴────────┴──────┴───────────┴───────┴──────────┘
  Use `pm2 show <id|name>` to get more details about an app
+```
 
+* stop application by pm2
+```bash
 $ pm2 stop spark-property-manager
 [PM2] Applying action stopProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
 [PM2] [spark-property-manager](0) ✓
@@ -184,7 +196,10 @@ $ pm2 stop spark-property-manager
 │ spark-property-manager │ 7  │ cluster │ 0   │ stopped │ 0       │ 0      │ 0%  │ 0 B    │ spark │ disabled │
 └────────────────────────┴────┴─────────┴─────┴─────────┴─────────┴────────┴─────┴────────┴───────┴──────────┘
  Use `pm2 show <id|name>` to get more details about an app
+```
 
+* remote application from pm2
+```bash
 $ pm2 delete spark-property-manager
 [PM2] Applying action deleteProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
 [PM2] [spark-property-manager](0) ✓
