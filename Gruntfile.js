@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-
+  // Jshint options - http://jshint.com/docs/options/
   grunt.initConfig({
     jshint: {
       files: ['Gruntfile.js',
