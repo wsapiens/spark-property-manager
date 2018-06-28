@@ -130,6 +130,7 @@ If you setup this on cloud environment with domain (Named IP Address), please up
 
 ## Static code analysis by jshint and grunt
 ```bash
+$ npm i -g grunt-cli
 $ grunt
 Running "jshint:files" (jshint) task
 >> 46 files lint free.
@@ -198,7 +199,7 @@ $ pm2 stop spark-property-manager
  Use `pm2 show <id|name>` to get more details about an app
 ```
 
-* remote application from pm2
+* remove application from pm2
 ```bash
 $ pm2 delete spark-property-manager
 [PM2] Applying action deleteProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
