@@ -2,6 +2,7 @@ const log = require('../log');
 const email = require('../email');
 const models = require('../models');
 const config = require('../config');
+const pjson = require('../package.json');
 const cryptoRandomString = require('crypto-random-string');
 var express = require('express');
 var passport = require('passport');
@@ -12,7 +13,11 @@ router.get('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: req.flash('errorMessage') });
   }
-  res.render('index', { manager: req.user.is_manager, message: ''});
+  res.render('index', {
+    manager: req.user.is_manager,
+    version: pjson.version,
+    message: ''
+  });
 });
 
 router.get('/login', function(req, res, next) {

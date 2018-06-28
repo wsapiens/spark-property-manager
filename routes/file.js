@@ -78,7 +78,7 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                    var filter = data[importConfig.filter_column_number];
                    if(importConfig.filter_keyword.includes(filter)) {
                      var expense_type_id = 9;
-                     for(i = 0; i < expenseTypes.length; i++) {
+                     for(let i = 0; i < expenseTypes.length; i++) {
                        if(data[importConfig.category_column_number].includes(expenseTypes[i].name)) {
                          expense_type_id = expenseTypes[i].id;
                        }

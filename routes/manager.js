@@ -1,4 +1,5 @@
 const log = require('../log');
+const pjson = require('../package.json');
 var express = require('express');
 var csrf = require('csurf');
 var csrfProtection = csrf({ cookie: true });
@@ -12,6 +13,7 @@ router.get('/expense', csrfProtection, function(req, res, next) {
   res.render('expense', {
     title: 'Expense Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -25,6 +27,7 @@ router.get('/import', csrfProtection, function(req, res, next) {
     message: '',
     error_message: '',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -36,6 +39,7 @@ router.get('/property', csrfProtection, function(req, res, next) {
   res.render('property', {
     title: 'Property Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
  });
 });
@@ -47,6 +51,7 @@ router.get('/unit', csrfProtection, function(req, res, next) {
   res.render('unit', {
     title: 'Unit Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -58,6 +63,7 @@ router.get('/user', csrfProtection, function(req, res, next) {
   res.render('user', {
     title: 'User Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -69,6 +75,7 @@ router.get('/tenant', csrfProtection, function(req, res, next) {
   res.render('tenant', {
     title: 'Tenant Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -80,6 +87,7 @@ router.get('/work', csrfProtection, function(req, res, next) {
   res.render('work', {
     title: 'Work Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
@@ -91,6 +99,7 @@ router.get('/vendor', csrfProtection, function(req, res, next) {
   res.render('vendor', {
     title: 'Vendor Manager',
     manager: req.user.is_manager,
+    version: pjson.version,
     csrfToken: req.csrfToken()
   });
 });
