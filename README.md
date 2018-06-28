@@ -237,3 +237,15 @@ https://github.com/wsapiens/spark-property-manager/blob/master/doc/login.png
 
 [password_change]:
 https://github.com/wsapiens/spark-property-manager/blob/master/doc/password_change.png
+
+## How to record expense
+* Add Property from Property Manager View. Building unit will be added automatically as default unit
+
+* Add or modify Unit for the added Property from Unit Manager View
+
+* Add Expense with selecting Unit / Property and Expense Type, you can also upload photo copy of the receipt
+  On the mobile, user will be prompted to take picture or choose photo in device.
+
+* For importing, bank / credit card statement, it needs to be flat file (.csv) format
+  Each bank and credit card company has different formation, so need to define column number for data type/kind first.
+  Once setup import column configuration on Import Manager view, load up .csv file to populate expenses
