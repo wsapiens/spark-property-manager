@@ -1,23 +1,24 @@
 var table;
 var tenantId;
+var rows_selected;
 $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $.get("/properties", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#property-select').append('<option>Select Property</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      console.log(value['address_street']);
-      $('#property-select').append('<option value=' + value['id'] + '>'
-                                  + value['address_street'] + ', '
-                                  + value['address_city'] + ','
-                                  + value['address_state']
-                                  + value['address_zip']
+      console.log(value.id);
+      console.log(value.address_street);
+      $('#property-select').append('<option value=' + value.id + '>'
+                                  + value.address_street + ', '
+                                  + value.address_city + ','
+                                  + value.address_state
+                                  + value.ddress_zip
                                   + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#property-select option:first').attr("selected",true);
     }
       //$('#property-select').val($('#property-select option:first').val());
@@ -28,10 +29,10 @@ $(document).ready(function(){
     $('#unit-select').append('<option>Select Unit</option>');
     if($(this).val() !== 'Select Property') {
       $.get("/properties/" + $(this).val() + "/units", function(data, status){
-        $.each(data['data'][0]['PropertyUnits'], function(key, value){
-          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        $.each(data.data[0].PropertyUnits, function(key, value){
+          $('#unit-select').append('<option value=' + value.id + '>' + value.name + '</option>');
         });
-        if(data['data'] && data['data'].length === 0) {
+        if(data.data && data.data.length === 0) {
           $('#unit-select').val($('#unit-select option:first').val()).change();
         }
       });
@@ -120,7 +121,6 @@ $(document).ready(function(){
               $('#lease-start-date').datepicker('setDate', null);
               $('#lease-end-date').datepicker('setDate', null);
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
-              receiptFile = '';
             },
             400: function(response) {
               resultPopup(response);
@@ -135,7 +135,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Property Unit, Firstname, LeaseStartDate and LeaseEndDate are required!')
+      alert('Property Unit, Firstname, LeaseStartDate and LeaseEndDate are required!');
     }
   });
 
@@ -156,7 +156,7 @@ $(document).ready(function(){
                   width: '10%',
                   className: 'dt-body-center',
                   render: function (PropertyUnit) {
-                            return PropertyUnit['Property']['address_street'] + ' ' + PropertyUnit['name'];
+                            return PropertyUnit.Property.address_street + ' ' + PropertyUnit.name;
                           }
                  },
                 { data: 'firstname', className: 'dt-body-center' },
@@ -255,7 +255,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/tenants/"+value['id'],
+        url:"/tenants/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -283,23 +283,23 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/tenants/"+rows_selected[0]['id'], function(data, status){
+    $.get("/tenants/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $.get("/units/"+data['unit_id'], function(udata, ustatus){
+        $.get("/units/"+data.unit_id, function(udata, ustatus){
           if("success" === ustatus) {
-            $('#property-select').val(udata['property_id']).change();
-            $('#firstname-text').val(data['firstname']);
-            $('#lastname-text').val(data['lastname']);
-            $('#phone-text').val(data['phone']);
-            $('#email-text').val(data['email']);
-            var startDate = data['lease_start'].split('T')[0].split('-');
+            $('#property-select').val(udata.property_id).change();
+            $('#firstname-text').val(data.firstname);
+            $('#lastname-text').val(data.lastname);
+            $('#phone-text').val(data.phone);
+            $('#email-text').val(data.email);
+            var startDate = data.lease_start.split('T')[0].split('-');
             $('#lease-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
-            var endDate = data['lease_end'].split('T')[0].split('-');
+            var endDate = data.lease_end.split('T')[0].split('-');
             $('#lease-end-date').datepicker('setDate', new Date(endDate[0], endDate[1]-1, endDate[2]));
-            tenantId = rows_selected[0]['id'];
+            tenantId = rows_selected[0].id;
             window.setTimeout(function(){
-              console.log(">>>>>" + data['unit_id']);
-              $('#unit-select').val(data['unit_id']).change();
+              console.log(">>>>>" + data.unit_id);
+              $('#unit-select').val(data.unit_id).change();
             }, 500);
           }
         });
