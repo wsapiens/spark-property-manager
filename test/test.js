@@ -27,8 +27,8 @@ describe('util', function() {
   });
 
   describe('getRandomRGB()', function() {
-    it('get RGB string', function() {
-      assert(util.getRandomRGB().match('[rgb(]{1}[0-9]+[,]{1}[0-9]+[,]{1}[0-9]+[)]{1}'), 'it should be rgb([number],[number],[number])');
+    it('get RGB number list', function() {
+      assert(util.getRandomRGB().join(",").match('[0-9]+[,]{1}[0-9]+[,]{1}[0-9]+'), 'it should be [number],[number],[number]');
     });
   });
 });

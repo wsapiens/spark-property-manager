@@ -65,6 +65,46 @@
                 title: {
                    display: true,
                    text: 'Expense By Month'
+                },
+                scales: {
+                  xAxes: [
+                    {
+                      stacked: true,
+                    }
+                  ],
+                  yAxes: [
+                    {
+                      stacked: true,
+                      display: true,
+                      type: 'linear',
+                      ticks: {
+                        beginAtZero: true
+                      }
+                    },
+                    {
+                      id: 'logarithmic',
+                      stacked: false,
+                      display: true,
+                      type: 'logarithmic',
+                      gridLines: {
+                        color: 'rgba(54, 162, 235, 0.5)'
+                      },
+                      ticks: {
+                        autoSkip: true,
+                        // min: 0,
+                        beginAtZero: true,
+                        callback: function (value, index, values) {
+                            if( value==100
+                              || value==1000
+                              || value==10000
+                              || value==100000
+                              || value==1000000) {
+                                return value ;
+                            }
+                        }
+                      }
+                    }
+                  ]
                 }
               }
             });

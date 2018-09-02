@@ -20,8 +20,9 @@ module.exports = {
   },
 
   getRandomRGB: function getRandomRGB() {
-    return ["rgb(" + Math.floor(Math.random() * 255),
-              Math.floor(Math.random() * 255),
-              Math.floor(Math.random() * 255) + ")"].join(",");
+    return [ Math.floor(Math.random() * 255).toString(),
+             Math.floor(Math.random() * 255).toString(),
+             Math.floor(Math.random() * 255).toString()
+            ];
   }
 };

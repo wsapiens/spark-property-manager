@@ -47,13 +47,27 @@ router.get('/types', function(req, res, next) {
           var data = [];
           var label = [];
           var color = [];
+          var bcolor = [];
           expenses.forEach(function(expense){
             label.push(expense.pay_type);
             data.push(expense.sum);
-            color.push(util.getRandomRGB());
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
           });
           res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                data: data,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              }
+            ],
+            labels: label
+          }));
         });
 });
 
@@ -78,13 +92,27 @@ router.get('/properties', function(req, res, next) {
           var data = [];
           var label = [];
           var color = [];
+          var bcolor = [];
           expenses.forEach(function(expense){
             label.push(expense.address_street);
             data.push(expense.sum);
-            color.push(util.getRandomRGB());
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
           });
           res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                data: data,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              }
+            ],
+            labels: label
+          }));
         });
 });
 
@@ -108,13 +136,27 @@ router.get('/units', function(req, res, next) {
           var data = [];
           var label = [];
           var color = [];
+          var bcolor = [];
           expenses.forEach(function(expense){
             label.push(expense.address_street+", "+expense.name);
             data.push(expense.sum);
-            color.push(util.getRandomRGB());
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
           });
           res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                data: data,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              }
+            ],
+            labels: label
+          }));
         });
 });
 
@@ -137,16 +179,44 @@ router.get('/times', function(req, res, next) {
              }
         )
         .then(expenses => {
+          var sum = 0.0;
           var data = [];
+          var accumulate = [];
           var label = [];
           var color = [];
+          var bcolor = [];
           expenses.forEach(function(expense){
             label.push(expense.time);
             data.push(expense.sum);
-            color.push(util.getRandomRGB());
+            sum += parseFloat(expense.sum);
+            accumulate.push(sum.toFixed(2));
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
           });
           res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({datasets: [{data: data, backgroundColor: color}], labels: label}));
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                label: 'Each Month',
+                data: data,
+                fill: false,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              },
+              {
+                label: 'Accumulated',
+                data: accumulate,
+                type: 'line',
+                fill: false,
+                yAxisID: 'logarithmic',
+                borderColor: 'rgb(54, 162, 235)'
+              }
+            ],
+            labels: label
+          }));
         });
 });
 
