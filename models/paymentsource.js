@@ -1,25 +1,17 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Expense = sequelize.define('Expense', {
-    pay_to: DataTypes.STRING,
+  var PaymentSource = sequelize.define('PaymentSource', {
+    account_number: DataTypes.STRING,
     description: DataTypes.TEXT,
-    amount: DataTypes.DECIMAL(10, 2),
-    pay_time: DataTypes.DATE,
-    file: DataTypes.TEXT,
-    unit_id: {
-      type: DataTypes.INTEGER,
-      references: 'property_unit', // <<< Note, its table's name, not object name
-      referencesKey: 'id' // <<< Note, its a column name
-    },
     type_id: {
       type: DataTypes.INTEGER,
-      references: 'expense_type', // <<< Note, its table's name, not object name
+      references: 'payment_type', // <<< Note, its table's name, not object name
       referencesKey: 'id' // <<< Note, its a column name
     },
-    source_id: {
+    company_id: {
       type: DataTypes.INTEGER,
-      references: 'payment_source',
-      referencesKey: 'id'
+      references: 'company', // <<< Note, its table's name, not object name
+      referencesKey: 'id' // <<< Note, its a column name
     }
   },
   {
@@ -32,28 +24,24 @@ module.exports = (sequelize, DataTypes) => {
     // transform all passed model names (first parameter of define) into plural.
     // if you don't want that, set the following
     freezeTableName: true,
-    tableName: 'expense'
+    tableName: 'payment_source'
   });
 
-  Expense.associate = function (models) {
-    models.Expense.belongsTo(models.PropertyUnit, {
-      onDelete: 'CASCADE',
-      foreignKey: 'unit_id',
-      targetKey: 'id'
-    });
-
-    models.Expense.belongsTo(models.ExpenseType, {
+  PaymentSource.associate = function (models) {
+    models.PaymentSource.belongsTo(models.PaymentType, {
       onDelete: 'CASCADE',
       foreignKey: 'type_id',
       targetKey: 'id'
     });
 
-    models.Expense.belongsTo(models.PaymentSource, {
+    models.Property.belongsTo(models.Company, {
       onDelete: 'CASCADE',
-      foreignKey: 'source_id',
+      foreignKey: 'company_id',
       targetKey: 'id'
     });
+
+    models.PaymentSource.hasMany(models.Expense, { foreignKey: 'source_id' });
   };
 
-  return Expense;
+  return PaymentSource;
 };

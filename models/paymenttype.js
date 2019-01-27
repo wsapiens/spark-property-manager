@@ -1,8 +1,7 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var Company = sequelize.define('Company', {
-    name: DataTypes.STRING,
-    phone: DataTypes.STRING
+  var PaymentType = sequelize.define('PaymentType', {
+    name: { type: DataTypes.STRING, allowNull: false }
   },
   {
     // don't add the timestamp attributes (updatedAt, createdAt)
@@ -14,15 +13,12 @@ module.exports = (sequelize, DataTypes) => {
     // transform all passed model names (first parameter of define) into plural.
     // if you don't want that, set the following
     freezeTableName: true,
-    tableName: 'company'
+    tableName: 'payment_type'
   });
 
-  Company.associate = function(models) {
-    models.Company.hasMany(models.Property, { foreignKey: 'company_id' });
-    models.Company.hasMany(models.User, { foreignKey: 'company_id' });
-    models.Company.hasMany(models.Tenant, { foreignKey: 'company_id' });
-    models.Company.hasMany(models.PaymentSource, { foreignKey: 'company_id' });
+  PaymentType.associate = function(models) {
+    models.PaymentType.hasMany(models.PaymentSource, { foreignKey: 'type_id' });
   };
 
-  return Company;
+  return PaymentType;
 };
