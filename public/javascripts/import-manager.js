@@ -102,7 +102,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('FilterColumnNumber, FilterKeyword, AmoutColumnNumber and PayToColumnNumber are required!')
+      alert('FilterColumnNumber, FilterKeyword, AmoutColumnNumber and PayToColumnNumber are required!');
     }
   });
 
@@ -251,7 +251,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/import/configs/"+value['id'],
+        url:"/import/configs/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -279,17 +279,17 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/import/configs/"+rows_selected[0]['id'], function(data, status){
+    $.get("/import/configs/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $('#filter-column-number').val(data['filter_column_number']);
-        $('#filter-keyword-text').val(data['filter_keyword']);
-        $('#date-column-number').val(data['date_column_number']);
-        $('#date-format-text').val(data['date_format']);
-        $('#pay-to-column-number').val(data['pay_to_column_number']);
-        $('#amount-column-number').val(data['amount_column_number']);
-        $('#category-column-number').val(data['category_column_number']);
-        $('#description-column-number').val(data['description_column_number']);
-        configId = rows_selected[0]['id'];
+        $('#filter-column-number').val(data.filter_column_number);
+        $('#filter-keyword-text').val(data.filter_keyword);
+        $('#date-column-number').val(data.date_column_number);
+        $('#date-format-text').val(data.date_format);
+        $('#pay-to-column-number').val(data.pay_to_column_number);
+        $('#amount-column-number').val(data.amount_column_number);
+        $('#category-column-number').val(data.category_column_number);
+        $('#description-column-number').val(data.description_column_number);
+        configId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

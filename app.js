@@ -25,6 +25,7 @@ var tenantRouter = require('./routes/tenants');
 var importRouter = require('./routes/import');
 var workRouter = require('./routes/works');
 var vendorRouter = require('./routes/vendors');
+var paymentRouter = require('./routes/payments');
 
 var app = express();
 
@@ -126,6 +127,7 @@ app.use('/tenants', tenantRouter);
 app.use('/import', importRouter);
 app.use('/works', workRouter);
 app.use('/vendors', vendorRouter);
+app.use('/payments', paymentRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

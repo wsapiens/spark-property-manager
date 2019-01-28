@@ -1,44 +1,49 @@
 var table;
-var userId;
+var methodId;
 $(document).ready(function(){
+  $('#payment-type-select').find('option').remove();
+  $.get("/types/payment", function(data, status){
+    console.log(data.data);
+    $('#payment-type-select').append('<option>Select Property Type</option>');
+    $.each(data.data, function(key, value){
+      console.log(value);
+      console.log(value.id);
+      console.log(value.name);
+      $('#payment-type-select').append('<option value=' + value.id + '>' + value.name + '</option>');
+    });
+    if(data.data.length > 0) {
+      $('#payment-type-select option:first').attr("selected",true);
+    }
+  });
+
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    var loginEmail = $('#email-text').val();
-    var firstName = $('#firstname-text').val();
-    var lastName = $('#lastname-text').val();
-    var phoneNumber = $('#phone-text').val();
-    var isManager = $('#is-manager-checkbox').prop('checked');
-
-    if( !phoneNumber) {
-      phoneNumber = '';
-    }
-
-    if( loginEmail && firstName ) {
-      if(userId) {
+    var typeId = $('#payment-type-select').val();
+    var accountNumber = $('#account-number-text').val();
+    var descriptionText = $('#description-text').val();
+    console.log(typeId);
+    console.log(accountNumber);
+    console.log(descriptionText);
+    if( typeId ) {
+      if(methodId) {
         $.ajax({
-          url:"/users/"+userId,
+          url:"/payments/methods/"+methodId,
           type: "PUT",
           data: JSON.stringify({
-                                  email: loginEmail,
-                                  firstname: firstName,
-                                  lastname: lastName,
-                                  phone: phoneNumber,
-                                  is_manager: isManager
+                                  type_id: typeId,
+                                  account_number: accountNumber,
+                                  description: descriptionText
                                 }),
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
-              table.api().ajax.url("/users").load();
-              $('#email-text').val('');
-              $('#firstname-text').val('');
-              $('#lastname-text').val('');
-              $('#phone-text').val('');
-              if($('#is-manager-checkbox').prop('checked')) {
-                $('#is-manager-checkbox').click();
-              }
-              userId = null;
+              table.api().ajax.url("/payments/methods").load();
+              $('#payment-type-select option:selected').prop('selected', false).change();
+              $('#account-number-text').val('');
+              $('#description-text').val('');
+              methodId = null;
               // refreshTable(table, false);
               rows_selected=[];
               table.api().clear();
@@ -58,28 +63,22 @@ $(document).ready(function(){
         });
       } else {
         $.ajax({
-          url:"/users/",
+          url:"/payments/methods/",
           type: "POST",
           data: JSON.stringify({
-                  email: loginEmail,
-                  firstname: firstName,
-                  lastname: lastName,
-                  phone: phoneNumber,
-                  is_manager: isManager
+                  type_id: typeId,
+                  account_number: accountNumber,
+                  description: descriptionText
                 }),
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
           dataType: "json",
           statusCode: {
             200: function() {
-              table.api().ajax.url("/users").load();
-              $('#email-text').val('');
-              $('#firstname-text').val('');
-              $('#lastname-text').val('');
-              $('#phone-text').val('');
-              if($('#is-manager-checkbox').prop('checked')) {
-                $('#is-manager-checkbox').click();
-              }
+              table.api().ajax.url("/payments/methods").load();
+              $('#payment-type-select option:selected').prop('selected', false).change();
+              $('#account-number-text').val('');
+              $('#description-text').val('');
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {
@@ -95,12 +94,12 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Email and Firstname are required!');
+      alert('Payment Type is required!');
     }
   });
 
-  table = $('#users').dataTable({
-            ajax: "/users",
+  table = $('#methods').dataTable({
+            ajax: "/payments/methods",
             columns: [
                 { data: null,
                   searchable: false,
@@ -112,21 +111,15 @@ $(document).ready(function(){
                           }
                 },
                 { data: 'id', width : '8%', className: 'dt-body-center' },
-                { data: 'email',
+                { data: 'PaymentType',
+                  width : '10%',
                   className: 'dt-body-center',
-                  render: function (email) {
-                            return '<a href="mailto:' + email + '">' + email + '</a>';
-                          }
-                 },
-                { data: 'firstname', className: 'dt-body-center'},
-                { data: 'lastname', className: 'dt-body-center'},
-                { data: 'phone',
-                  className: 'dt-body-center',
-                  render: function (phone) {
-                            return '<a href="tel:' + phone + '">' + phone + '</a>';
+                  render: function (PaymentType) {
+                            return PaymentType.name;
                           }
                 },
-                { data: 'is_manager', className: 'dt-body-center', width : '10%' }
+                { data: 'account_number', className: 'dt-body-center' },
+                { data: 'description', className: 'dt-body-center'}
             ],
             order: [[ 1, "desc" ]],
             processing: true,
@@ -143,7 +136,7 @@ $(document).ready(function(){
   );
 
   // Handle click on checkbox
-  $('#users tbody').on('click', 'input[type="checkbox"]', function(e){
+  $('#methods tbody').on('click', 'input[type="checkbox"]', function(e){
     var $row = $(this).closest('tr');
     // Get row data
     var data = table.api().row($row).data();
@@ -172,16 +165,16 @@ $(document).ready(function(){
   });
 
   // Handle click on table cells with checkboxes
-  $('#users').on('click', 'tbody td, thead th:first-child', function(){
+  $('#methods').on('click', 'tbody td, thead th:first-child', function(){
     $(this).parent().find('input[type="checkbox"]').trigger('click');
   });
 
   // Handle click on "Select all" control
   $('thead input[name="select_all"]', table.api().table().container()).on('click', function(e){
     if(this.checked){
-      $('#users tbody input[type="checkbox"]:not(:checked)').trigger('click');
+      $('#methods tbody input[type="checkbox"]:not(:checked)').trigger('click');
     } else {
-      $('#users tbody input[type="checkbox"]:checked').trigger('click');
+      $('#methods tbody input[type="checkbox"]:checked').trigger('click');
     }
 
     // Prevent click event from propagating to parent
@@ -196,11 +189,11 @@ $(document).ready(function(){
 });
 
 $(document).on('click', '#delete-button', function(){
+  var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
   if(0 !== rows_selected.length) {
-    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/users/"+value.id,
+        url:"/payments/methods/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -228,16 +221,12 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/users/"+rows_selected[0].id, function(data, status){
+    $.get("/payments/methods/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $('#email-text').val(data.email);
-        $('#firstname-text').val(data.firstname);
-        $('#lastname-text').val(data.lastname);
-        $('#phone-text').val(data.phone);
-        if($('#is-manager-checkbox').prop('checked') != data.is_manager) {
-          $('#is-manager-checkbox').click();
-        }
-        userId = rows_selected[0].id;
+        $('#payment-type-select').val(data.type_id).change();
+        $('#account-number-text').val(data.account_number);
+        $('#description-text').val(data.description);
+        methodId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

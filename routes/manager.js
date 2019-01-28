@@ -104,4 +104,16 @@ router.get('/vendor', csrfProtection, function(req, res, next) {
   });
 });
 
+router.get('/payment', csrfProtection, function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  res.render('payment', {
+    title: 'Payment Manager',
+    manager: req.user.is_manager,
+    version: pjson.version,
+    csrfToken: req.csrfToken()
+  });
+});
+
 module.exports = router;

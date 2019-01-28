@@ -13,8 +13,8 @@ $(document).ready(function(){
       console.log(value.address_street);
       $('#property-select').append('<option value=' + value.id + '>'
                                   + value.address_street + ', '
-                                  + value.address_city + ','
-                                  + value.address_state
+                                  + value.address_city + ', '
+                                  + value.address_state + ' '
                                   + value.ddress_zip
                                   + '</option>');
     });
@@ -67,6 +67,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/tenants").load();
               $('#property-select option:selected').prop('selected', false).change();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#firstname-text').val('');

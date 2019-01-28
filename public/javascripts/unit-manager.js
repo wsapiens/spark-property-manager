@@ -45,6 +45,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/units").load();
               $('#property-select option:selected').prop('selected', false).change();
               $('#unit-name-text').val('');
               if($('#is-building-checkbox').prop('checked')) {
@@ -103,7 +104,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Property and Unit Name are required!')
+      alert('Property and Unit Name are required!');
     }
   });
 
@@ -196,7 +197,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/units/"+value['id'],
+        url:"/units/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -225,14 +226,14 @@ $(document).on('click', '#delete-button', function(){
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-    $.get("/units/"+rows_selected[0]['id'], function(data, status){
+    $.get("/units/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $('#property-select').val(data['property_id']).change();
-        $('#unit-name-text').val(data['name']);
-        if($('#is-building-checkbox').prop('checked') != data['is_building']) {
+        $('#property-select').val(data.property_id).change();
+        $('#unit-name-text').val(data.name);
+        if($('#is-building-checkbox').prop('checked') != data.is_building) {
           $('#is-building-checkbox').click();
         }
-        unitId = rows_selected[0]['id'];
+        unitId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

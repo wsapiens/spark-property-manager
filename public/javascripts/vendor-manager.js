@@ -26,6 +26,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/vendors").load();
               $('#category-text').val('');
               $('#note-text').val('');
               $('#name-text').val('');
@@ -86,7 +87,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Vendor Name is required!')
+      alert('Vendor Name is required!');
     }
   });
 
@@ -189,7 +190,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/vendors/"+value['id'],
+        url:"/vendors/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -217,14 +218,14 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/vendors/"+rows_selected[0]['id'], function(data, status){
+    $.get("/vendors/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $('#category-text').val(data['category']);
-        $('#note-text').val(data['note']);
-        $('#name-text').val(data['name']);
-        $('#phone-text').val(data['phone']);
-        $('#email-text').val(data['email']);
-        vendorId = rows_selected[0]['id'];
+        $('#category-text').val(data.category);
+        $('#note-text').val(data.note);
+        $('#name-text').val(data.name);
+        $('#phone-text').val(data.phone);
+        $('#email-text').val(data.email);
+        vendorId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

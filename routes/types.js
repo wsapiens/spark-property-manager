@@ -29,4 +29,17 @@ router.get('/property', function(req, res, next) {
         });
 });
 
+router.get('/payment', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.PaymentType
+        .findAll()
+        .then(types => {
+          log.debug(types);
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({"data": types}));
+        });
+});
+
 module.exports = router;

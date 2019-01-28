@@ -1,6 +1,6 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  var PaymentSource = sequelize.define('PaymentSource', {
+  var PaymentMethod = sequelize.define('PaymentMethod', {
     account_number: DataTypes.STRING,
     description: DataTypes.TEXT,
     type_id: {
@@ -24,24 +24,24 @@ module.exports = (sequelize, DataTypes) => {
     // transform all passed model names (first parameter of define) into plural.
     // if you don't want that, set the following
     freezeTableName: true,
-    tableName: 'payment_source'
+    tableName: 'payment_method'
   });
 
-  PaymentSource.associate = function (models) {
-    models.PaymentSource.belongsTo(models.PaymentType, {
+  PaymentMethod.associate = function (models) {
+    models.PaymentMethod.belongsTo(models.PaymentType, {
       onDelete: 'CASCADE',
       foreignKey: 'type_id',
       targetKey: 'id'
     });
 
-    models.Property.belongsTo(models.Company, {
+    models.PaymentMethod.belongsTo(models.Company, {
       onDelete: 'CASCADE',
       foreignKey: 'company_id',
       targetKey: 'id'
     });
 
-    models.PaymentSource.hasMany(models.Expense, { foreignKey: 'source_id' });
+    models.PaymentMethod.hasMany(models.Expense, { foreignKey: 'method_id' });
   };
 
-  return PaymentSource;
+  return PaymentMethod;
 };

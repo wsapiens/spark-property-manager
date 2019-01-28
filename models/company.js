@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     models.Company.hasMany(models.Property, { foreignKey: 'company_id' });
     models.Company.hasMany(models.User, { foreignKey: 'company_id' });
     models.Company.hasMany(models.Tenant, { foreignKey: 'company_id' });
-    models.Company.hasMany(models.PaymentSource, { foreignKey: 'company_id' });
+    models.Company.hasMany(models.PaymentMethod, { foreignKey: 'company_id' });
   };
 
   return Company;

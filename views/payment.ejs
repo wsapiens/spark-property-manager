@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <% include head %>
+    <meta name="csrf-token" content=<%= csrfToken %>>
+    <script type="text/javascript" src="/javascripts/commons.js"></script>
+    <script type="text/javascript" src="/javascripts/payment-manager.js"></script>
+  </head>
+  <body>
+    <% include header %>
+    <div class="container">
+      <h1><%= title %></h1>
+      <form>
+        <label for="payment-type-select" class="select ui-select">Payment Type:</label>
+        <select name="select-native-1" id="payment-type-select">
+          <option value="1">Select Payment Type</option>
+        </select>
+      </form>
+      <br><br><br>
+      <form>
+        <label for="account-number-text">Account Number:</label>
+        <input type="text" data-clear-btn="true" name="account-number-text" id="account-number-text" value="">
+        <br>
+        <label for="description-text">Description:</label>
+        <input type="text" data-clear-btn="true" name="description-text" id="description-text" value="">
+      </form>
+      <br><br><br>
+      <form align="right">
+        <input type="button" data-inline="true" id="submit-button" value="Submit">
+      </form>
+      <br><br><br><br>
+      <hr>
+      <br><br>
+      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
+      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
+      <br><br>
+      <table id="methods" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+        <thead>
+          <tr>
+            <th><input name="select_all" value="1" type="checkbox"></th>
+            <th>Id</th>
+            <th>Type</th>
+            <th>AccountNumber</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tfoot>
+          <tr>
+            <th></th>
+            <th>Id</th>
+            <th>Type</th>
+            <th>AccountNumber</th>
+            <th>Description</th>
+          </tr>
+        </tfoot>
+      </table>
+      <br><br>
+    </div>
+    <% include panel %>
+    <% include config %>
+    <% include footer %>
+  </body>
+</html>

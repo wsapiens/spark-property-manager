@@ -3,15 +3,15 @@ var propertyId;
 $(document).ready(function(){
   $('#property-type-select').find('option').remove();
   $.get("/types/property", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#property-type-select').append('<option>Select Property Type</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      console.log(value['name']);
-      $('#property-type-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+      console.log(value.id);
+      console.log(value.name);
+      $('#property-type-select').append('<option value=' + value.id + '>' + value.name + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#property-type-select option:first').attr("selected",true);
     }
   });
@@ -48,6 +48,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/properties").load();
               $('#property-type-select option:selected').prop('selected', false).change();
               $('#address-street-text').val('');
               $('#address-city-text').val('');
@@ -111,7 +112,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Property Type and Street Address are required!')
+      alert('Property Type and Street Address are required!');
     }
   });
 
@@ -136,7 +137,7 @@ $(document).ready(function(){
                   width : '10%',
                   className: 'dt-body-center',
                   render: function (PropertyType) {
-                            return PropertyType['name'];
+                            return PropertyType.name;
                           }
                 },
                 { data: 'index_number', className: 'dt-body-center' }
@@ -213,7 +214,7 @@ $(document).on('click', '#delete-button', function(){
   if(0 !== rows_selected.length) {
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/properties/"+value['id'],
+        url:"/properties/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -241,15 +242,15 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/properties/"+rows_selected[0]['id'], function(data, status){
+    $.get("/properties/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $('#property-type-select').val(data['type_id']).change();
-        $('#address-street-text').val(data['address_street']);
-        $('#address-city-text').val(data['address_city']);
-        $('#address-state-text').val(data['address_state']);
-        $('#address-zip-text').val(data['address_zip']);
-        $('#index-text').val(data['index_number']);
-        propertyId = rows_selected[0]['id'];
+        $('#property-type-select').val(data.type_id).change();
+        $('#address-street-text').val(data.address_street);
+        $('#address-city-text').val(data.address_city);
+        $('#address-state-text').val(data.address_state);
+        $('#address-zip-text').val(data.address_zip);
+        $('#index-text').val(data.index_number);
+        propertyId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

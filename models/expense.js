@@ -16,9 +16,9 @@ module.exports = (sequelize, DataTypes) => {
       references: 'expense_type', // <<< Note, its table's name, not object name
       referencesKey: 'id' // <<< Note, its a column name
     },
-    source_id: {
+    method_id: {
       type: DataTypes.INTEGER,
-      references: 'payment_source',
+      references: 'payment_method',
       referencesKey: 'id'
     }
   },
@@ -48,9 +48,9 @@ module.exports = (sequelize, DataTypes) => {
       targetKey: 'id'
     });
 
-    models.Expense.belongsTo(models.PaymentSource, {
+    models.Expense.belongsTo(models.PaymentMethod, {
       onDelete: 'CASCADE',
-      foreignKey: 'source_id',
+      foreignKey: 'method_id',
       targetKey: 'id'
     });
   };

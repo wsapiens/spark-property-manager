@@ -5,20 +5,20 @@ $(document).ready(function(){
   $('#unit-select').find('option').remove();
   $('#vendor-select').find('option').remove();
   $.get("/properties", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#property-select').append('<option>Select Property</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      console.log(value['address_street']);
-      $('#property-select').append('<option value=' + value['id'] + '>'
-                                  + value['address_street'] + ', '
-                                  + value['address_city'] + ','
-                                  + value['address_state']
-                                  + value['address_zip']
+      console.log(value.id);
+      console.log(value.address_street);
+      $('#property-select').append('<option value=' + value.id + '>'
+                                  + value.address_street + ', '
+                                  + value.address_city + ', '
+                                  + value.address_state + ' '
+                                  + value.address_zip
                                   + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#property-select option:first').attr("selected",true);
     }
       //$('#property-select').val($('#property-select option:first').val());
@@ -29,10 +29,10 @@ $(document).ready(function(){
     $('#unit-select').append('<option>Select Unit</option>');
     if($(this).val() !== 'Select Property') {
       $.get("/properties/" + $(this).val() + "/units", function(data, status){
-        $.each(data['data'][0]['PropertyUnits'], function(key, value){
-          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        $.each(data.data[0].PropertyUnits, function(key, value){
+          $('#unit-select').append('<option value=' + value.id + '>' + value.name + '</option>');
         });
-        if(data['data'] && data['data'].length === 0) {
+        if(data.data && data.data.length === 0) {
           $('#unit-select').val($('#unit-select option:first').val()).change();
         }
       });
@@ -40,16 +40,16 @@ $(document).ready(function(){
   });
 
   $.get("/vendors", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#vendor-select').append('<option>Select Vendor</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      $('#vendor-select').append('<option value=' + value['id'] + '>'
-                                  + value['name']
+      console.log(value.id);
+      $('#vendor-select').append('<option value=' + value.id + '>'
+                                  + value.name
                                   + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#vendor-select option:first').attr("selected",true);
     }
   });
@@ -57,9 +57,9 @@ $(document).ready(function(){
   $('#vendor-select').on('change', function() {
     if($(this).val() !== 'Select Vendor') {
       $.get("/vendors/" + $(this).val(), function(data, status){
-        $('#name-text').val(data['name']);
-        $('#phone-text').val(data['phone']);
-        $('#email-text').val(data['email']);
+        $('#name-text').val(data.name);
+        $('#phone-text').val(data.phone);
+        $('#email-text').val(data.email);
       });
     }
   });
@@ -101,6 +101,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/works").load();
               $('#property-select option:selected').prop('selected', false).change();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#status-select option:selected').prop('selected', false).change();
@@ -178,20 +179,20 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Property Unit, Description and Estimation are required!')
+      alert('Property Unit, Description and Estimation are required!');
     }
     $('#vendor-select').find('option').remove();
     $.get("/vendors", function(data, status){
-      console.log(data['data']);
+      console.log(data.data);
       $('#vendor-select').append('<option>Select Vendor</option>');
-      $.each(data['data'], function(key, value){
+      $.each(data.data, function(key, value){
         console.log(value);
-        console.log(value['id']);
-        $('#vendor-select').append('<option value=' + value['id'] + '>'
-                                    + value['name']
+        console.log(value.id);
+        $('#vendor-select').append('<option value=' + value.id + '>'
+                                    + value.name
                                     + '</option>');
       });
-      if(data['data'].length > 0) {
+      if(data.data.length > 0) {
         $('#vendor-select option:first').attr("selected",true);
       }
     });
@@ -214,7 +215,7 @@ $(document).ready(function(){
                   width: '10%',
                   className: 'dt-body-center',
                   render: function (PropertyUnit) {
-                            return PropertyUnit['Property']['address_street'] + ' ' + PropertyUnit['name'];
+                            return PropertyUnit.Property.address_street + ' ' + PropertyUnit.name;
                           }
                  },
                 { data: 'description', className: 'dt-body-center' },
@@ -226,8 +227,8 @@ $(document).ready(function(){
                 { data: 'Vendor',
                   className: 'dt-body-center',
                   render: function(Vendor) {
-                            if(Vendor && Vendor['name']) {
-                              return Vendor['name'];
+                            if(Vendor && Vendor.name) {
+                              return Vendor.name;
                             } else {
                               return '';
                             }
@@ -236,8 +237,8 @@ $(document).ready(function(){
                 { data: 'Vendor',
                   className: 'dt-body-center',
                   render: function (Vendor) {
-                            if(Vendor && Vendor['phone']){
-                              return '<a href="tel:' + Vendor['phone'] + '">' + Vendor['phone'] + '</a>';
+                            if(Vendor && Vendor.phone){
+                              return '<a href="tel:' + Vendor.phone + '">' + Vendor.phone + '</a>';
                             } else {
                               return '';
                             }
@@ -247,8 +248,8 @@ $(document).ready(function(){
                   width : '10%',
                   className: 'dt-body-center',
                   render: function (Vendor) {
-                            if(Vendor && Vendor['email']) {
-                              return '<a href="mailto:' + Vendor['email'] + '">' + Vendor['email'] + '</a>';
+                            if(Vendor && Vendor.email) {
+                              return '<a href="mailto:' + Vendor.email + '">' + Vendor.email + '</a>';
                             } else {
                               return '';
                             }
@@ -333,7 +334,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/works/"+value['id'],
+        url:"/works/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -361,28 +362,28 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/works/"+rows_selected[0]['id'], function(data, status){
+    $.get("/works/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $.get("/units/"+data['unit_id'], function(udata, ustatus){
+        $.get("/units/"+data.unit_id, function(udata, ustatus){
           if("success" === ustatus) {
-            $('#property-select').val(udata['property_id']).change();
-            $('#status-select').val(data['status']).change();
-            $('#description-text').val(data['description']);
-            $('#estimation-text').val(data['estimation']);
-            if(data['start_date']) {
-              var startDate = data['start_date'].split('T')[0].split('-');
+            $('#property-select').val(udata.property_id).change();
+            $('#status-select').val(data.status).change();
+            $('#description-text').val(data.description);
+            $('#estimation-text').val(data.estimation);
+            if(data.start_date) {
+              var startDate = data.start_date.split('T')[0].split('-');
               $('#work-start-date').datepicker('setDate', new Date(startDate[0], startDate[1]-1, startDate[2]));
             }
-            if(data['end_date']) {
-              var endDate = data['end_date'].split('T')[0].split('-');
+            if(data.end_date) {
+              var endDate = data.end_date.split('T')[0].split('-');
               $('#work-end-date').datepicker('setDate', new Date(endDate[0], endDate[1]-1, endDate[2]));
             }
-            workId = rows_selected[0]['id'];
+            workId = rows_selected[0].id;
             window.setTimeout(function(){
-              console.log(">>>>>" + data['unit_id']);
-              $('#unit-select').val(data['unit_id']).change();
-              if(data['Vendor']) {
-                $('#vendor-select').val(data['vendor_id']).change();
+              console.log(">>>>>" + data.unit_id);
+              $('#unit-select').val(data.unit_id).change();
+              if(data.Vendor) {
+                $('#vendor-select').val(data.vendor_id).change();
               }
             }, 500);
           }

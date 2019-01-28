@@ -6,35 +6,35 @@ $(document).ready(function(){
   $('#unit-select').find('option').remove();
   $('#type-select').find('option').remove();
   $.get("/properties", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#property-select').append('<option>Select Property</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      console.log(value['address_street']);
-      $('#property-select').append('<option value=' + value['id'] + '>'
-                                  + value['address_street'] + ', '
-                                  + value['address_city'] + ','
-                                  + value['address_state']
-                                  + value['address_zip']
+      console.log(value.id);
+      console.log(value.address_street);
+      $('#property-select').append('<option value=' + value.id + '>'
+                                  + value.address_street + ', '
+                                  + value.address_city + ', '
+                                  + value.address_state + ' '
+                                  + value.address_zip
                                   + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#property-select option:first').attr("selected",true);
     }
       //$('#property-select').val($('#property-select option:first').val());
   });
 
   $.get("/types/expense", function(data, status){
-    console.log(data['data']);
+    console.log(data.data);
     $('#type-select').append('<option>Select Expense Type</option>');
-    $.each(data['data'], function(key, value){
+    $.each(data.data, function(key, value){
       console.log(value);
-      console.log(value['id']);
-      console.log(value['name']);
-      $('#type-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+      console.log(value.id);
+      console.log(value.name);
+      $('#type-select').append('<option value=' + value.id + '>' + value.name + '</option>');
     });
-    if(data['data'].length > 0) {
+    if(data.data.length > 0) {
       $('#type-select option:first').attr("selected",true);
     }
   });
@@ -44,10 +44,10 @@ $(document).ready(function(){
     $('#unit-select').append('<option>Select Unit</option>');
     if($(this).val() !== 'Select Property') {
       $.get("/properties/" + $(this).val() + "/units", function(data, status){
-        $.each(data['data'][0]['PropertyUnits'], function(key, value){
-          $('#unit-select').append('<option value=' + value['id'] + '>' + value['name'] + '</option>');
+        $.each(data.data[0].PropertyUnits, function(key, value){
+          $('#unit-select').append('<option value=' + value.id + '>' + value.name + '</option>');
         });
-        if(data['data'] && data['data'].length === 0) {
+        if(data.data && data.data.length === 0) {
           $('#unit-select').val($('#unit-select option:first').val()).change();
         }
       });
@@ -78,6 +78,7 @@ $(document).ready(function(){
           dataType: "json",
           statusCode: {
             200: function() {
+              table.api().ajax.url("/expenses").load();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
               $('#property-select option:selected').prop('selected', false).change();
@@ -141,7 +142,7 @@ $(document).ready(function(){
         });
       }
     } else {
-      alert('Property Unit, Expense Type and Amount are required!')
+      alert('Property Unit, Expense Type and Amount are required!');
     }
   });
 
@@ -298,7 +299,7 @@ $(document).on('click', '#delete-button', function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $.each(rows_selected, function(key, value){
       $.ajax({
-        url:"/expenses/"+value['id'],
+        url:"/expenses/"+value.id,
         type: "DELETE",
         // data: JSON.stringify({"ids": ids}),
         contentType: "application/json; charset=utf-8",
@@ -326,24 +327,24 @@ $(document).on('click', '#delete-button', function(){
 
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
-    $.get("/expenses/"+rows_selected[0]['id'], function(data, status){
+    $.get("/expenses/"+rows_selected[0].id, function(data, status){
       if("success" === status) {
-        $.get("/units/"+data['unit_id'], function(udata, ustatus){
+        $.get("/units/"+data.unit_id, function(udata, ustatus){
           if("success" === ustatus) {
-            $('#property-select').val(udata['property_id']).change();
-            $('#pay-amount-text').val(Number(data['amount'].replace("$", "")));
-            $('#pay-to-text').val(data['pay_to']);
-            $('#pay-desc-text').val(data['description']);
-            $('#type-select').val(data['type_id']).change();
-            $('#uploaded').val(data['file']);
-            payTime = data['pay_time'];
-            expenseId = rows_selected[0]['id'];
+            $('#property-select').val(udata.property_id).change();
+            $('#pay-amount-text').val(Number(data.amount.replace("$", "")));
+            $('#pay-to-text').val(data.pay_to);
+            $('#pay-desc-text').val(data.description);
+            $('#type-select').val(data.type_id).change();
+            $('#uploaded').val(data.file);
+            payTime = data.pay_time;
+            expenseId = rows_selected[0].id;
             window.setTimeout(function(){
-              console.log(">>>>>" + data['unit_id']);
-              $('#unit-select').val(data['unit_id']).change();
+              console.log(">>>>>" + data.unit_id);
+              $('#unit-select').val(data.unit_id).change();
             }, 500);
           }
-        })
+        });
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
     });

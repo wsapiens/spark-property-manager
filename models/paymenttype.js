@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   });
 
   PaymentType.associate = function(models) {
-    models.PaymentType.hasMany(models.PaymentSource, { foreignKey: 'type_id' });
+    models.PaymentType.hasMany(models.PaymentMethod, { foreignKey: 'type_id' });
   };
 
   return PaymentType;
