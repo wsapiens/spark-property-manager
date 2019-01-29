@@ -5,7 +5,8 @@
   "main": "./bin/server.js",
   "scripts": {
     "test": "mocha",
-    "start": "node ./bin/cluster.js"
+    "start": "node ./bin/server.js",
+    "debug": "node --inspect ./bin/server.js"
   },
   "author": "Steve Park",
   "license": "MIT",
