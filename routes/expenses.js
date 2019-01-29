@@ -11,12 +11,15 @@ router.get('/', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.sequelize
-        .query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, e.amount, e.pay_time, e.file '
+        .query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, pt.name AS pay_method, pm.account_number AS pay_account, e.amount, e.pay_time, e.file '
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id  '
-             + 'WHERE p.company_id = $1',
+             + 'LEFT JOIN payment_method AS pm ON e.method_id = pm.id '
+             + 'LEFT JOIN payment_type AS pt ON pm.type_id = pt.id '
+             + 'WHERE p.company_id = $1 '
+             + 'ORDER BY e.pay_time DESC',
              {
                bind: [ req.user.company_id ],
                type: models.sequelize.QueryTypes.SELECT
@@ -241,6 +244,7 @@ router.post('/', csrfProtection, function(req, res, next) {
     pay_to: req.body.pay_to,
     description: req.body.description,
     type_id: req.body.type_id,
+    method_id: req.body.method_id,
     amount: req.body.amount,
     pay_time: new Date(),
     file: req.body.file,
@@ -261,6 +265,7 @@ router.put('/:expenseId', csrfProtection, function(req, res, next) {
               unit_id: req.body.unit_id,
               pay_to: req.body.pay_to,
               type_id: req.body.type_id,
+              method_id: req.body.method_id,
               description: req.body.description,
               amount: req.body.amount,
               pay_time: req.body.pay_time,

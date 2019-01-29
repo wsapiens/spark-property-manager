@@ -5,6 +5,7 @@ $(document).ready(function(){
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $('#type-select').find('option').remove();
+  $('#method-select').find('option').remove();
   $.get("/properties", function(data, status){
     console.log(data.data);
     $('#property-select').append('<option>Select Property</option>');
@@ -39,6 +40,23 @@ $(document).ready(function(){
     }
   });
 
+  $.get("/payments/methods", function(data, status){
+    console.log(data.data);
+    $('#method-select').append('<option>Select Payment Method</option>');
+    $.each(data.data, function(key, value){
+      console.log(value);
+      console.log(value.id);
+      $('#method-select').append('<option value=' + value.id + '>'
+                                  + value.PaymentType.name + ', '
+                                  + value.account_number + ', '
+                                  + value.description
+                                  + '</option>');
+    });
+    if(data.data.length > 0) {
+      $('#method-select option:first').attr("selected",true);
+    }
+  });
+
   $('#property-select').on('change', function() {
     $('#unit-select').find('option').remove();
     $('#unit-select').append('<option>Select Unit</option>');
@@ -58,6 +76,7 @@ $(document).ready(function(){
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var unitId = $('#unit-select').val();
     var typeId = $('#type-select').val();
+    var methodId = $('#method-select').val();
     var payAmount = $('#pay-amount-text').val();
     var payTo = $('#pay-to-text').val();
     var payDesc = $('#pay-desc-text').val();
@@ -73,15 +92,17 @@ $(document).ready(function(){
           url:"/expenses/"+expenseId,
           type: "PUT",
           headers: { "CSRF-Token": token },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime, file: receiptFile}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           statusCode: {
             200: function() {
-              table.api().ajax.url("/expenses").load();
+              table.api().ajax.reload();
+              // table.api().ajax.url("/expenses").load();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
               $('#property-select option:selected').prop('selected', false).change();
+              $('#method-select option:selected').prop('selected', false).change();
               $('#pay-amount-text').val('');
               $('#pay-to-text').val('');
               $('#pay-desc-text').val('');
@@ -111,7 +132,7 @@ $(document).ready(function(){
           url:"/expenses/",
           type: "POST",
           headers: { "CSRF-Token": token },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
@@ -121,6 +142,7 @@ $(document).ready(function(){
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
               $('#property-select option:selected').prop('selected', false).change();
+              $('#method-select option:selected').prop('selected', false).change();
               $('#pay-amount-text').val('');
               $('#pay-to-text').val('');
               $('#pay-desc-text').val('');
@@ -162,6 +184,8 @@ $(document).ready(function(){
                 { data: 'address_street', "width" : "10%" },
                 { data: 'name', className: 'dt-body-center' },
                 { data: 'address_city', className: 'dt-body-center' },
+                { data: 'pay_method', className: 'dt-body-center' },
+                { data: 'pay_account', className: 'dt-body-center' },
                 { data: 'pay_to', className: 'dt-body-center'},
                 { data: 'description', "width" : "10%" },
                 { data: 'pay_type', className: 'dt-body-center' },
@@ -176,7 +200,7 @@ $(document).ready(function(){
                           }
                 }
             ],
-            "order": [[ 9, "desc" ]],
+            "order": [[ 11, "desc" ]],
             "processing": true,
             //"serverSide": true,
             "paging": true,
@@ -336,6 +360,7 @@ $(document).on('click', '#edit-button', function(){
             $('#pay-to-text').val(data.pay_to);
             $('#pay-desc-text').val(data.description);
             $('#type-select').val(data.type_id).change();
+            $('#method-select').val(data.method_id).change();
             $('#uploaded').val(data.file);
             payTime = data.pay_time;
             expenseId = rows_selected[0].id;
