@@ -12,9 +12,13 @@
       <h1><%= title %></h1>
       <br>
       <form id="file-upload-form" enctype="multipart/form-data">
-        <label>Upload CSV format Bank / CreditCard Statement:</label>
+        <label for="method-select" class="select ui-select">Payment Method:</label>
+        <select name="select-native-1" id="method-select">
+          <option value="1">Select Payment Method</option>
+        </select>
+        <label for="file-select">Upload Statement:</label>
         <input type="file" id="file-select" name="statement" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
-        <input type="button" id="upload-button" value="Upload Statement">
+        <input type="button" id="upload-button" data-icon="action" value="Upload Statement">
       </form>
       <input type="hidden" id="uploaded" value="">
       <br><br>

@@ -34,7 +34,7 @@ router.post('/receipt', upload.single('receipt'), function(req, res, next) {
   res.send(req.file.filename);
 });
 
-router.post('/statement', upload.single('statement'), function(req, res, next) {
+router.post('/statement/:methodId', upload.single('statement'), function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -90,6 +90,7 @@ router.post('/statement', upload.single('statement'), function(req, res, next) {
                        description: util.getImportDescription(data[importConfig.description_column_number], data[importConfig.filter_column_number]),
                        amount: util.getImportAmount(parseFloat(data[importConfig.amount_column_number]), data[importConfig.filter_column_number]),
                        pay_time: new Date(data[importConfig.date_column_number]),
+                       method_id: req.params.methodId,
                        file: ''
                      });
                    }

@@ -1,6 +1,24 @@
 var table;
 var configId;
 $(document).ready(function(){
+  $('#method-select').find('option').remove();
+  $.get("/payments/methods", function(data, status){
+    console.log(data.data);
+    $('#method-select').append('<option>Select Payment Method</option>');
+    $.each(data.data, function(key, value){
+      console.log(value);
+      console.log(value.id);
+      $('#method-select').append('<option value=' + value.id + '>'
+                                  + value.PaymentType.name + ', '
+                                  + value.account_number + ', '
+                                  + value.description
+                                  + '</option>');
+    });
+    if(data.data.length > 0) {
+      $('#method-select option:first').attr("selected",true);
+    }
+  });
+
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var filterColumn = $('#filter-column-number').val();
@@ -191,9 +209,11 @@ $(document).ready(function(){
   });
 
   $('#upload-button').on('click', function() {
-    $.ajax({
+    var methodId = $('#method-select').val();
+    if(methodId.toLowerCase().indexOf("select") === -1) {
+      $.ajax({
         // Your server script to process the upload
-        url: '/file/statement',
+        url: '/file/statement/' + methodId,
         type: 'POST',
 
         // Form data
@@ -209,6 +229,7 @@ $(document).ready(function(){
                 console.log(response);
                 window.location.href = '/manager/expense';
                 $.mobile.loading( "hide" );
+                $('#method-select option:selected').prop('selected', false).change();
                }
         },
 
@@ -241,7 +262,10 @@ $(document).ready(function(){
             }
             return myXhr;
         }
-    });
+      });
+    } else {
+      alert('Please Select Payment Method');
+    }
   });
 
 });
