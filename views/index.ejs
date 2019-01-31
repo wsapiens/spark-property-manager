@@ -134,17 +134,26 @@
         expenseByTime();
         $("html, body").animate({ scrollTop: 0 }, "slow");
       });
-      $(document).on('click', '#download-button', function() {
+      $(document).on('click', '#generate-button', function() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
         $.get("/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             console.log(Object.keys(data.data[0]).join(","));
+            var csv = Object.keys(data.data[0]).join(",") + '\n';
+
             data.data.forEach(function(row) {
               console.log(Object.values(row).join(","));
+              csv += Object.values(row).join(",") + '\n';
             });
-            // TODO make .csv file on browser
+            csv = csv.replace('<mark>', '');
+            csv = csv.replace('</mark>', '');
+
+            var a = document.getElementById("save-report");
+            var file = new Blob([csv], {type: 'text/csv'});
+            a.href = URL.createObjectURL(file);
+            a.download = 'report.csv';
           });
       });
       </script>
@@ -163,7 +172,8 @@
       <input type="text" data-role="date" id="end-date">
       <form>
         <input type="button" data-inline="true" data-icon="edit" id="draw-button" value="Draw Charts">
-        <input type="button" data-inline="true" data-icon="arrow-d" id="download-button" value="Download Report">
+        <input type="button" data-inline="true" data-icon="bars" id="generate-button" value="Generate Report">
+        <a href="" id="save-report">Save Report To File </a>
       </form>
       <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />

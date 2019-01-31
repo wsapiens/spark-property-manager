@@ -19,7 +19,7 @@ router.get('/', function(req, res, next) {
     endDate = req.query.end;
   }
   models.sequelize
-        .query('SELECT e.id, p.address_street, u.name, p.address_city, e.pay_to, e.description, t.name AS pay_type, pt.name AS pay_method, pm.account_number AS pay_account, e.amount, e.pay_time, e.file '
+        .query('SELECT e.id, p.address_street, u.name AS unit_name, p.address_city, e.pay_to, e.description, t.name AS pay_type, pt.name AS pay_method, pm.account_number AS pay_account, e.amount, e.pay_time, e.file '
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '

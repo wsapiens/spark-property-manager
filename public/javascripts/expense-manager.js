@@ -182,7 +182,7 @@ $(document).ready(function(){
                 },
                 { data: 'id', width : '8%', className: 'dt-body-center' },
                 { data: 'address_street', "width" : "10%" },
-                { data: 'name', className: 'dt-body-center' },
+                { data: 'unit_name', className: 'dt-body-center' },
                 { data: 'address_city', className: 'dt-body-center' },
                 { data: 'pay_method', className: 'dt-body-center' },
                 { data: 'pay_account', className: 'dt-body-center' },
