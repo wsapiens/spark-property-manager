@@ -3,6 +3,9 @@
   <head>
     <% include head %>
     <!-- <script type="text/javascript" src="/javascripts/commons.js"></script> -->
+    <style>
+       #download-report { display: none; }
+    </style>
   </head>
   <body>
     <% include header %>
@@ -150,10 +153,11 @@
             csv = csv.replace('<mark>', '');
             csv = csv.replace('</mark>', '');
 
-            var a = document.getElementById("save-report");
+            var report = document.getElementById("download-report");
+            report.style.display = "block";
             var file = new Blob([csv], {type: 'text/csv'});
-            a.href = URL.createObjectURL(file);
-            a.download = 'report.csv';
+            report.href = URL.createObjectURL(file);
+            report.download = 'report.csv';
           });
       });
       </script>
@@ -170,11 +174,13 @@
       <input type="text" data-role="date" id="start-date">
       <label for="end-date">End Date:</label>
       <input type="text" data-role="date" id="end-date">
-      <form>
-        <input type="button" data-inline="true" data-icon="edit" id="draw-button" value="Draw Charts">
-        <input type="button" data-inline="true" data-icon="bars" id="generate-button" value="Generate Report">
-        <a href="" id="save-report">Save Report To File </a>
-      </form>
+      <table>
+        <tr>
+          <td><input type="button" data-inline="true" data-icon="edit" id="draw-button" value="Draw Charts"></td>
+          <td><input type="button" data-inline="true" data-icon="bars" id="generate-button" value="Generate Report"></td>
+          <td><a href="" id="download-report" download>Save Report To File</a></td>
+        </tr>
+      </table>
       <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
       <input type="button" value="Import Manager" onclick="window.location.href='/manager/import'" />
