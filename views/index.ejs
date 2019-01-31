@@ -134,6 +134,19 @@
         expenseByTime();
         $("html, body").animate({ scrollTop: 0 }, "slow");
       });
+      $(document).on('click', '#download-button', function() {
+        var startDate = $('#start-date').datepicker("getDate");
+        var endDate = $('#end-date').datepicker("getDate");
+        $.get("/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            console.log(Object.keys(data.data[0]).join(","));
+            data.data.forEach(function(row) {
+              console.log(Object.values(row).join(","));
+            });
+            // TODO make .csv file on browser
+          });
+      });
       </script>
       <h1>Dashboard</h1>
       <br><br>
@@ -143,13 +156,14 @@
       <br><br><br><br>
       <canvas id="chartByTime" width="50" height="50"></canvas>
       <br><br><br><br>
-      <h3>Draw Expense Charts Between Dates</h3>
+      <h3>Selects Dates To Review Expenses</h3>
       <label for="start-date">Start Date:</label>
       <input type="text" data-role="date" id="start-date">
       <label for="end-date">End Date:</label>
       <input type="text" data-role="date" id="end-date">
       <form>
-        <input type="button" data-inline="true" id="draw-button" value="Draw">
+        <input type="button" data-inline="true" data-icon="edit" id="draw-button" value="Draw Charts">
+        <input type="button" data-inline="true" data-icon="arrow-d" id="download-button" value="Download Report">
       </form>
       <br><br><br><br>
       <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
