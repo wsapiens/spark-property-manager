@@ -144,7 +144,7 @@ $ npm start
 ```
 
 ## Run Application by using Process Manager PM2
-PM2 is provide production level process management
+PM2 provides production level process management
 [pm2 install guide](https://www.npmjs.com/package/pm2)
 
 * install pm2
