@@ -14,8 +14,7 @@ module.exports = {
     );
     queryInterface.removeColumn('work_order', 'assignee_name');
     queryInterface.removeColumn('work_order', 'assignee_phone');
-    queryInterface.removeColumn('work_order', 'assignee_email');
-    return;
+    return queryInterface.removeColumn('work_order', 'assignee_email');
   },
   down: (queryInterface, Sequelize) => {
     queryInterface.removeColumn('work_order', 'vendor_id');
@@ -33,13 +32,12 @@ module.exports = {
         type: Sequelize.TEXT
       }
     );
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'work_order',
       'assignee_email',
       {
         type: Sequelize.TEXT
       }
     );
-    return;
   }
 };
