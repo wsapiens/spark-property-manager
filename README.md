@@ -129,14 +129,31 @@ tls = false
 If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
 ## Encrypt database password
-```bash
-$ node
-> var enc = require('./util/encryption');
-> enc.encrypt('mypass')
-'+OVLqGdWXoupsnLHYegzOAwRiuWzBw=='
 
-> enc.decrypt('+OVLqGdWXoupsnLHYegzOAwRiuWzBw==');
+* encrypt db password from command line
+
+```bash
+spark-property-manager$ node
+> var crypto = require('./util/crypto');
+> crypto.encrypt('mypass')
+'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
+
+> crypto.decrypt('a199/unJEhzdS5lfoF3sQe1haMc5kg==');
 'mypass'
+```
+
+* put encrypted password with '[encrypt]' prefix into db password field
+
+* app.properties
+```
+# contents of properties file
+[db]
+hostname = postgresql.host.com
+port = 5432
+name = dbname
+dialect = postgres
+username = dbuser
+password = [encrypt]a199/unJEhzdS5lfoF3sQe1haMc5kg==
 ```
 
 ## Static code analysis by jshint and grunt
