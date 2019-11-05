@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    queryInterface.addColumn(
+    return queryInterface.addColumn(
       'expense',
       'method_id',
       {
@@ -12,10 +12,8 @@ module.exports = {
         }
       }
     );
-    return;
   },
   down: (queryInterface, Sequelize) => {
-    queryInterface.removeColumn('expense', 'method_id');
-    return;
+    return queryInterface.removeColumn('expense', 'method_id');
   }
 };
