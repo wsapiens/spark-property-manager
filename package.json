@@ -11,6 +11,7 @@
   "author": "Steve Park",
   "license": "MIT",
   "dependencies": {
+    "aes256": "^1.0.4",
     "body-parser": "^1.18.3",
     "chart.js": "^2.7.2",
     "cluster": "^0.7.7",
@@ -47,6 +48,7 @@
     "pg": "7.4.1",
     "pg-hstore": "^2.3.2",
     "properties-reader": "0.0.16",
+    "randomstring": "^1.1.5",
     "sequelize": "^4.38.0",
     "sequelize-cli": "^4.0.0"
   },

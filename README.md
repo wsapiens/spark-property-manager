@@ -128,6 +128,17 @@ tls = false
 ```
 If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
+## Encrypt database password
+```bash
+$ node
+> var enc = require('./util/encryption');
+> enc.encrypt('mypass')
+'+OVLqGdWXoupsnLHYegzOAwRiuWzBw=='
+
+> enc.decrypt('+OVLqGdWXoupsnLHYegzOAwRiuWzBw==');
+'mypass'
+```
+
 ## Static code analysis by jshint and grunt
 ```bash
 $ npm i -g grunt-cli
