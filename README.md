@@ -182,7 +182,7 @@ $ npm install pm2 -g
 
 * run application by pm2
 ```bash
-$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8
+$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
 [PM2] Starting /Users/spark/workspace3/spark-property-manager/bin/server.js in cluster_mode (8 instances)
 [PM2] Done.
 ┌────────────────────────┬────┬─────────┬───────┬────────┬─────────┬────────┬──────┬───────────┬───────┬──────────┐
