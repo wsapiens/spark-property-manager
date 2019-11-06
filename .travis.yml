@@ -1,10 +1,4 @@
 dist: bionic
-addons:
-  apt:
-    sources:
-      - google-chrome
-    packages:
-      - google-chrome-stable
 language: node_js
 node_js:
   - "13"
@@ -14,4 +8,3 @@ install:
 script:
   - grunt
   - npm test
-

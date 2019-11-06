@@ -135,7 +135,7 @@ If you setup this on cloud environment with domain (Named IP Address), please up
 ```bash
 spark-property-manager$ node
 > var crypto = require('./util/crypto');
-> crypto.encrypt('mypass')
+> crypto.encrypt('mypass');
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
 
 > crypto.decrypt('a199/unJEhzdS5lfoF3sQe1haMc5kg==');

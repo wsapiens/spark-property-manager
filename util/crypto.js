@@ -6,7 +6,7 @@ module.exports = {
   encrypt: function encrypt(plaintext) {
     var key = randomstring.generate(20);
     var encrypted = aes256.encrypt(key, plaintext);
-    fs.writeFile("./.app.key", key, function(err) {
+    fs.writeFile('./.app.key', key, function(err) {
         if(err) {
           return console.log(err);
         }
