@@ -137,9 +137,6 @@ spark-property-manager$ node
 > var crypto = require('./util/crypto');
 > crypto.encrypt('mypass');
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
-
-> crypto.decrypt('a199/unJEhzdS5lfoF3sQe1haMc5kg==');
-'mypass'
 ```
 
 * put encrypted password with '[encrypt]' prefix into db password field
