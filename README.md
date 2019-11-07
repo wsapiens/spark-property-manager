@@ -128,6 +128,31 @@ tls = false
 ```
 If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
+## Encrypt database password
+
+* encrypt db password from command line
+
+```bash
+spark-property-manager$ node
+> var crypto = require('./util/crypto');
+> crypto.encrypt('mypass');
+'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
+```
+
+* put encrypted password with '[encrypt]' prefix into db password field
+
+* app.properties
+```
+# contents of properties file
+[db]
+hostname = postgresql.host.com
+port = 5432
+name = dbname
+dialect = postgres
+username = dbuser
+password = [encrypt]a199/unJEhzdS5lfoF3sQe1haMc5kg==
+```
+
 ## Static code analysis by jshint and grunt
 ```bash
 $ npm i -g grunt-cli
@@ -154,7 +179,7 @@ $ npm install pm2 -g
 
 * run application by pm2
 ```bash
-$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8
+$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
 [PM2] Starting /Users/spark/workspace3/spark-property-manager/bin/server.js in cluster_mode (8 instances)
 [PM2] Done.
 ┌────────────────────────┬────┬─────────┬───────┬────────┬─────────┬────────┬──────┬───────────┬───────┬──────────┐

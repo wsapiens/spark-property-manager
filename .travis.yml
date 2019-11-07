@@ -1,0 +1,10 @@
+dist: bionic
+language: node_js
+node_js:
+  - "13"
+install:
+  - npm i -g grunt-cli
+  - npm install
+script:
+  - grunt
+  - npm test

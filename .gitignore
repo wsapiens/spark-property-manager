@@ -7,3 +7,5 @@
 /uploads
 /app.properties
 .DS_Store
+.app.key
+pm2-*.log
