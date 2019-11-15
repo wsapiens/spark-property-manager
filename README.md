@@ -43,14 +43,15 @@ $ sudo systemctl restart memcached
 ## Install Nodejs
 [nodejs install guide](https://nodejs.org/en/download/package-manager/)
 
-## Download dependencies
-```bash
-$ npm install
-```
-
 ## Download spark-property-Manager
 ```bash
 $ git clone https://github.com/wsapiens/spark-property-manager.git
+```
+
+## Download dependencies
+```bash
+$ cd spark-property-manager
+spark-mbp spark-property-manager $ npm install
 ```
 
 ## Run database migration
@@ -58,6 +59,7 @@ First, setup sequelize CLI config.json
 ```bash
 $ vi config/config.json
 ```
+
 ```json
 {
   "development": {
@@ -139,9 +141,7 @@ spark-property-manager$ node
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
 ```
 
-* put encrypted password with '[encrypt]' prefix into db password field
-
-* app.properties
+* put the encrypted password with '[encrypt]' prefix into db password field
 ```
 # contents of properties file
 [db]
@@ -163,9 +163,43 @@ Running "jshint:files" (jshint) task
 Done.
 ```
 
+## Run unit test by mocha
+* install mocha globally
+```bash
+$ npm i -g mocha
+$ mocha
+```
+
+* install mocha locally
+```bash
+$ npm i mocha
+$ node_modules/.bin/mocha
+```
+
 ## Run Application
 ```bash
 $ npm start
+
+  util
+    getImportAmount()
+      ✓ get negative amount for positive return amount
+      ✓ get negative amount for negative return amount
+      ✓ get postive amount for positive sale amount
+      ✓ get positive amount for negative sale amount
+    getImportDescription()
+      ✓ get description with return mark
+      ✓ get description without return mark
+    getRandomRGB()
+      ✓ get RGB number list
+
+  crypto
+    encrypt()
+      ✓ test encrypt
+    decrypt()
+      ✓ test decrypt
+
+
+  9 passing (23ms)
 ```
 
 ## Run Application by using Process Manager PM2
