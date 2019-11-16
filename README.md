@@ -51,7 +51,7 @@ $ git clone https://github.com/wsapiens/spark-property-manager.git
 ## Download dependencies
 ```bash
 $ cd spark-property-manager
-spark-mbp spark-property-manager $ npm install
+spark-property-manager $ npm install
 ```
 
 ## Run database migration
@@ -94,7 +94,7 @@ $ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
 ```
 
-* app.properties
+* app.properties example
 ```
 # contents of properties file
 [db]
@@ -141,7 +141,7 @@ spark-property-manager$ node
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
 ```
 
-* put the encrypted password with '[encrypt]' prefix into db password field
+* put the encrypted password with '[encrypt]' prefix into db password field on app.properties
 ```
 # contents of properties file
 [db]
