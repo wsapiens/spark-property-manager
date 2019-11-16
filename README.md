@@ -174,32 +174,32 @@ $ mocha
 ```bash
 $ npm i mocha
 $ node_modules/.bin/mocha
+
+util
+  getImportAmount()
+    ✓ get negative amount for positive return amount
+    ✓ get negative amount for negative return amount
+    ✓ get postive amount for positive sale amount
+    ✓ get positive amount for negative sale amount
+  getImportDescription()
+    ✓ get description with return mark
+    ✓ get description without return mark
+  getRandomRGB()
+    ✓ get RGB number list
+
+crypto
+  encrypt()
+    ✓ test encrypt
+  decrypt()
+    ✓ test decrypt
+
+
+9 passing (23ms)
 ```
 
 ## Run Application
 ```bash
 $ npm start
-
-  util
-    getImportAmount()
-      ✓ get negative amount for positive return amount
-      ✓ get negative amount for negative return amount
-      ✓ get postive amount for positive sale amount
-      ✓ get positive amount for negative sale amount
-    getImportDescription()
-      ✓ get description with return mark
-      ✓ get description without return mark
-    getRandomRGB()
-      ✓ get RGB number list
-
-  crypto
-    encrypt()
-      ✓ test encrypt
-    decrypt()
-      ✓ test decrypt
-
-
-  9 passing (23ms)
 ```
 
 ## Run Application by using Process Manager PM2
