@@ -1,8 +1,14 @@
 var table;
-var payTime;
 var expenseId;
 $(document).ready(function(){
   feather.replace()
+  $('#expense-date' ).datepicker({
+    onSelect: function (date, instance) {
+    }
+  });
+
+  $( "#expense-date" ).datepicker( "setDate", new Date());
+
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $('#type-select').find('option').remove();
@@ -82,6 +88,8 @@ $(document).ready(function(){
     var payTo = $('#pay-to-text').val();
     var payDesc = $('#pay-desc-text').val();
     var receiptFile = $('#uploaded').val();
+    var payTime = $('#expense-date').datepicker("getDate");
+    var payDate = [payTime.getFullYear(), ( payTime.getMonth() + 1 ), payTime.getDate()].join("-");
     console.log(unitId);
     console.log(payAmount);
     console.log(payTo);
@@ -93,7 +101,7 @@ $(document).ready(function(){
           url:"/expenses/"+expenseId,
           type: "PUT",
           headers: { "CSRF-Token": token },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime, file: receiptFile, method_id: methodId}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           statusCode: {
@@ -107,10 +115,10 @@ $(document).ready(function(){
               $('#pay-amount-text').val('');
               $('#pay-to-text').val('');
               $('#pay-desc-text').val('');
+              $('#expense-date').datepicker( "setDate", new Date());
               $('#file-select').val('');
               $('#uploaded').val('');
               expenseId = null;
-              payTime = null;
               // refreshTable(table, false);
               rows_selected=[];
               table.api().clear();
@@ -133,7 +141,7 @@ $(document).ready(function(){
           url:"/expenses/",
           type: "POST",
           headers: { "CSRF-Token": token },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, file: receiptFile, method_id: methodId}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
@@ -147,6 +155,7 @@ $(document).ready(function(){
               $('#pay-amount-text').val('');
               $('#pay-to-text').val('');
               $('#pay-desc-text').val('');
+              $('#expense-date').datepicker( "setDate", new Date());
               $('#file-select').val('');
               $('#uploaded').val('');
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
@@ -356,14 +365,15 @@ $(document).on('click', '#edit-button', function(){
       if("success" === status) {
         $.get("/units/"+data.unit_id, function(udata, ustatus){
           if("success" === ustatus) {
-            $('#property-select').val(udata.property_id).change();
+            $('#property-select').val(udata.property_id).change(); // this will load unit-select too
             $('#pay-amount-text').val(Number(data.amount.replace("$", "")));
             $('#pay-to-text').val(data.pay_to);
             $('#pay-desc-text').val(data.description);
             $('#type-select').val(data.type_id).change();
             $('#method-select').val(data.method_id).change();
             $('#uploaded').val(data.file);
-            payTime = data.pay_time;
+            $('#expense-date').datepicker( "setDate", new Date(data.pay_time));
+            $('#unit-select').val(udata.id).change();
             expenseId = rows_selected[0].id;
             window.setTimeout(function(){
               console.log(">>>>>" + data.unit_id);
