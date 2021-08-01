@@ -2,6 +2,7 @@ var table;
 var tenantId;
 var rows_selected;
 $(document).ready(function(){
+  feather.replace()
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $.get("/properties", function(data, status){

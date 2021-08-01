@@ -9,7 +9,7 @@
   </head>
   <body>
     <% include header %>
-    <div class="container">
+    <div class="container-fluid">
       <script>
       function expenseByType() {
         var startDate = $('#start-date').datepicker("getDate");
@@ -115,6 +115,7 @@
       }
 
       $(document).ready(function(){
+        feather.replace()
         $('#start-date' ).datepicker({
           onSelect: function (date, instance) {
           }
@@ -148,7 +149,15 @@
 
             data.data.forEach(function(row) {
               console.log(Object.values(row).join(","));
-              csv += Object.values(row).join(",") + '\n';
+              var line = "";
+              for (const [key, value] of Object.entries(row)) {
+                  if(typeof(value) == "string") {
+                    line += "\""+value+"\","
+                  } else {
+                    line += value+","
+                  } 
+              }
+              csv += line + '\n';
             });
             csv = csv.replace('<mark>', '');
             csv = csv.replace('</mark>', '');
@@ -161,49 +170,42 @@
           });
       });
       </script>
-      <h1>Dashboard</h1>
-      <br><br>
-      <canvas id="chartByType" width="50" height="50"></canvas>
-      <br><br><br><br>
-      <canvas id="chartByUnit" width="50" height="50"></canvas>
-      <br><br><br><br>
-      <canvas id="chartByTime" width="50" height="50"></canvas>
-      <br><br><br><br>
-      <h3>Selects Dates To Review Expenses</h3>
-      <label for="start-date">Start Date:</label>
-      <input type="text" data-role="date" id="start-date">
-      <label for="end-date">End Date:</label>
-      <input type="text" data-role="date" id="end-date">
-      <table>
-        <tr>
-          <td><input type="button" data-inline="true" data-icon="edit" id="draw-button" value="Draw Charts"></td>
-          <td><input type="button" data-inline="true" data-icon="bars" id="generate-button" value="Generate Report"></td>
-          <td><a href="" id="download-report" download>Save Report To File</a></td>
-        </tr>
-      </table>
-      <br><br><br><br>
-      <input type="button" value="Expense Manager" onclick="window.location.href='/manager/expense'" />
-      <input type="button" value="Import Manager" onclick="window.location.href='/manager/import'" />
-      <input type="button" value="Work Manager" onclick="window.location.href='/manager/work'" />
-      <input type="button" value="Vendor Manager" onclick="window.location.href='/manager/vendor'" />
-      <input type="button" value="Tenant Manager" onclick="window.location.href='/manager/tenant'" />
-      <%if (manager > 0) { %>
-        <input type="button" value="Property Manager" onclick="window.location.href='/manager/property'" />
-        <input type="button" value="Unit Manager" onclick="window.location.href='/manager/unit'" />
-        <input type="button" value="Payment Manager" onclick="window.location.href='/manager/payment'" />
-        <input type="button" value="User Manager" onclick="window.location.href='/manager/user'" />
-      <% } %>
-      <br>
-      <div align="center">
-        <p><font color="red"><%= message %></font></p>
+      <div class="row">
+        <% include panel %>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <br>
+          <h1 class="h4">Dashboard</h1>
+          <br><br>
+          <canvas id="chartByType" width="50" height="50"></canvas>
+          <br><br><br><br>
+          <canvas id="chartByUnit" width="50" height="50"></canvas>
+          <br><br><br><br>
+          <canvas id="chartByTime" width="50" height="50"></canvas>
+          <br><br><br><br>
+          <h1 class="h5">Selects Dates To Review Expenses</h1>
+          <span data-feather="calendar"></span>
+          <label for="start-date">Start Date:</label>
+          <input type="text" class="form-control input-sm" data-role="date" id="start-date">
+          <br>
+          <span data-feather="calendar"></span>
+          <label for="end-date">End Date:</label>
+          <input type="text" class="form-control input-sm" data-role="date" id="end-date">
+          <br>
+          <table>
+            <tr>
+              <td><button type="button" class="btn btn-sm btn-outline-secondary" id="draw-button">Draw Charts</button></td>
+              <td><button type="button" class="btn btn-sm btn-outline-secondary" id="generate-button">Generate Report</button></td>
+              <td><a href="" id="download-report" download> Save Report To File </a></td>
+            </tr>
+          </table>
+          <br><br><br><br>
+          <div align="center">
+            <p><font color="red"><%= message %></font></p>
+          </div>
+          <br><br>
+        </main>
       </div>
-      <br><br>
-      <form action="/logout">
-        <input type="submit" value="Logout" />
-      </form>
+      <% include footer %>
     </div>
-    <% include panel %>
-    <% include config %>
-    <% include footer %>
   </body>
 </html>

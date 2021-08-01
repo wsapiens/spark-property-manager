@@ -1,5 +1,11 @@
-<div data-role="header" data-position="fixed" data-theme="a">
-  <h1>SPARK Property Manager v<%= version %></h1>
-  <a href="#nav-panel" data-icon="bars" data-iconpos="notext">Menu</a>
-  <a href="#config-form" data-icon="gear" data-iconpos="notext">Config</a>
-</div>
+<header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
+  <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="#">SPARK Property Manager v<%= version %></a>
+  <button class="navbar-toggler position-absolute d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="navbar-nav">
+    <form class="nav-item text-nowrap bg-dark" action="/logout">
+      <input class="nav-link bg-dark px-3" type="submit" value="Sign Out" />
+    </form>
+  </div>
+</header>

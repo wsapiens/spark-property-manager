@@ -1,6 +1,7 @@
 var table;
 var propertyId;
 $(document).ready(function(){
+  feather.replace()
   $('#property-type-select').find('option').remove();
   $.get("/types/property", function(data, status){
     console.log(data.data);

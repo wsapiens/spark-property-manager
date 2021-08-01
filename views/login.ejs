@@ -4,24 +4,28 @@
     <% include head %>
   </head>
   <body>
-    <div class="container">
-      <h1>Sign In</h1>
-      <form method="post" action="/login">
-        <p>
-          <label>Username:</label>
-          <input type="text" name="username">
-        </p>
-        <p>
-          <label>Password:</label>
-          <input type="password" name="password">
-        </p>
-        <p>
-          <input type="submit" value="Login">
-        </p>
-      </form>
-      <div align="center">
-        <p><font color="red"><%= message %></font></p>
+    <div class="container-fluid">
+      <div class="row">
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <h1 class="h4">Spark Property Manager</h1>
+          <form method="post" action="/login">
+            <p>
+              <input type="text" class="form-control input-sm" name="username" placeholder="Username">
+            </p>
+            <p>
+              <input type="password" class="form-control input-sm" name="password" placeholder="Password">
+            </p>
+            <p>
+              <input type="submit" class="btn btn-primary btn-lg btn-block" value="Login">
+            </p>
+          </form>
+          <div align="center"></div>
+            <p>
+              <font color="red"><%= message %></font>
+            </p>
+          </div>
+        </main>
       </div>
-      <a href="/subscribe">Create Account For your company</a>
+    </div>
   </body>
 </html>

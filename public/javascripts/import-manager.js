@@ -1,6 +1,7 @@
 var table;
 var configId;
 $(document).ready(function(){
+  feather.replace()
   $('#method-select').find('option').remove();
   $.get("/payments/methods", function(data, status){
     console.log(data.data);

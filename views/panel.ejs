@@ -1,22 +1,77 @@
-<div data-role="panel" id="nav-panel" data-display="overlay" data-theme="b">
-  <ul data-role="listview">
-    <li data-icon="back"><a href="#" data-rel="close">Close</a></li>
-    <li data-icon="home"><a href="javascript:window.location.href='/'">Dashboard</a></li>
-    <li><a href="javascript:window.location.href='/manager/expense'">Expense</a></li>
-    <li><a href="javascript:window.location.href='/manager/import'">Import</a></li>
-    <li><a href="javascript:window.location.href='/manager/work'">Work</a></li>
-    <li><a href="javascript:window.location.href='/manager/vendor'">Vendor</a></li>
-    <li><a href="javascript:window.location.href='/manager/tenant'">Tenant</a></li>
+<nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+  <div class="position-sticky pt-3">
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <a class="nav-link active" aria-current="page" href="javascript:window.location.href='/'">
+          <span data-feather="home"></span>
+          Dashboard
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:window.location.href='/manager/expense'">
+          <span data-feather="dollar-sign"></span>
+          Expense
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:window.location.href='/manager/import'">
+          <span data-feather="upload"></span>
+          Import
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:window.location.href='/manager/work'">
+          <span data-feather="tool"></span>
+          Work
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:window.location.href='/manager/vendor'">
+          <span data-feather="shopping-bag"></span>
+          Vendor
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="javascript:window.location.href='/manager/tenant'">
+          <span data-feather="users"></span>
+          Tenant
+        </a>
+      </li>
+    </ul>
+
     <%if (manager > 0) { %>
-      <li><a href="javascript:window.location.href='/manager/property'">Property</a></li>
-      <li><a href="javascript:window.location.href='/manager/unit'">Unit</a></li>
-      <li><a href="javascript:window.location.href='/manager/payment'">Payment</a></li>
-      <li><a href="javascript:window.location.href='/manager/user'">User</a></li>
+      <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+        <span>Manager Action</span>
+        <a class="link-secondary" href="#" aria-label="Add a new report">
+          <span data-feather="plus-circle"></span>
+        </a>
+      </h6>
+      <ul class="nav flex-column mb-2">
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:window.location.href='/manager/property'">
+            <span data-feather="file-text"></span>
+            Property
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:window.location.href='/manager/unit'">
+            <span data-feather="file-text"></span>
+            Unit
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:window.location.href='/manager/payment'">
+            <span data-feather="credit-card"></span>
+            Payment
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="javascript:window.location.href='/manager/user'">
+            <span data-feather="user-check"></span>
+            User
+          </a>
+        </li>
+      </ul>
     <% } %>
-    <li>
-      <form action="/logout">
-        <input data-icon="power" type="submit" value="Logout" />
-      </form>
-    </li>
-  </ul>
-</div>
+  </div>
+</nav>

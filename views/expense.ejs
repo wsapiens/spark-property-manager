@@ -8,97 +8,103 @@
   </head>
   <body>
     <% include header %>
-    <div class="container">
-      <h1><%= title %></h1>
-      <form>
-        <label for="property-select" class="select ui-select">Property:</label>
-        <select name="select-native-1" id="property-select">
-          <option value="1">Select Property</option>
-        </select>
-        <br>
-        <label for="unit-select" class="select ui-select">Unit:</label>
-        <select name="select-native-1" id="unit-select">
-          <option value="1">Select Unit</option>
-        </select>
-        <br>
-        <label for="type-select" class="select ui-select">Expense Type:</label>
-        <select name="select-native-1" id="type-select">
-          <option value="1">Select Expense Type</option>
-        </select>
-        <br>
-        <label for="method-select" class="select ui-select">Payment Method:</label>
-        <select name="select-native-1" id="method-select">
-          <option value="1">Select Payment Method</option>
-        </select>
-      </form>
-      <br><br><br>
-      <form>
-        <label for="pay-amount-text">Pay Amount:</label>
-        <input type="number" data-clear-btn="true" name="pay-amount-text" id="pay-amount-text" value="">
-        <br>
-        <label for="pay-to-text">Pay To:</label>
-        <input type="text" data-clear-btn="true" name="pay-to-text" id="pay-to-text" value="">
-        <br>
-        <label for="pay-desc-text">Description:</label>
-        <textarea name="pay-desc-text" id="pay-desc-text"></textarea>
-      </form>
-      <br>
-      <form id="file-upload-form" enctype="multipart/form-data">
-        <label>Upload Photo Copy of Receipt:</label>
-        <input type="file" id="file-select" name="receipt" accept="image/*">
-        <input type="button" id="upload-button" data-icon="action" value="Upload Receipt">
-      </form>
-      <input type="hidden" id="uploaded" value="">
-      <br><br><br>
-      <form align="right">
-        <input type="button" data-inline="true" id="submit-button" value="Submit">
-      </form>
-      <br><br><br><br>
-      <hr>
-      <br><br>
-      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
-      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
-      <br><br>
-      <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
-        <thead>
-          <tr>
-            <th><input name="select_all" value="1" type="checkbox"></th>
-            <th>Id</th>
-            <th>PropertyAddres</th>
-            <th>ProptertyUnit</th>
-            <th>PropertyCity</th>
-            <th>PayMethod</th>
-            <th>PayAccount</th>
-            <th>PayTo</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Time</th>
-            <th>Receipt</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th></th>
-            <th>Id</th>
-            <th>PropertyAddres</th>
-            <th>PropertyUnit</th>
-            <th>PropertyCity</th>
-            <th>PayMethod</th>
-            <th>PayAccount</th>
-            <th>PayTo</th>
-            <th>Description</th>
-            <th>Type</th>
-            <th>Amount</th>
-            <th>Time</th>
-            <th>Receipt</th>
-          </tr>
-        </tfoot>
-      </table>
-      <br><br>
+    <div class="container-fluid">
+      <div class="row">
+        <% include panel %>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <br>
+          <h1 class="h4"><%= title %></h1>
+          <br>
+          <form>
+            <label for="property-select" class="select ui-select">Property:</label>
+            <select class="form-select" name="select-native-1" id="property-select">
+              <option value="1">Select Property</option>
+            </select>
+            <br>
+            <label for="unit-select" class="select ui-select">Unit:</label>
+            <select class="form-select" name="select-native-1" id="unit-select">
+              <option value="1">Select Unit</option>
+            </select>
+            <br>
+            <label for="type-select" class="select ui-select">Expense Type:</label>
+            <select class="form-select" name="select-native-1" id="type-select">
+              <option value="1">Select Expense Type</option>
+            </select>
+            <br>
+            <label for="method-select" class="select ui-select">Payment Method:</label>
+            <select class="form-select" name="select-native-1" id="method-select">
+              <option value="1">Select Payment Method</option>
+            </select>
+          </form>
+          <br>
+          <form>
+            <label for="pay-amount-text">Pay Amount:</label>
+            <input type="number" class="form-control input-sm" name="pay-amount-text" id="pay-amount-text" value="">
+            <br>
+            <label for="pay-to-text">Pay To:</label>
+            <input type="text" class="form-control input-sm" name="pay-to-text" id="pay-to-text" value="">
+            <br>
+            <label for="pay-desc-text">Description:</label>
+            <textarea class="form-control input-sm" name="pay-desc-text" id="pay-desc-text"></textarea>
+          </form>
+          <br>
+          <form id="file-upload-form" enctype="multipart/form-data">
+            <label>Upload Photo Copy of Receipt:</label>
+            <input type="file" class="form-control input-sm" id="file-select" name="receipt" accept="image/*">
+            <br>
+            <input type="button" class="btn btn-sm btn-outline-secondary" id="upload-button" data-icon="action" value="Upload Receipt">
+          </form>
+          <input type="hidden" id="uploaded" value="">
+          <br>
+          <form align="right">
+            <button id="submit-button" class="btn btn-sm btn-outline-primary">Submit</button>
+          </form>
+          <br>
+          <hr>
+          <br>
+          <button id="edit-button" class="btn btn-sm btn-outline-secondary">Edit Selected</button>
+          <button id="delete-button" class="btn btn-sm btn-outline-secondary">Delete Selected</button>
+          <br><br>
+          <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+            <thead>
+              <tr>
+                <th><input name="select_all" value="1" type="checkbox"></th>
+                <th>Id</th>
+                <th>PropertyAddres</th>
+                <th>ProptertyUnit</th>
+                <th>PropertyCity</th>
+                <th>PayMethod</th>
+                <th>PayAccount</th>
+                <th>PayTo</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Time</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Id</th>
+                <th>PropertyAddres</th>
+                <th>PropertyUnit</th>
+                <th>PropertyCity</th>
+                <th>PayMethod</th>
+                <th>PayAccount</th>
+                <th>PayTo</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Amount</th>
+                <th>Time</th>
+                <th>Receipt</th>
+              </tr>
+            </tfoot>
+          </table>
+          <br><br>
+        </main>
+      </div>
+      <% include footer %>
     </div>
-    <% include panel %>
-    <% include config %>
-    <% include footer %>
   </body>
 </html>

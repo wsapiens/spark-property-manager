@@ -1,6 +1,7 @@
 var table;
 var workId;
 $(document).ready(function(){
+  feather.replace()
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $('#vendor-select').find('option').remove();

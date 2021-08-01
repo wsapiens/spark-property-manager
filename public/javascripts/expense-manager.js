@@ -2,6 +2,7 @@ var table;
 var payTime;
 var expenseId;
 $(document).ready(function(){
+  feather.replace()
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $('#type-select').find('option').remove();

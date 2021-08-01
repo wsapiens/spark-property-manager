@@ -8,79 +8,87 @@
   </head>
   <body>
     <% include header %>
-    <div class="container">
-      <h1><%= title %></h1>
-      <br>
-      <form>
-        <label for="property-select" class="select ui-select">Property:</label>
-        <select name="select-native-1" id="property-select">
-          <option value="1">Select Property</option>
-        </select>
-        <br>
-        <label for="unit-select" class="select ui-select">Unit:</label>
-        <select name="select-native-1" id="unit-select">
-          <option value="1">Select Unit</option>
-        </select>
-        <label for="firstname-text">First Name:</label>
-        <input type="text" data-clear-btn="true" name="firstname-text" id="firstname-text" value="">
-        <br>
-        <label for="lastname-text">Last Name:</label>
-        <input type="text" data-clear-btn="true" name="lastname-text" id="lastname-text" value="">
-        <br>
-        <label for="phone-text">Phone:</label>
-        <input type="text" data-clear-btn="true" name="phone-text" id="phone-text" value="">
-        <br>
-        <label for="email-text">Email:</label>
-        <input type="text" data-clear-btn="true" name="email-text" id="email-text" value="">
-        <br>
-        <label for="lease-start-date">Lease Start Date</label>
-        <input type="text" data-role="date" id="lease-start-date">
-        <label for="lease-end-date">Lease End Date</label>
-        <input type="text" data-role="date" id="lease-end-date">
-        <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
-      </form>
-      <br><br><br>
-      <form align="right">
-        <input type="button" data-inline="true" id="submit-button" value="Submit">
-      </form>
-      <br><br><br><br>
-      <hr>
-      <br><br>
-      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
-      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
-      <br><br>
-      <table id="tenants" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
-        <thead>
-          <tr>
-            <th><input name="select_all" value="1" type="checkbox"></th>
-            <th>Id</th>
-            <th>PropertyUnit</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>LeaseStartDate</th>
-            <th>LeaseEndDate</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th></th>
-            <th>Id</th>
-            <th>PropertyUnit</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Phone</th>
-            <th>Email</th>
-            <th>LeaseStartDate</th>
-            <th>LeaseEndDate</th>
-          </tr>
-        </tfoot>
-      </table>
-      <br><br>
+    <div class="container-fluid">
+      <div class="row">
+        <% include panel %>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <br>
+          <h1 class="h4"><%= title %></h1>
+          <br>
+          <form>
+            <label for="property-select" class="select ui-select">Property:</label>
+            <select class="form-select" name="select-native-1" id="property-select">
+              <option value="1">Select Property</option>
+            </select>
+            <br>
+            <label for="unit-select" class="select ui-select">Unit:</label>
+            <select class="form-select" name="select-native-1" id="unit-select">
+              <option value="1">Select Unit</option>
+            </select>
+            <br>
+            <label for="firstname-text">First Name:</label>
+            <input type="text" class="form-control input-sm" name="firstname-text" id="firstname-text" value="">
+            <br>
+            <label for="lastname-text">Last Name:</label>
+            <input type="text" class="form-control input-sm" name="lastname-text" id="lastname-text" value="">
+            <br>
+            <label for="phone-text">Phone:</label>
+            <input type="text" class="form-control input-sm" name="phone-text" id="phone-text" value="">
+            <br>
+            <label for="email-text">Email:</label>
+            <input type="text" class="form-control input-sm" name="email-text" id="email-text" value="">
+            <br>
+            <span data-feather="calendar"></span>
+            <label for="lease-start-date">Lease Start Date</label>
+            <input type="text" class="form-control input-sm" data-role="date" id="lease-start-date">
+            <br>
+            <span data-feather="calendar"></span>
+            <label for="lease-end-date">Lease End Date</label>
+            <input type="text" class="form-control input-sm" data-role="date" id="lease-end-date">
+            <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
+          </form>
+          <br><br>
+          <form align="right">
+            <button id="submit-button" class="btn btn-sm btn-outline-primary">Submit</button>
+          </form>
+          <br>
+          <hr>
+          <br>
+          <button id="edit-button" class="btn btn-sm btn-outline-secondary">Edit Selected</button>
+          <button id="delete-button" class="btn btn-sm btn-outline-secondary">Delete Selected</button>
+          <br><br>
+          <table id="tenants" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+            <thead>
+              <tr>
+                <th><input name="select_all" value="1" type="checkbox"></th>
+                <th>Id</th>
+                <th>PropertyUnit</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>LeaseStartDate</th>
+                <th>LeaseEndDate</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Id</th>
+                <th>PropertyUnit</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>Email</th>
+                <th>LeaseStartDate</th>
+                <th>LeaseEndDate</th>
+              </tr>
+            </tfoot>
+          </table>
+          <br><br>
+        </main>
+      </div>
+      <% include footer %>
     </div>
-    <% include panel %>
-    <% include config %>
-    <% include footer %>
   </body>
 </html>

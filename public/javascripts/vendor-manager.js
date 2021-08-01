@@ -1,6 +1,7 @@
 var table;
 var vendorId;
 $(document).ready(function(){
+  feather.replace()
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var categoryText = $('#category-text').val();

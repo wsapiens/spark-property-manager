@@ -1,6 +1,7 @@
 var table;
 var methodId;
 $(document).ready(function(){
+  feather.replace()
   $('#payment-type-select').find('option').remove();
   $.get("/types/payment", function(data, status){
     console.log(data.data);

@@ -8,67 +8,72 @@
   </head>
   <body>
     <% include header %>
-    <div class="container">
-      <h1><%= title %></h1>
-      <br>
-      <div align="center">
-        <p>Any Change Will Make Password Reset and Send New Password to The Email</p>
+    <div class="container-fluid">
+      <div class="row">
+        <% include panel %>
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <br>
+          <h1 class="h4"><%= title %></h1>
+          <br>
+          <div align="center">
+            <p>Create Or Edit User Account for Others, It Will Reset Password and Send New Password to The Email</p>
+          </div>
+          <form>
+            <label for="email-text">Email:</label>
+            <input type="text" class="form-control input-sm" name="email-text" id="email-text" value="">
+            <br>
+            <label for="firstname-text">First Name:</label>
+            <input type="text" class="form-control input-sm" name="firstname-text" id="firstname-text" value="">
+            <br>
+            <label for="lastname-text">Last Name:</label>
+            <input type="text" class="form-control input-sm" name="lastname-text" id="lastname-text" value="">
+            <br>
+            <label for="phone-text">Phone:</label>
+            <input type="text" class="form-control input-sm" name="phone-text" id="phone-text" value="">
+            <br>
+            <label class="form-check-label" for="is-manager-checkbox">This User Is Manager</label>
+            <input type="checkbox" class="form-check-input" name="is-manager-checkbox" id="is-manager-checkbox">
+            <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
+          </form>
+          <br><br>
+          <form align="right">
+            <button id="submit-button" class="btn btn-sm btn-outline-primary">Submit</button>
+          </form>
+          <br>
+          <hr>
+          <br>
+          <button id="edit-button" class="btn btn-sm btn-outline-secondary">Edit Selected</button>
+          <button id="delete-button" class="btn btn-sm btn-outline-secondary">Delete Selected</button>
+          <br><br>
+          <table id="users" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
+            <thead>
+              <tr>
+                <th><input name="select_all" value="1" type="checkbox"></th>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>IsManager</th>
+              </tr>
+            </thead>
+            <tfoot>
+              <tr>
+                <th></th>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Phone</th>
+                <th>IsManager</th>
+              </tr>
+            </tfoot>
+          </table>
+          <br><br><br><br>
+          <% include config %>
+        </main>
       </div>
-      <form>
-        <label for="email-text">Email:</label>
-        <input type="text" data-clear-btn="true" name="email-text" id="email-text" value="">
-        <br>
-        <label for="firstname-text">First Name:</label>
-        <input type="text" data-clear-btn="true" name="firstname-text" id="firstname-text" value="">
-        <br>
-        <label for="lastname-text">Last Name:</label>
-        <input type="text" data-clear-btn="true" name="lastname-text" id="lastname-text" value="">
-        <br>
-        <label for="phone-text">Phone:</label>
-        <input type="text" data-clear-btn="true" name="phone-text" id="phone-text" value="">
-        <br>
-        <label for="is-manager-checkbox">This User Is Manager</label>
-        <input type="checkbox" name="is-manager-checkbox" id="is-manager-checkbox">
-        <!-- <input type="radio" name="radio-enhanced" id="is-building-radio" data-enhanced="true"> -->
-      </form>
-      <br><br><br>
-      <form align="right">
-        <input type="button" data-inline="true" id="submit-button" value="Submit">
-      </form>
-      <br><br><br><br>
-      <hr>
-      <br><br>
-      <button id="edit-button" class="ui-btn ui-btn-inline">Edit Selected</button>
-      <button id="delete-button" class="ui-btn ui-btn-inline">Delete Selected</button>
-      <br><br>
-      <table id="users" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
-        <thead>
-          <tr>
-            <th><input name="select_all" value="1" type="checkbox"></th>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Phone</th>
-            <th>IsManager</th>
-          </tr>
-        </thead>
-        <tfoot>
-          <tr>
-            <th></th>
-            <th>Id</th>
-            <th>Email</th>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>Phone</th>
-            <th>IsManager</th>
-          </tr>
-        </tfoot>
-      </table>
-      <br><br>
+      <% include footer %>
     </div>
-    <% include panel %>
-    <% include config %>
-    <% include footer %>
   </body>
 </html>

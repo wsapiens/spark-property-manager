@@ -1,6 +1,7 @@
 var table;
 var userId;
 $(document).ready(function(){
+  feather.replace()
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var loginEmail = $('#email-text').val();

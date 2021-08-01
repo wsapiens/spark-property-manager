@@ -1,6 +1,7 @@
 var table;
 var unitId;
 $(document).ready(function(){
+  feather.replace()
   $('#property-select').find('option').remove();
   $.get("/properties", function(data, status){
     console.log(data['data']);
