@@ -254,7 +254,7 @@ router.post('/', csrfProtection, function(req, res, next) {
     type_id: req.body.type_id,
     method_id: req.body.method_id,
     amount: req.body.amount,
-    pay_time: new Date(),
+    pay_time: req.body.pay_time,
     file: req.body.file,
   }).then(expense => {
     res.send(expense);
