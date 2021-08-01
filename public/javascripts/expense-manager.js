@@ -273,6 +273,7 @@ $(document).ready(function(){
   });
 
   $('#upload-button').on('click', function() {
+    $('#spinner').removeClass('d-none');
     $.ajax({
         // Your server script to process the upload
         url: '/file/receipt',
@@ -290,7 +291,7 @@ $(document).ready(function(){
           200: function(response) {
                 console.log(response);
                 $('#uploaded').val(response);
-                $.mobile.loading( "hide" );
+                $('#spinner').addClass('d-none');
                }
         },
 
