@@ -2,6 +2,18 @@ var table;
 var propertyId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').addClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#property-type-select').find('option').remove();
   $.get("/types/property", function(data, status){
     console.log(data.data);

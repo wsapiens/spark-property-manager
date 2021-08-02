@@ -2,6 +2,18 @@ var table;
 var userId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').addClass('active');
+
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var loginEmail = $('#email-text').val();

@@ -116,6 +116,18 @@
 
       $(document).ready(function(){
         feather.replace()
+
+        $('#nav-dashboard').addClass('active');
+        $('#nav-expense').removeClass('active');
+        $('#nav-import').removeClass('active');
+        $('#nav-work').removeClass('active');
+        $('#nav-vendor').removeClass('active');
+        $('#nav-tenant').removeClass('active');
+        $('#nav-property').removeClass('active');
+        $('#nav-unit').removeClass('active');
+        $('#nav-payment').removeClass('active');
+        $('#nav-user').removeClass('active');
+
         $('#start-date' ).datepicker({
           onSelect: function (date, instance) {
           }
