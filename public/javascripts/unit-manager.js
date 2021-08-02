@@ -2,6 +2,18 @@ var table;
 var unitId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').addClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#property-select').find('option').remove();
   $.get("/properties", function(data, status){
     console.log(data['data']);

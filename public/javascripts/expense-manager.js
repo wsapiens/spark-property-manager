@@ -2,6 +2,18 @@ var table;
 var expenseId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').addClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#expense-date' ).datepicker({
     onSelect: function (date, instance) {
     }

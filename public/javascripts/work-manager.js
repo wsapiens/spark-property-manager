@@ -2,6 +2,18 @@ var table;
 var workId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').addClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $('#vendor-select').find('option').remove();

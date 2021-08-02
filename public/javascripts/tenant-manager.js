@@ -3,6 +3,18 @@ var tenantId;
 var rows_selected;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').addClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#property-select').find('option').remove();
   $('#unit-select').find('option').remove();
   $.get("/properties", function(data, status){

@@ -2,6 +2,18 @@ var table;
 var vendorId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').addClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').removeClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#submit-button').on('click', function() {
     var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var categoryText = $('#category-text').val();

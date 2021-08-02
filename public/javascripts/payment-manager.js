@@ -2,6 +2,18 @@ var table;
 var methodId;
 $(document).ready(function(){
   feather.replace()
+
+  $('#nav-dashboard').removeClass('active');
+  $('#nav-expense').removeClass('active');
+  $('#nav-import').removeClass('active');
+  $('#nav-work').removeClass('active');
+  $('#nav-vendor').removeClass('active');
+  $('#nav-tenant').removeClass('active');
+  $('#nav-property').removeClass('active');
+  $('#nav-unit').removeClass('active');
+  $('#nav-payment').addClass('active');
+  $('#nav-user').removeClass('active');
+
   $('#payment-type-select').find('option').remove();
   $.get("/types/payment", function(data, status){
     console.log(data.data);
