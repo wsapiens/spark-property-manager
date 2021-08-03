@@ -67,7 +67,7 @@ router.post('/statement/:methodId', upload.single('statement'), function(req, re
             }).then(properties => {
               defaultUnitId = properties[0].PropertyUnits[0].id;
 
-              csv.fromPath(req.file.path)
+              csv.parseFile(req.file.path)
                  .on("data", function(data){
                    console.log(data);
                    row++;
@@ -76,7 +76,8 @@ router.post('/statement/:methodId', upload.single('statement'), function(req, re
                      return;
                    }
                    var filter = data[importConfig.filter_column_number];
-                   if(importConfig.filter_keyword.includes(filter)) {
+                   var regex = new RegExp( importConfig.filter_keyword.replace(",", "|") , "i");
+                   if(regex.test(filter)) {
                      var expense_type_id = 9;
                      for(let i = 0; i < expenseTypes.length; i++) {
                        if(data[importConfig.category_column_number].includes(expenseTypes[i].name)) {
