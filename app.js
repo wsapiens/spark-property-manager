@@ -1,5 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
+var eaa = require('express-async-await')
 var session = require('express-session');
 var memcachedStore = require('connect-memcached')(session);
 var path = require('path');
@@ -27,7 +28,7 @@ var workRouter = require('./routes/works');
 var vendorRouter = require('./routes/vendors');
 var paymentRouter = require('./routes/payments');
 
-var app = express();
+var app = eaa(express());
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on
