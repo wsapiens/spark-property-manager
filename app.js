@@ -1,6 +1,6 @@
 var createError = require('http-errors');
 var express = require('express');
-var eaa = require('express-async-await')
+var eaa = require('express-async-await');
 var session = require('express-session');
 var memcachedStore = require('connect-memcached')(session);
 var path = require('path');
