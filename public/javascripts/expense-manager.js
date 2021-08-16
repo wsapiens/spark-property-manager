@@ -1,6 +1,6 @@
 var table;
 var expenseId;
-$(document).ready(function(){
+$(function(){
   feather.replace()
 
   $('#nav-dashboard').removeClass('active');
@@ -112,10 +112,12 @@ $(document).ready(function(){
         $.ajax({
           url:"/expenses/"+expenseId,
           type: "PUT",
-          headers: { "CSRF-Token": token },
+          headers: { "CSRF-Token": token, "cache-control": "no-cache" },
           data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
+          cache: false,
+          async: false,
           statusCode: {
             200: function() {
               table.api().ajax.reload();
@@ -152,11 +154,13 @@ $(document).ready(function(){
         $.ajax({
           url:"/expenses/",
           type: "POST",
-          headers: { "CSRF-Token": token },
+          headers: { "CSRF-Token": token, "cache-control": "no-cache" },
           data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
+          cache: false,
+          async: false,
           statusCode: {
             200: function() {
               table.api().ajax.url("/expenses").load();
