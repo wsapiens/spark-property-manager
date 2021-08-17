@@ -26,13 +26,10 @@ router.get('/:userId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  models.User.find({
-    where: {
-      id: req.params.userId
-    }
-  }).then(user => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(user));
+  models.User.findByPk(req.params.userId)
+    .then(user => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(user));
   });
 });
 
