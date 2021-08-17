@@ -14,7 +14,7 @@
     "aes256": "^1.0.4",
     "body-parser": "^1.18.3",
     "bootstrap": "5.0.2",
-    "chart.js": "^2.7.2",
+    "chart.js": "^3.5.0",
     "cluster": "^0.7.7",
     "connect-flash": "^0.1.1",
     "connect-memcached": "^0.2.0",
