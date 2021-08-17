@@ -236,7 +236,7 @@ router.get('/:expenseId', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Expense
-        .findById(req.params.expenseId)
+        .findByPk(req.params.expenseId)
         .then(exponse =>{
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify(exponse));
@@ -266,10 +266,10 @@ router.put('/:expenseId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Expense
-        .findById(req.params.expenseId)
+        .findByPk(req.params.expenseId)
         .then(expense => {
           if(expense) {
-            expense.updateAttributes({
+            expense.update({
               unit_id: req.body.unit_id,
               pay_to: req.body.pay_to,
               type_id: req.body.type_id,

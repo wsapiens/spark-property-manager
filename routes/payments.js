@@ -26,13 +26,10 @@ router.get('/methods/:methodId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  models.PaymentMethod.find({
-    where: {
-      id: req.params.methodId
-    }
-  }).then(method => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(method));
+  models.PaymentMethod.findByPk(req.params.methodId)
+    .then(method => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(method));
   });
 });
 
@@ -55,10 +52,10 @@ router.put('/methods/:methodId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.PaymentMethod
-        .findById(req.params.methodId)
+        .findByPk(req.params.methodId)
         .then(method => {
           if(method) {
-            method.updateAttributes({
+            method.update({
               type_id: req.body.type_id,
               description: req.body.description,
               account_number: req.body.account_number

@@ -26,7 +26,7 @@ router.get('/:vendorId', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Vendor
-        .findById(req.params.vendorId)
+        .findByPk(req.params.vendorId)
         .then(vendor =>{
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify(vendor));
@@ -54,10 +54,10 @@ router.put('/:vendorId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Vendor
-        .findById(req.params.vendorId)
+        .findByPk(req.params.vendorId)
         .then(vendor => {
           if(vendor) {
-            vendor.updateAttributes({
+            vendor.update({
               name: req.body.name,
               phone: req.body.phone,
               email: req.body.email,
