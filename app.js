@@ -77,7 +77,7 @@ passport.serializeUser(function(user, cb) {
 
 passport.deserializeUser(function(id, cb) {
   models.User
-        .findById(id)
+        .findByPk(id)
         .then(user => {
           cb(null, user);
         });

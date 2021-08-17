@@ -117,10 +117,10 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
       company_id: req.user.company_id
     }).then(vendor => {
       models.WorkOrder
-            .findById(req.params.workId)
+            .findByPk(req.params.workId)
             .then(work => {
               if(work) {
-                work.updateAttributes({
+                work.update({
                   unit_id: req.body.unit_id,
                   description: req.body.description,
                   status: req.body.status,
@@ -135,10 +135,10 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
     });
   } else {
     models.WorkOrder
-          .findById(req.params.workId)
+          .findByPk(req.params.workId)
           .then(work => {
             if(work) {
-              work.updateAttributes({
+              work.update({
                 unit_id: req.body.unit_id,
                 description: req.body.description,
                 status: req.body.status,

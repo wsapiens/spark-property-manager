@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <% include head %>
+    <%- include('head'); -%>
     <!-- <script type="text/javascript" src="/javascripts/commons.js"></script> -->
     <style>
        #download-report { display: none; }
     </style>
   </head>
   <body>
-    <% include header %>
+    <%- include('header'); -%>
     <div class="container-fluid">
       <script>
       function expenseByType() {
@@ -183,7 +183,7 @@
       });
       </script>
       <div class="row">
-        <% include panel %>
+        <%- include('panel'); -%>
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
           <br>
           <h1 class="h4">Dashboard</h1>
@@ -217,7 +217,7 @@
           <br><br>
         </main>
       </div>
-      <% include footer %>
+      <%- include('footer'); -%>
     </div>
   </body>
 </html>

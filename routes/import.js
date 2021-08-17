@@ -46,7 +46,7 @@ router.get('/configs/:configId', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
-        .findById(req.params.configId)
+        .findByPk(req.params.configId)
         .then(importConfig => {
           res.setHeader('Content-Type', 'application/json');
           res.send(JSON.stringify(importConfig));
@@ -58,10 +58,10 @@ router.put('/configs/:configId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.ImportStatementConfig
-        .findById(req.params.configId)
+        .findByPk(req.params.configId)
         .then(importConfig => {
           if(importConfig) {
-            importConfig.updateAttributes({
+            importConfig.update({
               filter_column_number: req.body.filter_column_number,
               filter_keyword: req.body.filter_keyword,
               date_column_number: req.body.date_column_number,

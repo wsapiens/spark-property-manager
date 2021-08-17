@@ -51,7 +51,7 @@ router.get('/:tenantId', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Tenant
-        .findById(req.params.tenantId)
+        .findByPk(req.params.tenantId)
         .then(tenant => {
           log.debug(tenant);
           res.setHeader('Content-Type', 'application/json');
@@ -64,10 +64,10 @@ router.put('/:tenantId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Tenant
-    .findById(req.params.tenantId)
+    .findByPk(req.params.tenantId)
     .then(tenant => {
       if(tenant) {
-        tenant.updateAttributes({
+        tenant.update({
           unit_id: req.body.unit_id,
           firstname: req.body.firstname,
           lastname: req.body.lastname,

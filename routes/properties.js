@@ -26,13 +26,10 @@ router.get('/:propertyId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  models.Property.find({
-    where: {
-      id: req.params.propertyId
-    }
-  }).then(property => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify(property));
+  models.Property.findByPk(req.params.propertyId)
+    .then(property => {
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(property));
   });
 });
 
@@ -84,10 +81,10 @@ router.put('/:propertyId', csrfProtection, function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.Property
-        .findById(req.params.propertyId)
+        .findByPk(req.params.propertyId)
         .then(property => {
           if(property) {
-            property.updateAttributes({
+            property.update({
               type_id: req.body.type_id,
               address_street: req.body.address_street,
               address_city: req.body.address_city,
