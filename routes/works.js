@@ -120,7 +120,7 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
             .findByPk(req.params.workId)
             .then(work => {
               if(work) {
-                work.forEach({
+                work.update({
                   unit_id: req.body.unit_id,
                   description: req.body.description,
                   status: req.body.status,
