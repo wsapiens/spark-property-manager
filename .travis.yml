@@ -8,3 +8,9 @@ install:
 script:
   - grunt
   - npm test
+deploy:
+  provider: npm
+  email: $PROJECT_OWNER_EMAIL
+  api_key: $NPM_ACCESS_TOKEN
+  on:
+    tags: true
