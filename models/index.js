@@ -39,7 +39,7 @@ var sequelize = new Sequelize(config.get('db.name'),
   //storage: 'path/to/database.sqlite',
 
   // http://docs.sequelizejs.com/manual/tutorial/querying.html#operators
-  operatorsAliases: false
+  operatorsAliases: 0
 });
 
 fs.readdirSync(__dirname)
