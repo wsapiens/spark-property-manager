@@ -17,6 +17,9 @@
         $.get("/expenses/types?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
+            if(window.chartByType instanceof Chart) {
+              window.chartByType.destroy();
+            }
             var ctx = document.getElementById('chartByType').getContext('2d');
             window.chartByType = new Chart(ctx,{
               type: 'doughnut',
@@ -40,6 +43,9 @@
         $.get("/expenses/units?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
+            if(window.chartByUnit instanceof Chart) {
+              window.chartByUnit.destroy();
+            }
             var ctx = document.getElementById('chartByUnit').getContext('2d');
             window.chartByUnit = new Chart(ctx,{
               type: 'doughnut',
@@ -60,6 +66,9 @@
         $.get("/expenses/times?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
+            if(window.chartByMonth instanceof Chart) {
+              window.chartByMonth.destroy();
+            }
             var ctx = document.getElementById('chartByTime').getContext('2d');
             window.chartByMonth = new Chart(ctx,{
               type: 'bar',
