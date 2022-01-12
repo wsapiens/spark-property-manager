@@ -9,6 +9,7 @@ var logger = require('morgan');
 var passport = require('passport');
 var flash    = require('connect-flash');
 var ipfilter = require('express-ipfilter').IpFilter;
+const rateLimit = require('express-rate-limit')
 const LocalStrategy = require('passport-local').Strategy;
 const log = require('./log');
 const models = require('./models');
@@ -147,5 +148,15 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	max: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+	standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+})
+
+// Apply the rate limiting middleware to all requests
+app.use(limiter)
 
 module.exports = app;
