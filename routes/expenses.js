@@ -16,7 +16,7 @@ router.get('/', function(req, res, next) {
   }
   var endDate = new Date();
   if(undefined !== req.query.end ) {
-    endDate = req.query.end;
+    endDate = req.query.end + ' 23:59:59'; // add 23h 59m 59s
   }
   models.sequelize
         .query('SELECT e.id, p.address_street, u.name AS unit_name, p.address_city, e.pay_to, e.description, t.name AS pay_type, pt.name AS pay_method, pm.account_number AS pay_account, e.amount, e.pay_time, e.file '

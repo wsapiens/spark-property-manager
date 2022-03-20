@@ -1,5 +1,7 @@
 var table;
 var expenseId;
+var startDate;
+var endDate;
 $(function(){
   feather.replace()
 
@@ -102,6 +104,10 @@ $(function(){
     var receiptFile = $('#uploaded').val();
     var payTime = $('#expense-date').datepicker("getDate");
     var payDate = [payTime.getFullYear(), ( payTime.getMonth() + 1 ), payTime.getDate()].join("-");
+    startDate = $('#start-date').datepicker("getDate");
+    endDate = $('#end-date').datepicker("getDate");
+    var expenses_url = "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+                  + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-");
     console.log(unitId);
     console.log(payAmount);
     console.log(payTo);
@@ -120,8 +126,6 @@ $(function(){
           async: false,
           statusCode: {
             200: function() {
-              table.api().ajax.reload();
-              // table.api().ajax.url("/expenses").load();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
               $('#property-select option:selected').prop('selected', false).change();
@@ -132,12 +136,12 @@ $(function(){
               $('#expense-date').datepicker( "setDate", new Date());
               $('#file-select').val('');
               $('#uploaded').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
               expenseId = null;
-              // refreshTable(table, false);
               rows_selected=[];
+              table.api().ajax.url(expenses_url);
               table.api().clear();
               table.api().ajax.reload();
-              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {
               resultPopup(response);
@@ -163,7 +167,6 @@ $(function(){
           async: false,
           statusCode: {
             200: function() {
-              table.api().ajax.url("/expenses").load();
               $('#unit-select option:selected').prop('selected', false).change();
               $('#type-select option:selected').prop('selected', false).change();
               $('#property-select option:selected').prop('selected', false).change();
@@ -175,6 +178,8 @@ $(function(){
               $('#file-select').val('');
               $('#uploaded').val('');
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+              table.api().clear();
+              table.api().ajax.url(expenses_url).load();
               receiptFile = '';
             },
             400: function(response) {
@@ -194,8 +199,25 @@ $(function(){
     }
   });
 
+  $('#start-date' ).datepicker({
+    onSelect: function (date, instance) {
+    }
+  });
+
+  $('#end-date' ).datepicker({
+    onSelect: function (date, instance) {
+    }
+  });
+
+  $( "#start-date" ).datepicker( "setDate", new Date(new Date().getFullYear(), 0, 1));
+  $( "#end-date" ).datepicker( "setDate", new Date());
+
+  startDate = $('#start-date').datepicker("getDate");
+  endDate = $('#end-date').datepicker("getDate");
+
   table = $('#expenses').dataTable({
-            "ajax": "/expenses",
+            "ajax": "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+                     + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
             "columns": [
                 { data: null,
                   searchable: false,
@@ -359,7 +381,12 @@ $(document).on('click', '#delete-button', function(){
         statusCode: {
           200: function() {
                 rows_selected=[];
-                refreshTable(table, true);
+                startDate = $('#start-date').datepicker("getDate");
+                endDate = $('#end-date').datepicker("getDate");
+                var expenses_url = "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+                                + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-");
+                table.api().clear();
+                table.api().ajax.url(expenses_url).load();
                },
           400: function(response) {
                 resultPopup(response);
@@ -402,4 +429,15 @@ $(document).on('click', '#edit-button', function(){
       }
     });
   }
+});
+
+
+$(document).on('click', '#apply-dates-button', function() {
+  startDate = $('#start-date').datepicker("getDate");
+  endDate = $('#end-date').datepicker("getDate");
+  var expenses_url = "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+                  + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-");
+  table.api().clear();
+  table.api().ajax.url(expenses_url).load();
+  $("html, body").animate({ scrollTop: $(document).height() }, "slow");
 });

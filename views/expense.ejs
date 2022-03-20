@@ -62,15 +62,37 @@
           </form>
           <input type="hidden" id="uploaded" value="">
           <br>
-          <form align="right">
+          <div align="right">
             <button id="submit-button" class="btn btn-sm btn-outline-primary">Submit</button>
-          </form>
+          </div>
           <br>
           <hr>
           <br>
-          <button id="edit-button" class="btn btn-sm btn-outline-secondary">Edit Selected</button>
-          <button id="delete-button" class="btn btn-sm btn-outline-secondary">Delete Selected</button>
-          <br><br>
+          <h1 class="h5">Selects Dates To Review Expenses</h1>
+          <span data-feather="calendar"></span>
+          <label for="start-date">Start Date:</label>
+          <input type="text" class="form-control input-sm" data-role="date" id="start-date">
+          <br>
+          <span data-feather="calendar"></span>
+          <label for="end-date">End Date:</label>
+          <input type="text" class="form-control input-sm" data-role="date" id="end-date">
+          <br>
+          <br>
+          <!-- <button id="apply-dates-button" class="btn btn-sm btn-outline-primary">Apply Dates</button> -->
+          <div align="right">
+            <button id="apply-dates-button" class="btn btn-sm btn-outline-primary">Apply Dates</button>
+          </div>
+          <br>
+          <table>
+            <tr>
+              <td><br><br></td>
+            </tr>
+            <tr>
+              <td><button id="edit-button" class="btn btn-sm btn-outline-secondary">Edit Selected</button></td>
+              <td><button id="delete-button" class="btn btn-sm btn-outline-secondary">Delete Selected</button></td>
+            </tr>
+          </table>
+          <br>
           <table id="expenses" class="display" style="border-collapse:collapse;border-spacing:0;width:100%">
             <thead>
               <tr>
