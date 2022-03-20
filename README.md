@@ -79,7 +79,17 @@ $ node_modules/.bin/sequelize db:migrate
 $ node_modules/.bin/sequelize db:seed:all
 ```
 
-if sequelize db migration doesn't work, then load up from schema.sql
+Create base company and initial login user after running DB migration and generating seed data
+```bash
+$ psql -U username -d dbname
+# SELECT COUNT(*) FROM company; -- it would be zero
+# INSERT INTO company(name) VALUES ('base company'); -- create base comapny
+# CREATE EXTENSION pgcrypto;
+# INSERT INTO login_user(company_id, email, password, is_admin, is_manager) VALUES (1, 'email', crypt('password', gen_salt('bf')), true, true); -- create a login user with email as username and password as password for the base company
+# \q
+```
+
+if sequelize db migration doesn't work, then load up from schema.sql which will create base company and initial login user
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
 ```

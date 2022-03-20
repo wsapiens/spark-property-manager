@@ -4,20 +4,24 @@
     <%- include('head'); -%>
   </head>
   <body>
-    <div class="container-fluid">
+    <div class="container-fluid" style="max-width: 400px;">
       <div class="row">
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+          <br>
           <br>
           <h1 class="h4">Spark Property Manager</h1>
           <br>
           <form method="post" action="/login">
             <p>
+              <label>Email address</label>
               <input type="text" class="form-control input-sm" name="username" placeholder="Username">
             </p>
             <p>
+              <label>Password</label>
               <input type="password" class="form-control input-sm" name="password" placeholder="Password">
             </p>
             <p>
+              <br>
               <input type="submit" class="btn btn-primary btn-lg btn-block" value="Login">
             </p>
           </form>
