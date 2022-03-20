@@ -433,11 +433,11 @@ $(document).on('click', '#edit-button', function(){
 
 
 $(document).on('click', '#apply-dates-button', function() {
+  $("html, body").animate({ scrollTop: $(document).height() }, "slow");
   startDate = $('#start-date').datepicker("getDate");
   endDate = $('#end-date').datepicker("getDate");
   var expenses_url = "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
                   + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-");
   table.api().clear();
   table.api().ajax.url(expenses_url).load();
-  $("html, body").animate({ scrollTop: $(document).height() }, "slow");
 });
