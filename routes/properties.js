@@ -61,6 +61,8 @@ router.post('/', csrfProtection, function(req, res, next) {
     address_state: req.body.address_state,
     address_zip: req.body.address_zip,
     index_number: req.body.index_number,
+    loan_info: req.body.loan_info,
+    memo: req.body.memo,
     company_id:req.user.company_id
   }).then(property => {
     if(property.type_id !== 3) {
@@ -90,7 +92,9 @@ router.put('/:propertyId', csrfProtection, function(req, res, next) {
               address_city: req.body.address_city,
               address_state: req.body.address_state,
               address_zip: req.body.address_zip,
-              index_number: req.body.index_number
+              index_number: req.body.index_number,
+              loan_info: req.body.loan_info,
+              memo: req.body.memo,
             });
           }
         });

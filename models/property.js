@@ -7,6 +7,8 @@ module.exports = (sequelize, DataTypes) => {
     address_state: { type: DataTypes.STRING, allowNull: false },
     address_zip: { type: DataTypes.STRING, allowNull: false },
     index_number: DataTypes.STRING,
+    loan_info: DataTypes.STRING,
+    memo: DataTypes.STRING,
     company_id: {
       type: DataTypes.INTEGER,
       references: 'company', // <<< Note, its table's name, not object name

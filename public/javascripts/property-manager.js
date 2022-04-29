@@ -37,6 +37,8 @@ $(document).ready(function(){
     var addressState = $('#address-state-text').val();
     var addressZip = $('#address-zip-text').val();
     var indexNumber = $('#index-text').val();
+    var loanInfo = $('#loan-info-text').val();
+    var memoData = $('#memo-text').val();
     console.log(typeId);
     console.log(addressStreet);
     console.log(addressCity);
@@ -54,7 +56,9 @@ $(document).ready(function(){
                                   address_city: addressCity,
                                   address_state: addressState,
                                   address_zip: addressZip,
-                                  index_number: indexNumber
+                                  index_number: indexNumber,
+                                  loan_info: loanInfo,
+                                  memo: memoData
                                 }),
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
@@ -68,12 +72,15 @@ $(document).ready(function(){
               $('#address-state-text').val('');
               $('#address-zip-text').val('');
               $('#index-text').val('');
+              $('#loan-info-text').val('');
+              $('#memo-text').val('');
+              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
               propertyId = null;
               // refreshTable(table, false);
               rows_selected=[];
+              table.api().ajax.url("/properties/");
               table.api().clear();
               table.api().ajax.reload();
-              $("html, body").animate({ scrollTop: $(document).height() }, "slow");
             },
             400: function(response) {
               resultPopup(response);
@@ -96,7 +103,9 @@ $(document).ready(function(){
                   address_city: addressCity,
                   address_state: addressState,
                   address_zip: addressZip,
-                  index_number: indexNumber
+                  index_number: indexNumber,
+                  loan_info: loanInfo,
+                  memo: memoData
                 }),
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
@@ -110,7 +119,11 @@ $(document).ready(function(){
               $('#address-state-text').val('');
               $('#address-zip-text').val('');
               $('#index-text').val('');
+              $('#loan-info-text').val('');
+              $('#memo-text').val('');
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
+              table.api().clear();
+              table.api().ajax.url("/properties/").load();
             },
             400: function(response) {
               resultPopup(response);
@@ -141,19 +154,21 @@ $(document).ready(function(){
                             return '<input type="checkbox">';
                           }
                 },
-                { data: 'id', width : '8%', className: 'dt-body-center' },
-                { data: 'address_street', className: 'dt-body-center' },
-                { data: 'address_city', className: 'dt-body-center'},
-                { data: 'address_state', className: 'dt-body-center', "width" : "10%" },
-                { data: 'address_zip', className: 'dt-body-center' },
+                { data: 'id', width : '4%', className: 'dt-body-center' },
+                { data: 'address_street', className: 'dt-body-center', width : '15%' },
+                { data: 'address_city', className: 'dt-body-center', width : '15%'},
+                { data: 'address_state', className: 'dt-body-center', width : '4%' },
+                { data: 'address_zip', className: 'dt-body-center', width : '6%' },
                 { data: 'PropertyType',
-                  width : '10%',
+                  width : '6%',
                   className: 'dt-body-center',
                   render: function (PropertyType) {
                             return PropertyType.name;
                           }
                 },
-                { data: 'index_number', className: 'dt-body-center' }
+                { data: 'index_number', className: 'dt-body-center', width : '15%'  },
+                { data: 'loan_info', className: 'dt-body-center', width : '15%' },
+                { data: 'memo', className: 'dt-body-center' },
             ],
             order: [[ 1, "desc" ]],
             processing: true,
@@ -165,7 +180,7 @@ $(document).ready(function(){
             select: {
               style:    'os',
               selector: 'td:first-child'
-            }
+            },
         }
   );
 
@@ -263,6 +278,8 @@ $(document).on('click', '#edit-button', function(){
         $('#address-state-text').val(data.address_state);
         $('#address-zip-text').val(data.address_zip);
         $('#index-text').val(data.index_number);
+        $('#loan-info-text').val(data.loan_info);
+        $('#memo-text').val(data.memo);
         propertyId = rows_selected[0].id;
         $("html, body").animate({ scrollTop: 0 }, "slow");
       }
