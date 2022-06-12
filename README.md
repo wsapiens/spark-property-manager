@@ -48,6 +48,14 @@ $ sudo systemctl restart memcached
 $ git clone https://github.com/wsapiens/spark-property-manager.git
 ```
 
+or download tarball by npm
+
+```bash
+$ npm pack spark-property-manager
+
+$ tar -xvf spark-property-manager-{version}.tgz
+```
+
 ## Download dependencies
 ```bash
 $ cd spark-property-manager
