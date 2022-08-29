@@ -52,7 +52,8 @@
     "pg-hstore": "^2.3.2",
     "properties-reader": "2.2.0",
     "randomstring": "^1.1.5",
-    "sequelize": "^6.6.5"
+    "sequelize": "^6.6.5",
+    "validator": "^13.7.0"
   },
   "repository": {
     "type": "git",

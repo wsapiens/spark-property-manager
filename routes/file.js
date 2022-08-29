@@ -2,6 +2,7 @@ const log = require('../log');
 const util = require('../util');
 const models = require('../models');
 const csv = require("fast-csv");
+var validator = require('validator');
 // var fs = require('fs');
 var express = require('express');
 var router = express.Router();
@@ -11,13 +12,14 @@ var storage = multer.diskStorage({
     cb(null, './uploads/');
   },
   filename: function (req, file, cb) {
-    cb(null, req.user.company_id
+    cb(null, validator.escape(
+              req.user.company_id
               + '-'
               + file.fieldname
               + '-'
               + Date.now()
               + '-'
-              + file.originalname);
+              + file.originalname));
   }
 });
 var upload = multer({ storage: storage });
@@ -106,6 +108,6 @@ router.post('/statement/:methodId', upload.single('statement'), function(req, re
             });
           });
   });
-  res.send(req.file.originalname);
+  res.send(validator.escape(req.file.originalname));
 });
 module.exports = router;
