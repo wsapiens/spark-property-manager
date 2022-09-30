@@ -5,7 +5,7 @@
   "main": "./bin/server.js",
   "scripts": {
     "test": "mocha",
-    "lint": "eslint --ext .js app.js bin config email log migrations models routes util seeders",
+    "lint": "eslint --ext .js app.js bin config email log migrations models routes util seeders public/javascripts",
     "start": "node ./bin/server.js",
     "debug": "node --inspect ./bin/server.js"
   },

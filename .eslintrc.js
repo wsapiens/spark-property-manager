@@ -3,7 +3,8 @@ module.exports = {
         'browser': true,
         'commonjs': true,
         'es2021': true,
-        'node': true
+        'node': true,
+        'jquery': true
     },
     'extends': 'eslint:recommended',
     'overrides': [
@@ -20,5 +21,6 @@ module.exports = {
         'quotes': [ 'off' ],
         'semi': [ 'off' ],
         'no-unused-vars': [ 'off' ],
+        'no-undef': [ 'off' ]
     }
 };
