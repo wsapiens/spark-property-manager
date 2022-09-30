@@ -8,19 +8,24 @@ module.exports = {
     },
     'extends': 'eslint:recommended',
     'overrides': [
+        {
+            'files': ['public/javascripts/*.js', 'test/*.js'],
+            'rules': {
+                "no-undef": 'off'
+            }
+        }
     ],
     'parserOptions': {
         'ecmaVersion': 'latest'
     },
     'rules': {
-        'indent': [ 'off' ],
+        'indent': 'off' ,
         'linebreak-style': [
             'error',
             'unix'
         ],
-        'quotes': [ 'off' ],
-        'semi': [ 'off' ],
-        'no-unused-vars': [ 'off' ],
-        'no-undef': [ 'off' ]
+        'quotes': 'off',
+        'semi': 'off',
+        'no-unused-vars': 'off'
     }
 };
