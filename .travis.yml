@@ -6,7 +6,7 @@ install:
   - npm i -g grunt-cli
   - npm install
 script:
-  - grunt
+  - npm run lint
   - npm test
 deploy:
   provider: npm

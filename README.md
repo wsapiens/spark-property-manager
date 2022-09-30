@@ -1,21 +1,26 @@
 # Spark Property Manager
+
 A Real Estate Property Management WebApplication to manage Bookkeeping and WorkOrder easy. Write Up expense to each property unit with uploading receipt image or bulk upload your bank account statement as flat file with configuring columns
 
 - Technologies: Nodejs, postgresql
 
 ## Step To Setup
+
 ## Postgresql
+
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install postgresql postgresql-contrib
 ```
 
 ## Create User and Database
+
 ```bash
 $ createuser -P -s dbusername --createdb
 ```
 
 If that doesn't create user with creating db
+
 ```bash
 $ sudo -u postgres psql
 # CREATE USER username WITH PASSWORD 'password';
@@ -25,6 +30,7 @@ $ sudo -u postgres psql
 ```
 
 Login by the created user and create pgcrypto extension for password encryption
+
 ```bash
 $ psql -U username -d dbname
 # CREATE EXTENSION pgcrypto;
@@ -32,7 +38,9 @@ $ psql -U username -d dbname
 ```
 
 ## Memcached
+
 Install and start Memcached
+
 ```bash
 $ sudo apt-get update
 $ sudo apt-get install memcached
@@ -41,9 +49,11 @@ $ sudo systemctl restart memcached
 ```
 
 ## Install Nodejs
+
 [nodejs install guide](https://nodejs.org/en/download/package-manager/)
 
 ## Download spark-property-Manager
+
 ```bash
 $ git clone https://github.com/wsapiens/spark-property-manager.git
 ```
@@ -57,6 +67,7 @@ $ tar -xvf spark-property-manager-{version}.tgz
 ```
 
 ## Download dependencies
+
 ```bash
 $ cd spark-property-manager
 spark-property-manager $ npm install
@@ -64,6 +75,7 @@ spark-property-manager $ npm install
 
 ## Run database migration
 First, setup sequelize CLI config.json
+
 ```bash
 $ vi config/config.json
 ```
@@ -82,12 +94,14 @@ $ vi config/config.json
 ```
 
 Run DB migration and generate seed data
+
 ```bash
 $ node_modules/.bin/sequelize db:migrate
 $ node_modules/.bin/sequelize db:seed:all
 ```
 
 Create base company and initial login user after running DB migration and generating seed data
+
 ```bash
 $ psql -U username -d dbname
 # SELECT COUNT(*) FROM company; -- it would be zero
@@ -98,22 +112,27 @@ $ psql -U username -d dbname
 ```
 
 if sequelize db migration doesn't work, then load up from schema.sql which will create base company and initial login user
+
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
 ```
+
 ## Generate self-signed cert and key to run on https
+
 ```bash
 $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsigned.key -out apache-selfsigned.crt
 ```
 
 ## Copy app.properties.TEMPLATE to app.properties and update app.properties accordingly to your environment
+
 ```bash
 $ cp app.properties.TEMPLATE app.properties
 $ vi app.properties
 ```
 
 * app.properties example
-```
+
+```bash
 # contents of properties file
 [db]
 hostname = postgresql.host.com
@@ -146,6 +165,7 @@ port = 465
 ssl = true
 tls = false
 ```
+
 If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
 
 ## Encrypt database password
@@ -160,7 +180,8 @@ spark-property-manager$ node
 ```
 
 * put the encrypted password with '[encrypt]' prefix into db password field on app.properties
-```
+
+```bash
 # contents of properties file
 [db]
 hostname = postgresql.host.com
@@ -172,6 +193,7 @@ password = [encrypt]a199/unJEhzdS5lfoF3sQe1haMc5kg==
 ```
 
 ## Static code analysis by jshint and grunt
+
 ```bash
 $ npm i -g grunt-cli
 $ grunt
@@ -181,14 +203,34 @@ Running "jshint:files" (jshint) task
 Done.
 ```
 
+## Static code analysis by ESLint
+
+.eslintrc.js file contains ESLint configurations with rules
+
+```bash
+$ npm run lint
+
+> spark-property-manager@1.1.15 lint
+> eslint --ext .js app.js bin config email log migrations models routes util seeders
+```
+
+To recreate the configuration instead of editting the existing one
+
+```bash
+$ npm init @eslint/config
+```
+
 ## Run unit test by mocha
+
 * install mocha globally
+
 ```bash
 $ npm i -g mocha
 $ mocha
 ```
 
 * install mocha locally
+
 ```bash
 $ npm i mocha
 $ node_modules/.bin/mocha
@@ -216,20 +258,24 @@ crypto
 ```
 
 ## Run Application
+
 ```bash
 $ npm start
 ```
 
 ## Run Application by using Process Manager PM2
+
 PM2 provides production level process management
 [pm2 install guide](https://www.npmjs.com/package/pm2)
 
 * install pm2
+
 ```bash
 $ npm install pm2 -g
 ```
 
 * run application by pm2
+
 ```bash
 $ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
 [PM2] Starting /Users/spark/workspace3/spark-property-manager/bin/server.js in cluster_mode (8 instances)
@@ -250,6 +296,7 @@ $ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
 ```
 
 * stop application by pm2
+
 ```bash
 $ pm2 stop spark-property-manager
 [PM2] Applying action stopProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
@@ -277,6 +324,7 @@ $ pm2 stop spark-property-manager
 ```
 
 * remove application from pm2
+
 ```bash
 $ pm2 delete spark-property-manager
 [PM2] Applying action deleteProcessId on app [spark-property-manager](ids: 0,1,2,3,4,5,6,7)
@@ -295,17 +343,20 @@ Use `pm2 show <id|name>` to get more details about an app
 ```
 
 ## Open by Browser
+
 http://localhost:8080
 
 ## Create Account by Valid Email address and it will send temporary password to your email
+
 ![alt text][account_creation]
 
 ## Login by temporary password sent to your email
+
 ![alt text][login]
 
 ## Change password
-![alt text][password_change]
 
+![alt text][password_change]
 
 [account_creation]: https://github.com/wsapiens/spark-property-manager/blob/master/doc/account_creation.png
 
@@ -316,6 +367,7 @@ https://github.com/wsapiens/spark-property-manager/blob/master/doc/login.png
 https://github.com/wsapiens/spark-property-manager/blob/master/doc/password_change.png
 
 ## How to record expense
+
 * Add Property from Property Manager View. Building unit will be added automatically as default unit
 
 * Add or modify Unit for the added Property from Unit Manager View

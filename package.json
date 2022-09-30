@@ -5,6 +5,7 @@
   "main": "./bin/server.js",
   "scripts": {
     "test": "mocha",
+    "lint": "eslint --ext .js app.js bin config email log migrations models routes util seeders",
     "start": "node ./bin/server.js",
     "debug": "node --inspect ./bin/server.js"
   },
@@ -94,6 +95,11 @@
     "jshint"
   ],
   "devDependencies": {
+    "eslint": "^8.24.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.3.0",
+    "eslint-plugin-promise": "^6.0.1",
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-contrib-watch": "^1.1.0",
     "mocha": "^9.0.3",
