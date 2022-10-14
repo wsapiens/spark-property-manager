@@ -1,8 +1,24 @@
 var table;
 var unitId;
-$(document).ready(function(){
+$(function(){
   feather.replace()
-
+  $(".manager-content-header").click(function () {
+    $header = $(this);
+    //getting the next element
+    $content = $header.next();
+    //open up the content needed - toggle the slide- if visible, slide up, if not slidedown.
+    $content.slideToggle(500, function () {
+      //execute this after slideToggle is done
+      //change text of header based on visibility of content div
+      const managerContentHeaderIcon = $('#manager-content-header-icon');
+      if($content.is(":visible")) {
+        managerContentHeaderIcon.html(feather.icons['minus-circle'].toSvg());
+        // headerIcon.replaceWith(feather.icons['minus-circle'].toSvg());
+      } else {
+        managerContentHeaderIcon.html(feather.icons['plus-circle'].toSvg());
+      }
+    });
+  });
   $('#nav-dashboard').removeClass('active');
   $('#nav-expense').removeClass('active');
   $('#nav-import').removeClass('active');
