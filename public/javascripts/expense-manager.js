@@ -103,7 +103,6 @@ $(function(){
     var payDesc = $('#pay-desc-text').val();
     var receiptFile = $('#uploaded').val();
     var payTime = $('#expense-date').datepicker("getDate");
-    var payDate = [payTime.getFullYear(), ( payTime.getMonth() + 1 ), payTime.getDate()].join("-");
     startDate = $('#start-date').datepicker("getDate");
     endDate = $('#end-date').datepicker("getDate");
     var expenses_url = "/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
@@ -119,7 +118,7 @@ $(function(){
           url:"/expenses/"+expenseId,
           type: "PUT",
           headers: { "CSRF-Token": token, "cache-control": "no-cache" },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime.toISOString(), file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           dataType: "json",
           cache: false,
@@ -159,7 +158,7 @@ $(function(){
           url:"/expenses/",
           type: "POST",
           headers: { "CSRF-Token": token, "cache-control": "no-cache" },
-          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payDate, file: receiptFile, method_id: methodId}),
+          data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime.toISOString(), file: receiptFile, method_id: methodId}),
           contentType: "application/json; charset=utf-8",
           // headers: { "X-XSRF-TOKEN": $.cookie("XSRF-TOKEN")},
           dataType: "json",
