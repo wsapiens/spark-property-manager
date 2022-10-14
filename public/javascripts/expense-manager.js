@@ -138,9 +138,8 @@ $(function(){
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
               expenseId = null;
               rows_selected=[];
-              table.api().ajax.url(expenses_url);
               table.api().clear();
-              table.api().ajax.reload();
+              table.api().ajax.url(expenses_url).load();
             },
             400: function(response) {
               resultPopup(response);
