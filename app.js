@@ -73,7 +73,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    secure: false, // change this to true when run as https
+    secure: config.get('app.https'),
     httpOnly: true,
     domain: findDomain(),
     expires: expiryDate
