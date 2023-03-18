@@ -56,11 +56,28 @@ app.use(
   express.static(path.join(__dirname, 'node_modules')),
   express.static(path.join(__dirname, 'public'))
 );
+
+const expiryDate = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+
+function findDomain() {
+  if(config.get('app.url')) {
+    return config.get('app.url').split('://')[1].split(':')[0];
+  } else if(config.get('app.hostname')) {
+    return config.get('app.hostname');
+  }
+  return 'localhose';
+}
+
 app.use(session({
   secret: config.get('app.sessionSecret'),
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }, // change this to true when run as https
+  cookie: {
+    secure: false, // change this to true when run as https
+    httpOnly: true,
+    domain: findDomain(),
+    expires: expiryDate
+  },
   store: new memcachedStore({
     hosts: [ config.get('app.memcachedHost') ],
     secret: config.get('app.memcachedSecret'), // Optionally use transparent encryption for memcache session data
