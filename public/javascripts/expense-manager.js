@@ -430,7 +430,7 @@ $(document).on('click', '#edit-button', function(){
             $('#type-select').val(data.type_id).change();
             $('#method-select').val(data.method_id).change();
             $('#uploaded').val(data.file);
-            $('#expense-date').datepicker( "setDate", new Date(data.pay_time));
+            $('#expense-date').datepicker( "setDate", new Date(data.pay_time.replace("Z", ""))); // remove UTC timezone since we don't handle timezone but receive ISO time from backend
             $('#unit-select').val(udata.id).change();
             expenseId = rows_selected[0].id;
             window.setTimeout(function(){
