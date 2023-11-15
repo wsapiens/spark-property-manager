@@ -417,6 +417,8 @@ $(document).on('click', '#delete-button', function(){
   }
 });
 
+// The imported expense data shows all the date in the system timezone of backend.
+// Javascript uses the system timezone when parses the date string.
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
     $.get("/expenses/"+rows_selected[0].id, function(data, status){
@@ -430,7 +432,7 @@ $(document).on('click', '#edit-button', function(){
             $('#type-select').val(data.type_id).change();
             $('#method-select').val(data.method_id).change();
             $('#uploaded').val(data.file);
-            $('#expense-date').datepicker( "setDate", new Date(data.pay_time.replace("Z", ""))); // remove UTC timezone since we don't handle timezone but receive ISO time from backend
+            $('#expense-date').datepicker( "setDate", new Date(data.pay_time.replace("Z", ""))); // remove UTC timezone since we don't handle timezone
             $('#unit-select').val(udata.id).change();
             expenseId = rows_selected[0].id;
             window.setTimeout(function(){
