@@ -417,8 +417,6 @@ $(document).on('click', '#delete-button', function(){
   }
 });
 
-// The imported expense data shows all the date in the system timezone of backend.
-// Javascript uses the system timezone when parses the date string.
 $(document).on('click', '#edit-button', function(){
   if(1 === rows_selected.length) {
     $.get("/expenses/"+rows_selected[0].id, function(data, status){

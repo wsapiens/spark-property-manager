@@ -7,6 +7,7 @@ var validator = require('validator');
 var express = require('express');
 var router = express.Router();
 var multer = require('multer');
+var moment = require('moment-timezone');
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './uploads/');
@@ -36,9 +37,6 @@ router.post('/receipt', upload.single('receipt'), function(req, res, next) {
   res.send(req.file.filename);
 });
 
-// TODO pass the timezone info from the fontend UI and adjust timezone offset during parsing the data.
-// The imported expense data displays dates in the system timezone corresponding to the process runs this module.
-// When parsing date only strings, JavaScript utilizes the system timezone.
 router.post('/statement/:methodId', upload.single('statement'), function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
@@ -95,7 +93,7 @@ router.post('/statement/:methodId', upload.single('statement'), function(req, re
                        type_id: expense_type_id,
                        description: util.getImportDescription(data[importConfig.description_column_number], data[importConfig.filter_column_number]),
                        amount: util.getImportAmount(parseFloat(data[importConfig.amount_column_number]), data[importConfig.filter_column_number]),
-                       pay_time: new Date(data[importConfig.date_column_number]),  // parse the date only string with system timezone
+                       pay_time: new Date(moment.tz(data[importConfig.date_column_number], importConfig.date_format, req.query.tzId).format()),
                        method_id: req.params.methodId,
                        file: ''
                      });

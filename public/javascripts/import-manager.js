@@ -242,7 +242,7 @@ $(function(){
     if(methodId.toLowerCase().indexOf("select") === -1) {
       $.ajax({
         // Your server script to process the upload
-        url: '/file/statement/' + methodId,
+        url: '/file/statement/' + methodId + '?tzId=' + Intl.DateTimeFormat().resolvedOptions().timeZone,
         type: 'POST',
 
         // Form data
