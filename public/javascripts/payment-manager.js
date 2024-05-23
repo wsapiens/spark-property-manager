@@ -66,6 +66,8 @@ $(function(){
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
           dataType: "json",
+          cache: false,
+          async: false,
           statusCode: {
             200: function() {
               table.api().ajax.url("/payments/methods").load();
@@ -102,6 +104,8 @@ $(function(){
           contentType: "application/json; charset=utf-8",
           headers: { "CSRF-Token": token },
           dataType: "json",
+          cache: false,
+          async: false,
           statusCode: {
             200: function() {
               table.api().ajax.url("/payments/methods").load();
