@@ -69,6 +69,9 @@ router.post('/statement/:methodId', upload.single('statement'), function(req, re
               }]
             }).then(properties => {
               defaultUnitId = properties[0].PropertyUnits[0].id;
+              if(req.query.unitId !== null ) {
+                defaultUnitId = req.query.unitId;
+              }
 
               csv.parseFile(req.file.path)
                  .on("data", function(data){

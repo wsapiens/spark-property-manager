@@ -30,6 +30,8 @@ $(function(){
   $('#nav-payment').removeClass('active');
   $('#nav-user').removeClass('active');
 
+  $('#property-select').find('option').remove();
+  $('#unit-select').find('option').remove();
   $('#method-select').find('option').remove();
   $.get("/payments/methods", function(data, status){
     console.log(data.data);
@@ -45,6 +47,41 @@ $(function(){
     });
     if(data.data.length > 0) {
       $('#method-select option:first').attr("selected",true);
+    }
+  });
+
+  $.get("/properties", function(data, status){
+    console.log(data.data);
+    $('#property-select').append('<option>Select Property</option>');
+    $.each(data.data, function(key, value){
+      console.log(value);
+      console.log(value.id);
+      console.log(value.address_street);
+      $('#property-select').append('<option value=' + value.id + '>'
+                                  + value.address_street + ', '
+                                  + value.address_city + ', '
+                                  + value.address_state + ' '
+                                  + value.address_zip
+                                  + '</option>');
+    });
+    if(data.data.length > 0) {
+      $('#property-select option:first').attr("selected",true);
+    }
+      //$('#property-select').val($('#property-select option:first').val());
+  });
+
+  $('#property-select').on('change', function() {
+    $('#unit-select').find('option').remove();
+    $('#unit-select').append('<option>Select Unit</option>');
+    if($(this).val() !== 'Select Property') {
+      $.get("/properties/" + $(this).val() + "/units", function(data, status){
+        $.each(data.data[0].PropertyUnits, function(key, value){
+          $('#unit-select').append('<option value=' + value.id + '>' + value.name + '</option>');
+        });
+        if(data.data && data.data.length === 0) {
+          $('#unit-select').val($('#unit-select option:first').val()).change();
+        }
+      });
     }
   });
 
@@ -239,10 +276,11 @@ $(function(){
 
   $('#upload-button').on('click', function() {
     var methodId = $('#method-select').val();
+    var unitId = $('#unit-select').val();
     if(methodId.toLowerCase().indexOf("select") === -1) {
       $.ajax({
         // Your server script to process the upload
-        url: '/file/statement/' + methodId + '?tzId=' + Intl.DateTimeFormat().resolvedOptions().timeZone,
+        url: '/file/statement/' + methodId + '?tzId=' + Intl.DateTimeFormat().resolvedOptions().timeZone + '&unitId=' + unitId,
         type: 'POST',
 
         // Form data
