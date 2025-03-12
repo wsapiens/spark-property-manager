@@ -76,7 +76,7 @@ router.put('/:userId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  var random_password = cryptoRandomString(5);
+  var random_password = crypto.generateRandomString(5);
   var message	= {
    text:	'Your Account has been updated with your email: '
           + req.body.email
