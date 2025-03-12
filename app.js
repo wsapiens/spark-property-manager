@@ -2,6 +2,8 @@ var createError = require('http-errors');
 var express = require('express');
 var eaa = require('express-async-await');
 var session = require('express-session');
+var csurf = require("tiny-csrf");
+const crypto = require('./util/crypto');
 var memcachedStore = require('connect-memcached')(session);
 var path = require('path');
 var cookieParser = require('cookie-parser');
@@ -51,7 +53,14 @@ app.set('trust proxy', 1);
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+app.use(cookieParser(config.get('app.sessionSecret')));
+app.use(
+  csurf(
+    crypto.generateRandomString(32),
+    ["POST", "PUT", "GET"],
+    ["/", /\/\.*/i, "/login", /\/login\.*/i],
+  )
+);
 app.use(
   express.static(path.join(__dirname, 'node_modules')),
   express.static(path.join(__dirname, 'public'))

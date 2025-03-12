@@ -1,8 +1,6 @@
 const log = require('../log');
 const models = require('../models');
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
 router.get('/methods', function(req, res, next) {
@@ -33,7 +31,7 @@ router.get('/methods/:methodId', function(req, res, next) {
   });
 });
 
-router.post('/methods/', csrfProtection, function(req, res, next) {
+router.post('/methods/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -47,7 +45,7 @@ router.post('/methods/', csrfProtection, function(req, res, next) {
   });
 });
 
-router.put('/methods/:methodId', csrfProtection, function(req, res, next) {
+router.put('/methods/:methodId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -65,7 +63,7 @@ router.put('/methods/:methodId', csrfProtection, function(req, res, next) {
   res.send();
 });
 
-router.delete('/methods/:methodId', csrfProtection, function(req, res, next) {
+router.delete('/methods/:methodId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -75,6 +73,10 @@ router.delete('/methods/:methodId', csrfProtection, function(req, res, next) {
     }
   }).then(function() {
     res.send();
+  }).catch(function(err){
+    log.error(err.message);
+    log.error(err.stack);
+    res.status(400).send(err.message);
   });
 });
 

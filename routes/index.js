@@ -3,7 +3,7 @@ const email = require('../email');
 const models = require('../models');
 const config = require('../config');
 const pjson = require('../package.json');
-const cryptoRandomString = require('crypto-random-string');
+const crypto = require('../util/crypto');
 var express = require('express');
 var passport = require('passport');
 var router = express.Router();
@@ -127,7 +127,7 @@ router.post('/subscribe', function(req, res, next) {
                     name: req.body.email
                   }).then(company => {
                     var company_id = company.id;
-                    var random_password = cryptoRandomString(5);
+                    var random_password = crypto.generateRandomString(5);
                     var message	= {
                       text:	'Your Account has been created with your email: '
                             + req.body.email

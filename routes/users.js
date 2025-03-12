@@ -2,10 +2,8 @@ const log = require('../log');
 const email = require('../email');
 const models = require('../models');
 const config = require('../config');
-const cryptoRandomString = require('crypto-random-string');
+const crypto = require('../util/crypto')
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -33,11 +31,11 @@ router.get('/:userId', function(req, res, next) {
   });
 });
 
-router.post('/', csrfProtection, function(req, res, next) {
+router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
-  var random_password = cryptoRandomString(5);
+  var random_password = crypto.generateRandomString(5);
   var message	= {
    text:	'Your Account has been created with your email: '
           + req.body.email
@@ -74,7 +72,7 @@ router.post('/', csrfProtection, function(req, res, next) {
     });
 });
 
-router.put('/:userId', csrfProtection, function(req, res, next) {
+router.put('/:userId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -116,7 +114,7 @@ router.put('/:userId', csrfProtection, function(req, res, next) {
     });
 });
 
-router.delete('/:userId', csrfProtection, function(req, res, next) {
+router.delete('/:userId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }

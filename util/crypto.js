@@ -1,11 +1,17 @@
 const aes256 = require('aes256');
-const randomstring = require("randomstring");
 const fs = require('fs');
 const path = require('path');
+const crypto = require('node:crypto');
+
+function generateRandomString(length) {
+  return crypto.randomBytes(length / 2).toString('hex');
+}
 
 module.exports = {
+  generateRandomString: generateRandomString,
+
   encrypt: function encrypt(plaintext) {
-    var key = randomstring.generate(20);
+    var key = generateRandomString(20);
     var encrypted = aes256.encrypt(key, plaintext);
     // process.stdout.write(key);
     fs.writeFileSync(path.resolve(__dirname, '../.app.key'), key, 'utf8');

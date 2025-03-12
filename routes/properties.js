@@ -1,8 +1,6 @@
 const log = require('../log');
 const models = require('../models');
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -50,7 +48,7 @@ router.get('/:propertyId/units', function(req, res, next) {
   });
 });
 
-router.post('/', csrfProtection, function(req, res, next) {
+router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -78,7 +76,7 @@ router.post('/', csrfProtection, function(req, res, next) {
   });
 });
 
-router.put('/:propertyId', csrfProtection, function(req, res, next) {
+router.put('/:propertyId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -101,7 +99,7 @@ router.put('/:propertyId', csrfProtection, function(req, res, next) {
   res.send();
 });
 
-router.delete('/:propertyId', csrfProtection, function(req, res, next) {
+router.delete('/:propertyId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }

@@ -1,8 +1,6 @@
 const log = require('../log');
 const models = require('../models');
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -47,7 +45,7 @@ router.get('/:workId', function(req, res, next) {
         });
 });
 
-router.post('/', csrfProtection, function(req, res, next) {
+router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -97,7 +95,7 @@ router.post('/', csrfProtection, function(req, res, next) {
   }
 });
 
-router.put('/:workId', csrfProtection, function(req, res, next) {
+router.put('/:workId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -154,7 +152,7 @@ router.put('/:workId', csrfProtection, function(req, res, next) {
   res.send();
 });
 
-router.delete('/:workId', csrfProtection, function(req, res, next) {
+router.delete('/:workId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }

@@ -1,8 +1,6 @@
 const log = require('../log');
 const models = require('../models');
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
 router.get('/', function(req, res, next) {
@@ -33,7 +31,7 @@ router.get('/:vendorId', function(req, res, next) {
         });
 });
 
-router.post('/', csrfProtection, function(req, res, next) {
+router.post('/', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -49,7 +47,7 @@ router.post('/', csrfProtection, function(req, res, next) {
   });
 });
 
-router.put('/:vendorId', csrfProtection, function(req, res, next) {
+router.put('/:vendorId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -69,7 +67,7 @@ router.put('/:vendorId', csrfProtection, function(req, res, next) {
   res.send();
 });
 
-router.delete('/:vendorId', csrfProtection, function(req, res, next) {
+router.delete('/:vendorId', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -79,6 +77,10 @@ router.delete('/:vendorId', csrfProtection, function(req, res, next) {
     }
   }).then(function() {
     res.send();
+  }).catch(function(err){
+    log.error(err.message);
+    log.error(err.stack);
+    res.status(400).send(err.message);
   });
 });
 

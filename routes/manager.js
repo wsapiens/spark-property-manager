@@ -1,11 +1,9 @@
 const log = require('../log');
 const pjson = require('../package.json');
 var express = require('express');
-var csrf = require('csurf');
-var csrfProtection = csrf({ cookie: true });
 var router = express.Router();
 
-router.get('/expense', csrfProtection, function(req, res, next) {
+router.get('/expense', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -18,7 +16,7 @@ router.get('/expense', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/import', csrfProtection, function(req, res, next) {
+router.get('/import', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -32,7 +30,7 @@ router.get('/import', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/property', csrfProtection, function(req, res, next) {
+router.get('/property', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -44,7 +42,7 @@ router.get('/property', csrfProtection, function(req, res, next) {
  });
 });
 
-router.get('/unit', csrfProtection, function(req, res, next) {
+router.get('/unit', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -56,7 +54,7 @@ router.get('/unit', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/user', csrfProtection, function(req, res, next) {
+router.get('/user', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -68,7 +66,7 @@ router.get('/user', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/tenant', csrfProtection, function(req, res, next) {
+router.get('/tenant', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -80,7 +78,7 @@ router.get('/tenant', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/work', csrfProtection, function(req, res, next) {
+router.get('/work', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -92,7 +90,7 @@ router.get('/work', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/vendor', csrfProtection, function(req, res, next) {
+router.get('/vendor', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
@@ -104,7 +102,7 @@ router.get('/vendor', csrfProtection, function(req, res, next) {
   });
 });
 
-router.get('/payment', csrfProtection, function(req, res, next) {
+router.get('/payment', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
   }
