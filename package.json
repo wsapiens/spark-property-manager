@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/server.js",
   "scripts": {
@@ -25,7 +25,7 @@
     "datatables.net": "1.12.1",
     "datatables.net-dt": "1.12.1",
     "debug": "~4.3.2",
-    "ejs": "^3.1.6",
+    "ejs": "^3.1.10",
     "emailjs": "^2.1.0",
     "es5-ext": "^0.10.61",
     "express": "^4.21.2",
