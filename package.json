@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/server.js",
   "scripts": {
@@ -18,7 +18,7 @@
     "chart.js": "^3.5.0",
     "cluster": "^0.7.7",
     "connect-flash": "^0.1.1",
-    "connect-memcached": "2.0.0",
+    "connect-session-sequelize": "^7.1.7",
     "continuation-local-storage": "^3.2.1",
     "cookie-parser": "~1.4.3",
     "datatables": "1.10.18",
@@ -102,6 +102,6 @@
     "grunt-contrib-jshint": "^3.2.0",
     "grunt-contrib-watch": "^1.1.0",
     "mocha": "^11.1.0",
-    "sequelize-cli": "^6.2.0"
+    "sequelize-cli": "^6.6.2"
   }
 }

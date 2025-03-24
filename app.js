@@ -4,7 +4,7 @@ var eaa = require('express-async-await');
 var session = require('express-session');
 var csurf = require("tiny-csrf");
 const crypto = require('./util/crypto');
-var memcachedStore = require('connect-memcached')(session);
+var SequelizeStore = require("connect-session-sequelize")(session.Store);
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
@@ -87,9 +87,9 @@ app.use(session({
     domain: findDomain(),
     expires: expiryDate
   },
-  store: new memcachedStore({
-    hosts: [ config.get('app.memcachedHost') ],
-    secret: config.get('app.memcachedSecret'), // Optionally use transparent encryption for memcache session data
+  store: new SequelizeStore({
+    db: models.sequelize,
+    table: "Sessions"
   })
 }));
 // uploads static should be after setting session
