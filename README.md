@@ -37,17 +37,6 @@ $ psql -U username -d dbname
 # \q
 ```
 
-## Memcached
-
-Install and start Memcached
-
-```bash
-$ sudo apt-get update
-$ sudo apt-get install memcached
-$ sudo apt-get install libmemcached-tools
-$ sudo systemctl restart memcached
-```
-
 ## Install Nodejs
 
 [nodejs install guide](https://nodejs.org/en/download/package-manager/)
