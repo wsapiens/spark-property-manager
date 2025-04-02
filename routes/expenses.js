@@ -17,15 +17,26 @@ router.get('/', function(req, res, next) {
     endDate = req.query.end + ' 23:59:59'; // add 23h 59m 59s
   }
   models.sequelize
-        .query('SELECT e.id, p.address_street, u.name AS unit_name, p.address_city, e.pay_to, e.description, t.name AS pay_type, pt.name AS pay_method, pm.account_number AS pay_account, e.amount, e.pay_time, e.file '
-             + 'FROM expense AS e '
-             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
-             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
-             + 'INNER JOIN property AS p ON p.id = u.property_id  '
-             + 'LEFT JOIN payment_method AS pm ON e.method_id = pm.id '
-             + 'LEFT JOIN payment_type AS pt ON pm.type_id = pt.id '
-             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
-             + 'ORDER BY e.pay_time DESC',
+        .query('SELECT e.id, '
+          + 'p.address_street As street, '
+          + '(CASE WHEN u.name LIKE \'%ffice%\' THEN \'Home Office\' ELSE u.name END) AS unit_name, '
+          + 'p.address_city, '
+          + 'e.pay_to, '
+          + 'e.description, '
+          + 't.name AS pay_type, '
+          + 'pt.name AS pay_method, '
+          + 'pm.account_number AS pay_account, '
+          + 'e.amount, '
+          + 'e.pay_time, '
+          + 'e.file '
+          + 'FROM expense AS e '
+          + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+          + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+          + 'INNER JOIN property AS p ON p.id = u.property_id  '
+          + 'LEFT JOIN payment_method AS pm ON e.method_id = pm.id '
+          + 'LEFT JOIN payment_type AS pt ON pm.type_id = pt.id '
+          + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
+          + 'ORDER BY street, unit_name, pay_type, e.pay_time',
              {
                bind: [ req.user.company_id, startDate, endDate ],
                type: models.sequelize.QueryTypes.SELECT
