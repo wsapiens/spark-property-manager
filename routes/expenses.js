@@ -36,6 +36,65 @@ router.get('/', function(req, res, next) {
         });
 });
 
+// Retrieve total expenses by type per property, treating Home Office as a separate entity.
+router.get('/types/properties-office', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT * FROM ('
+          + 'SELECT * FROM ('
+          + 'SELECT p.address_street as street, t.name as type, SUM(e.amount) '
+          + 'FROM expense AS e '
+          + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+          + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+          + 'INNER JOIN property AS p ON p.id = u.property_id '
+          + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name NOT LIKE \'%ffice%\' '
+          + 'GROUP BY p.id, t.name) prop_sub '
+          + 'UNION '
+          + 'select * FROM ('
+          + 'SELECT \'Home Office\' as street, t.name as type, SUM(e.amount) '
+          + 'FROM expense AS e '
+          + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+          + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+          + 'INNER JOIN property AS p ON p.id = u.property_id '
+          + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name LIKE \'%ffice%\' '
+          + 'GROUP BY p.id, u.id, t.name) office_sub '
+          + ') union_sub '
+          + 'ORDER BY street, type',
+             {
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        ).then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          var bcolor = [];
+          expenses.forEach(function(expense){
+            label.push(expense.street+", "+expense.type);
+            data.push(expense.sum);
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
+          });
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                label: 'Expense by Property and Type',
+                data: data,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              }
+            ],
+            labels: label
+          }));
+        });
+});
+
 router.get('/types', function(req, res, next) {
   if(!req.isAuthenticated()) {
     return res.render('login', { message: '' });
@@ -90,10 +149,64 @@ router.get('/properties', function(req, res, next) {
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
-             + 'WHERE p.company_id = $1 '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
              + 'GROUP BY p.id ',
              {
-               bind: [ req.user.company_id ],
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
+               type: models.sequelize.QueryTypes.SELECT
+             }
+        )
+        .then(expenses => {
+          var data = [];
+          var label = [];
+          var color = [];
+          var bcolor = [];
+          expenses.forEach(function(expense){
+            label.push(expense.address_street);
+            data.push(expense.sum);
+            let rgb = util.getRandomRGB();
+            bcolor.push("rgb(" + rgb.join(",") + ")");
+            rgb.push('0.2');
+            color.push("rgba(" + rgb.join(",") + ")");
+          });
+          res.setHeader('Content-Type', 'application/json');
+          res.send(JSON.stringify({
+            datasets: [
+              {
+                data: data,
+                backgroundColor: color,
+                borderColor: bcolor,
+                borderWidth:1
+              }
+            ],
+            labels: label
+          }));
+        });
+});
+
+// Calculate total expenses per property, treating Home Office as a separate entity.
+router.get('/properties-office', function(req, res, next) {
+  if(!req.isAuthenticated()) {
+    return res.render('login', { message: '' });
+  }
+  models.sequelize
+        .query('SELECT p.address_street, SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name NOT LIKE \'%ffice%\' '
+             + 'GROUP BY p.id '
+             + 'UNION '
+             + 'SELECT \'Home Office\', SUM(e.amount) '
+             + 'FROM expense AS e '
+             + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
+             + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
+             + 'INNER JOIN property AS p ON p.id = u.property_id '
+             + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name LIKE \'%ffice%\' '
+             + 'GROUP BY p.id, u.id;',
+             {
+               bind: [ req.user.company_id, req.query.start, req.query.end ],
                type: models.sequelize.QueryTypes.SELECT
              }
         )

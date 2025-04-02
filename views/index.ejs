@@ -14,7 +14,7 @@
       function expenseByType() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
-        $.get("/expenses/types?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+        $.get("/expenses/types/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             if(window.chartByType instanceof Chart) {
@@ -22,38 +22,39 @@
             }
             var ctx = document.getElementById('chartByType').getContext('2d');
             window.chartByType = new Chart(ctx,{
-              type: 'doughnut',
+              type: 'bar',
               data: data,
               options: {
                 title: {
                    display: true,
-                   text: 'Expense By Type'
+                   text: 'Expense By Property And Type'
                 },
                 legend: {
                   display: true,
-                }
+                },
+                indexAxis: 'y'
               }
             });
         });
       }
 
-      function expenseByUnit() {
+      function expenseByProperty() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
-        $.get("/expenses/units?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+        $.get("/expenses/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
-            if(window.chartByUnit instanceof Chart) {
-              window.chartByUnit.destroy();
+            if(window.chartByProperty instanceof Chart) {
+              window.chartByProperty.destroy();
             }
-            var ctx = document.getElementById('chartByUnit').getContext('2d');
-            window.chartByUnit = new Chart(ctx,{
+            var ctx = document.getElementById('chartByProperty').getContext('2d');
+            window.chartByProperty = new Chart(ctx,{
               type: 'doughnut',
               data: data,
               options: {
                 title: {
                    display: true,
-                   text: 'Expense By Unit'
+                   text: 'Expense By Property'
                 }
               }
             });
@@ -166,12 +167,12 @@
         $( "#start-date" ).datepicker( "setDate", new Date(new Date().getFullYear(), 0, 1));
         $( "#end-date" ).datepicker( "setDate", new Date());
         expenseByType();
-        expenseByUnit();
+        expenseByProperty();
         expenseByTime();
       });
       $(document).on('click', '#draw-button', function() {
         expenseByType();
-        expenseByUnit();
+        expenseByProperty();
         expenseByTime();
         $("html, body").animate({ scrollTop: 0 }, "slow");
       });
@@ -213,11 +214,14 @@
           <br>
           <h1 class="h4">Dashboard</h1>
           <br><br>
-          <canvas id="chartByType" width="50" height="50"></canvas>
-          <br><br><br><br>
-          <canvas id="chartByUnit" width="50" height="50"></canvas>
-          <br><br><br><br>
+          <h1 class="h5">Monthly Expense</h1>
           <canvas id="chartByTime" width="50" height="50"></canvas>
+          <br><br><br><br>
+          <h1 class="h5">Expense by Property</h1>
+          <canvas id="chartByProperty" width="50" height="50"></canvas>
+          <br><br><br><br>
+          <h1 class="h5">Expense by Property And Type</h1>
+          <canvas id="chartByType" width="50" height="50"></canvas>
           <br><br><br><br>
           <h1 class="h5">Selects Dates To Review Expenses</h1>
           <span data-feather="calendar"></span>

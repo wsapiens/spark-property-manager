@@ -27,6 +27,9 @@ var sequelize = new Sequelize(config.get('db.name'),
                               decrypt(config.get('db.password')), {
   host: config.get('db.hostname'),
   dialect: config.get('db.dialect'),
+  dialectOptions: {
+    multipleStatements: true
+  },
 
   pool: {
     max: 5,
