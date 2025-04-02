@@ -4,7 +4,9 @@
     <%- include('head'); -%>
     <!-- <script type="text/javascript" src="/javascripts/commons.js"></script> -->
     <style>
-       #download-report { display: none; }
+       #download-detailed-expense-report { display: none; }
+       #download-expense-type-property-report { display: none; }
+       #download-expense-property-report { display: none; }
     </style>
   </head>
   <body>
@@ -200,11 +202,67 @@
             csv = csv.replace('<mark>', '');
             csv = csv.replace('</mark>', '');
 
-            var report = document.getElementById("download-report");
+            var report = document.getElementById("download-detailed-expense-report");
             report.style.display = "block";
             var file = new Blob([csv], {type: 'text/csv'});
             report.href = URL.createObjectURL(file);
-            report.download = 'report.csv';
+            report.download = 'expense-report.csv';
+          });
+
+          $.get("/expenses/types/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            console.log(['property', 'amount'].join(","));
+            var csv =['property', 'amount'].join(",") + '\n';
+
+            var index = 0;
+            data.datasets[0].data.forEach(function(amt) {
+              console.log(Object.values([data.labels[index], amt]).join(","));
+              var line = "";
+              for (const [key, value] of Object.entries([data.labels[index], amt])) {
+                  if(typeof(value) == "string") {
+                    line += "\""+value+"\","
+                  } else {
+                    line += value+","
+                  }
+              }
+              csv += line + '\n';
+              index++;
+            });
+
+            var report = document.getElementById("download-expense-type-property-report");
+            report.style.display = "block";
+            var file = new Blob([csv], {type: 'text/csv'});
+            report.href = URL.createObjectURL(file);
+            report.download = 'expense-type-property-report.csv';
+          });
+
+          $.get("/expenses/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+            + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
+          function(data, status){
+            console.log(Object.keys(['Property', 'Amount']).join(","));
+            var csv =['property', 'amount'].join(",") + '\n';
+
+            var index = 0;
+            data.datasets[0].data.forEach(function(amt) {
+              console.log(Object.values([data.labels[index], amt]).join(","));
+              var line = "";
+              for (const [key, value] of Object.entries([data.labels[index], amt])) {
+                  if(typeof(value) == "string") {
+                    line += "\""+value+"\","
+                  } else {
+                    line += value+","
+                  }
+              }
+              csv += line + '\n';
+              index++;
+            });
+
+            var report = document.getElementById("download-expense-property-report");
+            report.style.display = "block";
+            var file = new Blob([csv], {type: 'text/csv'});
+            report.href = URL.createObjectURL(file);
+            report.download = 'expense-property-report.csv';
           });
       });
       </script>
@@ -235,8 +293,11 @@
           <table>
             <tr>
               <td><button type="button" class="btn btn-sm btn-outline-secondary" id="draw-button"><span data-feather="pie-chart"></span>&nbsp;Draw Charts</button></td>
-              <td><button type="button" class="btn btn-sm btn-outline-secondary" id="generate-button"><span data-feather="file-plus"></span>&nbsp;Generate Report</button></td>
-              <td><a href="" id="download-report" download> Save Report To File </a></td>
+              <td><button type="button" class="btn btn-sm btn-outline-secondary" id="generate-button"><span data-feather="file-plus"></span>&nbsp;Generate Reports</button></td>
+              <td>&nbsp;</td>
+              <td>&nbsp;<a href="" id="download-detailed-expense-report" download><span data-feather="download"></span> Expense Report</a></td>
+              <td>&nbsp;<a href="" id="download-expense-type-property-report" download><span data-feather="download"></span> Property Expense Report </a></td>
+              <td>&nbsp;<a href="" id="download-expense-property-report" download><span data-feather="download"></span> Expense Type and Property Report</a></td>
             </tr>
           </table>
           <br><br><br><br>
