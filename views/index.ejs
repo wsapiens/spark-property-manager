@@ -212,8 +212,8 @@
           $.get("/expenses/types/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
-            console.log(['property', 'amount'].join(","));
-            var csv =['property', 'amount'].join(",") + '\n';
+            console.log(['property_expense_type', 'amount'].join(","));
+            var csv =['property_expense_type', 'amount'].join(",") + '\n';
 
             var index = 0;
             data.datasets[0].data.forEach(function(amt) {
@@ -240,7 +240,7 @@
           $.get("/expenses/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
-            console.log(Object.keys(['Property', 'Amount']).join(","));
+            console.log(Object.keys(['property', 'amount']).join(","));
             var csv =['property', 'amount'].join(",") + '\n';
 
             var index = 0;
