@@ -53,8 +53,8 @@ router.get('/types/properties-office', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.sequelize
-        .query('SELECT * FROM ('
-          + 'SELECT * FROM ('
+        .query('SELECT * FROM ( '
+          + 'SELECT * FROM ( '
           + 'SELECT p.address_street as street, t.name as type, SUM(e.amount) '
           + 'FROM expense AS e '
           + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
@@ -63,7 +63,7 @@ router.get('/types/properties-office', function(req, res, next) {
           + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name NOT LIKE \'%ffice%\' '
           + 'GROUP BY p.id, t.name) prop_sub '
           + 'UNION '
-          + 'select * FROM ('
+          + 'SELECT * FROM ('
           + 'SELECT \'Home Office\' as street, t.name as type, SUM(e.amount) '
           + 'FROM expense AS e '
           + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
@@ -201,21 +201,26 @@ router.get('/properties-office', function(req, res, next) {
     return res.render('login', { message: '' });
   }
   models.sequelize
-        .query('SELECT p.address_street, SUM(e.amount) '
+        .query('SELECT * FROM ( '
+             + 'SELECT * FROM ( '
+             + 'SELECT p.address_street AS street, SUM(e.amount) '
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
              + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name NOT LIKE \'%ffice%\' '
-             + 'GROUP BY p.id '
+             + 'GROUP BY p.id ) prop_sub '
              + 'UNION '
-             + 'SELECT \'Home Office\', SUM(e.amount) '
+             + 'SELECT * FROM ( '
+             + 'SELECT \'Home Office\' AS street, SUM(e.amount) '
              + 'FROM expense AS e '
              + 'INNER JOIN expense_type AS t ON t.id = e.type_id '
              + 'INNER JOIN property_unit AS u ON e.unit_id = u.id '
              + 'INNER JOIN property AS p ON p.id = u.property_id '
              + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 AND u.name LIKE \'%ffice%\' '
-             + 'GROUP BY p.id, u.id;',
+             + 'GROUP BY p.id, u.id) office_sub '
+             + ') union_sub '
+             + 'ORDER BY street',
              {
                bind: [ req.user.company_id, req.query.start, req.query.end ],
                type: models.sequelize.QueryTypes.SELECT
@@ -227,7 +232,7 @@ router.get('/properties-office', function(req, res, next) {
           var color = [];
           var bcolor = [];
           expenses.forEach(function(expense){
-            label.push(expense.address_street);
+            label.push(expense.street);
             data.push(expense.sum);
             let rgb = util.getRandomRGB();
             bcolor.push("rgb(" + rgb.join(",") + ")");
