@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
   }
   models.sequelize
         .query('SELECT e.id, '
-          + 'p.address_street As street, '
+          + 'p.address_street As address_street, '
           + '(CASE WHEN u.name LIKE \'%ffice%\' THEN \'Home Office\' ELSE u.name END) AS unit_name, '
           + 'p.address_city, '
           + 'e.pay_to, '
@@ -36,7 +36,7 @@ router.get('/', function(req, res, next) {
           + 'LEFT JOIN payment_method AS pm ON e.method_id = pm.id '
           + 'LEFT JOIN payment_type AS pt ON pm.type_id = pt.id '
           + 'WHERE p.company_id = $1 AND e.pay_time >= $2 AND e.pay_time <= $3 '
-          + 'ORDER BY street, unit_name, pay_type, e.pay_time',
+          + 'ORDER BY address_street, unit_name, pay_type, e.pay_time',
              {
                bind: [ req.user.company_id, startDate, endDate ],
                type: models.sequelize.QueryTypes.SELECT
