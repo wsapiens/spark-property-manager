@@ -16,7 +16,7 @@
       function expenseByType() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
-        $.get("/expenses/types/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+        $.get("/expenses/types/properties/report?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             if(window.chartByType instanceof Chart) {
@@ -43,7 +43,7 @@
       function expenseByProperty() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
-        $.get("/expenses/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+        $.get("/expenses/properties/report?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             if(window.chartByProperty instanceof Chart) {
@@ -181,7 +181,7 @@
       $(document).on('click', '#generate-button', function() {
         var startDate = $('#start-date').datepicker("getDate");
         var endDate = $('#end-date').datepicker("getDate");
-        $.get("/expenses?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+        $.get("/expenses/report?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             console.log(Object.keys(data.data[0]).join(","));
@@ -209,7 +209,7 @@
             report.download = 'expense-report.csv';
           });
 
-          $.get("/expenses/types/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+          $.get("/expenses/types/properties/report?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             console.log(['property_expense_type', 'amount'].join(","));
@@ -237,7 +237,7 @@
             report.download = 'expense-type-property-report.csv';
           });
 
-          $.get("/expenses/properties-office?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
+          $.get("/expenses/properties/report?start="+ [startDate.getFullYear(), ( startDate.getMonth() + 1 ), startDate.getDate()].join("-")
             + "&end=" +[endDate.getFullYear(), ( endDate.getMonth() + 1 ), endDate.getDate()].join("-"),
           function(data, status){
             console.log(Object.keys(['property', 'amount']).join(","));
