@@ -1,6 +1,6 @@
 # Spark Property Manager
 
-A Real Estate Property Management WebApplication to manage Bookkeeping and WorkOrder easy. Write Up expense to each property unit with uploading receipt image or bulk upload your bank account statement as flat file with configuring columns
+A Real Estate Property Management Web Application for streamlined bookkeeping and work order management. Allocate expenses to each property unit by uploading receipt images or bulk uploading bank statements as flat files with configurable columns.
 
 - Technologies: Nodejs, postgresql
 
@@ -13,13 +13,13 @@ $ sudo apt-get update
 $ sudo apt-get install postgresql postgresql-contrib
 ```
 
-## Create User and Database
+## Create Database and Database User
 
 ```bash
 $ createuser -P -s dbusername --createdb
 ```
 
-If that doesn't create user with creating db
+If creating the DB doesn’t add the user, follow the steps.
 
 ```bash
 $ sudo -u postgres psql
@@ -29,7 +29,7 @@ $ sudo -u postgres psql
 # \q
 ```
 
-Login by the created user and create pgcrypto extension for password encryption
+Log in with the created database user and enable the pgcrypto extension for password encryption.
 
 ```bash
 $ psql -U username -d dbname
@@ -47,7 +47,7 @@ $ psql -U username -d dbname
 $ git clone https://github.com/wsapiens/spark-property-manager.git
 ```
 
-or download tarball by npm
+or download tarball by npm.
 
 ```bash
 $ npm pack spark-property-manager
@@ -63,11 +63,13 @@ spark-property-manager $ npm install
 ```
 
 ## Run database migration
-First, setup sequelize CLI config.json
+First, setup sequelize CLI config.json.
 
 ```bash
 $ vi config/config.json
 ```
+
+See the example below.
 
 ```json
 {
@@ -82,14 +84,21 @@ $ vi config/config.json
 }
 ```
 
-Run DB migration and generate seed data
+Run DB migration and generate seed data using the installed Sequelize.
 
 ```bash
 $ node_modules/.bin/sequelize db:migrate
 $ node_modules/.bin/sequelize db:seed:all
 ```
 
-Create base company and initial login user after running DB migration and generating seed data
+Or via npx (Node Package eXecute command-line utility) with sequelize-cli.
+
+```bash
+$ npx sequelize-cli db:migrate
+$ npx sequelize-cli db:seed:all
+```
+
+Create the base company and initial login user after completing the DB migration and seeding data.
 
 ```bash
 $ psql -U username -d dbname
@@ -100,7 +109,7 @@ $ psql -U username -d dbname
 # \q
 ```
 
-if sequelize db migration doesn't work, then load up from schema.sql which will create base company and initial login user
+If Sequelize DB migration fails, load from schema.sql to create the base company and initial login user.
 
 ```bash
 spark-property-manager$ psql -U username -d Database -a -f schema.sql
@@ -153,7 +162,8 @@ ssl = true
 tls = false
 ```
 
-If you setup this on cloud environment with domain (Named IP Address), please update url property accordingly, so account creation notification email can include correct url of this app ```url = http://your.domain.com:8080```
+If deploying in a cloud environment with a domain (named IP address), update the url property accordingly to ensure account creation emails include the correct app link.
+```url = http://your.domain.com:8080```
 
 ## Encrypt database password
 
@@ -192,8 +202,7 @@ Done.
 
 ## Static code analysis by ESLint
 
-.eslintrc.js file contains ESLint configurations with rules
-
+The .eslintrc.js file defines ESLint configurations and rules.
 ```bash
 $ npm run lint
 
@@ -201,7 +210,7 @@ $ npm run lint
 > eslint --ext .js app.js bin config email log migrations models routes util seeders
 ```
 
-To recreate the configuration instead of editting the existing one
+To recreate the configuration rather than editing the existing one.
 
 ```bash
 $ npm init @eslint/config
@@ -252,7 +261,7 @@ $ npm start
 
 ## Run Application by using Process Manager PM2
 
-PM2 provides production level process management
+PM2 offers production-grade process management.
 [pm2 install guide](https://www.npmjs.com/package/pm2)
 
 * install pm2
@@ -355,13 +364,13 @@ https://github.com/wsapiens/spark-property-manager/blob/master/doc/password_chan
 
 ## How to record expense
 
-* Add Property from Property Manager View. Building unit will be added automatically as default unit
+* Add a property from the Property Manager view; the building unit will be automatically added as the default unit.
 
-* Add or modify Unit for the added Property from Unit Manager View
+* Add or modify a unit for the added property from the Unit Manager view.
 
-* Add Expense with selecting Unit / Property and Expense Type, you can also upload photo copy of the receipt
-  On the mobile, user will be prompted to take picture or choose photo in device.
+* Add an expense by selecting the unit/property and expense type; you can also upload a receipt photo.
+  On mobile, users will be prompted to either take a picture or choose a photo from the device.
 
-* For importing, bank / credit card statement, it needs to be flat file (.csv) format
-  Each bank and credit card company has different formation, so need to define column number for data type/kind first.
-  Once setup import column configuration on Import Manager view, load up .csv file to populate expenses
+* For importing bank or credit card statements, use a flat file (.csv) format.
+  As each bank and credit card company has a different format, define the column numbers for each data type first.
+  Once the import column configuration is set in the Import Manager view, upload the .csv file to populate expenses.
