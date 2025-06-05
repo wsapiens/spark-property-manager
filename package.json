@@ -1,6 +1,6 @@
 {
   "name": "spark-property-manager",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Spark Real Estate Management Application",
   "main": "./bin/server.js",
   "scripts": {
@@ -45,7 +45,7 @@
     "log4js": "^6.3.0",
     "moment-timezone": "^0.5.43",
     "morgan": "~1.9.0",
-    "multer": "2.0.0",
+    "multer": "2.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pg": "8.7.1",
