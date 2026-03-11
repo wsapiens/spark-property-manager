@@ -9,3 +9,4 @@
 .DS_Store
 .app.key
 pm2-*.log
+.aider*
