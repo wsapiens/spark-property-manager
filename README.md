@@ -454,7 +454,7 @@ warn: To run "bm2", add the global bin folder to $PATH:
 * run application by bm2
 
 ```bash
-$ bm2 start ./bin/server.js --name "spark-property-manager" -i 4
+$ bm2 start ./bin/server.js --name "spark-property-manager" -i 4 --cwd $(pwd)
 Starting daemon..
 Waiting for daemon..
 
