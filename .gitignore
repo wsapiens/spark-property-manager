@@ -10,3 +10,4 @@
 .app.key
 pm2-*.log
 .aider*
+bun.lock

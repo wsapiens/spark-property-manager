@@ -2,7 +2,7 @@ const log = require('../log');
 const email = require('../email');
 const models = require('../models');
 const config = require('../config');
-const crypto = require('../util/crypto')
+const crypto = require('../util/crypto');
 var express = require('express');
 var router = express.Router();
 

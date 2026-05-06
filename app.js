@@ -58,7 +58,7 @@ app.use(
   csurf(
     crypto.generateRandomString(32),
     ["POST", "PUT", "GET"],
-    ["/", /\/\.*/i, "/login", /\/login\.*/i],
+    ["/", /\/\.*/i, "/login", /\/login\.*/i]
   )
 );
 app.use(

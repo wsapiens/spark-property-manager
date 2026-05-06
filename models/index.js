@@ -6,8 +6,8 @@ const config    = require('../config');
 const crypto    = require('../util/crypto');
 const log       = require('../log');
 const Sequelize = require('sequelize');
-const cls = require('continuation-local-storage');
-var namespace = cls.createNamespace('spark-property-manager-namespace');
+const als = require('als-unhooked'); // Bridge for Bun
+const namespace = als.createNamespace('spark-property-manager-namespace');
 Sequelize.useCLS(namespace);
 const encrypt_prefix = "[encrypt]";
 

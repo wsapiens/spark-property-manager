@@ -41,6 +41,10 @@ $ psql -U username -d dbname
 
 [nodejs install guide](https://nodejs.org/en/download/package-manager/)
 
+## Install Bun
+
+[bun homepage](https://bun.sh/)
+
 ## Download spark-property-Manager
 
 ```bash
@@ -60,6 +64,10 @@ $ tar -xvf spark-property-manager-{version}.tgz
 ```bash
 $ cd spark-property-manager
 spark-property-manager $ npm install
+```
+ or
+```bash
+spark-property-manager $ bun install
 ```
 
 ## Run database migration
@@ -167,13 +175,31 @@ If deploying in a cloud environment with a domain (named IP address), update the
 
 ## Encrypt database password
 
-* encrypt db password from command line
+* encrypt db password from command line by node.js
 
 ```bash
 spark-property-manager$ node
 > var crypto = require('./util/crypto');
 > crypto.encrypt('mypass');
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
+```
+
+* encrypt db password from command line by bun
+
+```bash
+spark-property-manager$ bun repl
+Welcome to Bun v1.3.13
+Type .copy [code] to copy to clipboard. .help for more info.
+
+❯ var crypto = require('./util/crypto');
+{
+  generateRandomString: [Function: generateRandomString],
+  encrypt: [Function: encrypt],
+  decrypt: [Function: decrypt],
+}
+❯ crypto.encrypt('mypass');
+"bPPEir+8a0z2aSQOzMr8ngYfevHLig=="
+❯
 ```
 
 * put the encrypted password with '[encrypt]' prefix into db password field on app.properties
@@ -191,8 +217,17 @@ password = [encrypt]a199/unJEhzdS5lfoF3sQe1haMc5kg==
 
 ## Static code analysis by jshint and grunt
 
+* install grunt
 ```bash
 $ npm i -g grunt-cli
+```
+   or
+```bash
+$ bun add -g grunt-cli
+```
+
+* run grunt
+```bash
 $ grunt
 Running "jshint:files" (jshint) task
 >> 46 files lint free.
@@ -222,7 +257,37 @@ $ npm init @eslint/config
 
 ```bash
 $ npm i -g mocha
-$ mocha
+```
+ or
+```bash
+$ bun add -g mocha
+```
+
+* run mocha
+```bash
+❯ mocha
+
+
+  util
+    getImportAmount()
+      ✔ get negative amount for positive return amount
+      ✔ get negative amount for negative return amount
+      ✔ get postive amount for positive sale amount
+      ✔ get positive amount for negative sale amount
+    getImportDescription()
+      ✔ get description with return mark
+      ✔ get description without return mark
+    getRandomRGB()
+      ✔ get RGB number list
+
+  crypto
+    encrypt()
+      ✔ test encrypt
+    decrypt()
+      ✔ test decrypt
+
+
+  9 passing (10ms)
 ```
 
 * install mocha locally
@@ -255,8 +320,37 @@ crypto
 
 ## Run Application
 
+* run application by npm
+
+Update package.json script section to use Node
+```json
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint --ext .js .",
+    "start": "node ./bin/server.js",
+    "debug": "node --inspect ./bin/server.js"
+  },
+```
+
+npm start command will run the application
 ```bash
 $ npm start
+```
+
+or update package.json script section to use bun
+
+```json
+  "scripts": {
+    "test": "mocha",
+    "lint": "eslint --ext .js .",
+    "start": "bun ./bin/server.js",
+    "debug": "bun --inspect ./bin/server.js"
+  },
+```
+
+bun start command will run the application
+```bash
+$ bun start
 ```
 
 ## Run Application by using Process Manager PM2
@@ -336,6 +430,98 @@ $ pm2 delete spark-property-manager
 │ App name │ id │ mode │ pid │ status │ restart │ uptime │ cpu │ mem │ user │ watching │
 └──────────┴────┴──────┴─────┴────────┴─────────┴────────┴─────┴─────┴──────┴──────────┘
 Use `pm2 show <id|name>` to get more details about an app
+```
+
+## Run Application by using Process Manager BM2
+
+BM2 is a process manager built entirely on Bun native APIs.
+The modern PM2 replacement — zero Node.js dependencies, pure Bun performance.
+
+* install bm2
+
+```bash
+$ bun add -g bm2
+bun add v1.3.13 (bf2e2cec)
+
+installed bm2@1.0.39 with binaries:
+ - bm2
+
+12 packages installed [516.00ms]
+
+warn: To run "bm2", add the global bin folder to $PATH:
+```
+
+* run application by bm2
+
+```bash
+$ bm2 start ./bin/server.js --name "spark-property-manager" -i 4
+Starting daemon..
+Waiting for daemon..
+
+BM2 — Bun Process Manager
+─────────────────────────────────────────────
+
+┌────┬──────────────────────────┬───────────┬─────────┬─────────┬───────┬──────────┬───┬──────────┬──────┬─────┐
+│ id │ name                     │ namespace │ version │ mode    │   pid │   uptime │ ↺ │ status   │  cpu │ mem │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼───────┼──────────┼───┼──────────┼──────┼─────┤
+│  0 │ spark-property-manager-0 │ default   │ -       │ cluster │ 96142 │ 0h 0m 0s │ 0 │ ● online │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼───────┼──────────┼───┼──────────┼──────┼─────┤
+│  1 │ spark-property-manager-1 │ default   │ -       │ cluster │ 96143 │ 0h 0m 0s │ 0 │ ● online │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼───────┼──────────┼───┼──────────┼──────┼─────┤
+│  2 │ spark-property-manager-2 │ default   │ -       │ cluster │ 96144 │ 0h 0m 0s │ 0 │ ● online │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼───────┼──────────┼───┼──────────┼──────┼─────┤
+│  3 │ spark-property-manager-3 │ default   │ -       │ cluster │ 96145 │ 0h 0m 0s │ 0 │ ● online │ 0.0% │  0b │
+└────┴──────────────────────────┴───────────┴─────────┴─────────┴───────┴──────────┴───┴──────────┴──────┴─────┘
+```
+
+* stop application by bm2
+
+```bash
+$ bm2 stop spark-property-manager
+
+BM2 — Bun Process Manager
+─────────────────────────────────────────────
+
+┌────┬──────────────────────────┬───────────┬─────────┬─────────┬─────┬────────┬────┬───────────┬──────┬─────┐
+│ id │ name                     │ namespace │ version │ mode    │ pid │ uptime │  ↺ │ status    │  cpu │ mem │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  0 │ spark-property-manager-0 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  1 │ spark-property-manager-1 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  2 │ spark-property-manager-2 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  3 │ spark-property-manager-3 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+└────┴──────────────────────────┴───────────┴─────────┴─────────┴─────┴────────┴────┴───────────┴──────┴─────┘
+```
+
+* remove application from bm2
+
+```bash
+$ bm2 delete spark-property-manager
+✓ Deleted
+
+BM2 — Bun Process Manager
+─────────────────────────────────────────────
+
+┌────┬──────────────────────────┬───────────┬─────────┬─────────┬─────┬────────┬────┬───────────┬──────┬─────┐
+│ id │ name                     │ namespace │ version │ mode    │ pid │ uptime │  ↺ │ status    │  cpu │ mem │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  0 │ spark-property-manager-0 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  1 │ spark-property-manager-1 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  2 │ spark-property-manager-2 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+├────┼──────────────────────────┼───────────┼─────────┼─────────┼─────┼────────┼────┼───────────┼──────┼─────┤
+│  3 │ spark-property-manager-3 │ default   │ -       │ cluster │   - │      - │ 16 │ ● errored │ 0.0% │  0b │
+└────┴──────────────────────────┴───────────┴─────────┴─────────┴─────┴────────┴────┴───────────┴──────┴─────┘
+
+$ bm2 list
+
+BM2 — Bun Process Manager
+─────────────────────────────────────────────
+
+No processes running
 ```
 
 ## Open by Browser
