@@ -63,11 +63,11 @@ $ tar -xvf spark-property-manager-{version}.tgz
 
 ```bash
 $ cd spark-property-manager
-spark-property-manager $ npm install
+spark-property-manager$ npm install
 ```
  or
 ```bash
-spark-property-manager $ bun install
+spark-property-manager$ bun install
 ```
 
 ## Run database migration
