@@ -1,0 +1,11 @@
+.app.key
+.travis.yml
+app.log
+/.github
+/.codex
+/openspec
+/node_modules
+/uploads
+*.crt
+*.key
+
