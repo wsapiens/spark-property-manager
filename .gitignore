@@ -11,3 +11,5 @@
 pm2-*.log
 .aider*
 bun.lock
+*.key
+*.crt

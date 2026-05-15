@@ -125,7 +125,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/tenants/",
+          url:"/tenants",
           type: "POST",
           data: JSON.stringify({
                   unit_id: unitId,

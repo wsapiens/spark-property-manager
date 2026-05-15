@@ -170,7 +170,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/expenses/",
+          url:"/expenses",
           type: "POST",
           headers: { "CSRF-Token": token, "cache-control": "no-cache" },
           data: JSON.stringify({unit_id: unitId, pay_to: payTo, description: payDesc, type_id: typeId, amount: payAmount, pay_time: payTime.toISOString(), file: receiptFile, method_id: methodId}),
@@ -325,6 +325,7 @@ $(function(){
   });
 
   $('#upload-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     $('#spinner').removeClass('d-none');
     $.ajax({
         // Your server script to process the upload
@@ -333,7 +334,7 @@ $(function(){
 
         // Form data
         data: new FormData($('#file-upload-form')[0]),
-
+        headers: { "CSRF-Token": token, "cache-control": "no-cache" },
         // Tell jQuery not to process data or worry about content-type
         // You *must* include these options!
         cache: false,

@@ -1,90 +1,89 @@
-const log = require('../log');
-const config = require('../config');
+const { Hono } = require('hono');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/configs', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/configs', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ImportStatementConfig
-        .findAll({
+
+  const importConfig = await models.ImportStatementConfig.findAll({
     where: {
-      company_id: req.user.company_id
+      company_id: user.company_id
     }
-  }).then(importConfig => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"data": importConfig}));
   });
+  return c.json({ data: importConfig });
 });
 
-router.post('/configs', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.post('/configs', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ImportStatementConfig
-        .create({
-          filter_column_number: req.body.filter_column_number,
-          filter_keyword: req.body.filter_keyword,
-          date_column_number: req.body.date_column_number,
-          date_format: req.body.date_format,
-          pay_to_column_number: req.body.pay_to_column_number,
-          amount_column_number: req.body.amount_column_number,
-          category_column_number: req.body.category_column_number,
-          description_column_number: req.body.description_column_number,
-          company_id: req.user.company_id
-        }).then(importConfig => {
-          res.send(importConfig);
-        });
+
+  const body = await parseBody(c);
+  const importConfig = await models.ImportStatementConfig.create({
+    filter_column_number: body.filter_column_number,
+    filter_keyword: body.filter_keyword,
+    date_column_number: body.date_column_number,
+    date_format: body.date_format,
+    pay_to_column_number: body.pay_to_column_number,
+    amount_column_number: body.amount_column_number,
+    category_column_number: body.category_column_number,
+    description_column_number: body.description_column_number,
+    company_id: user.company_id
+  });
+  return c.json(importConfig);
 });
 
-router.get('/configs/:configId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/configs/:configId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ImportStatementConfig
-        .findByPk(req.params.configId)
-        .then(importConfig => {
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify(importConfig));
-        });
+
+  const importConfig = await models.ImportStatementConfig.findByPk(c.req.param('configId'));
+  return c.json(importConfig);
 });
 
-router.put('/configs/:configId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.put('/configs/:configId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ImportStatementConfig
-        .findByPk(req.params.configId)
-        .then(importConfig => {
-          if(importConfig) {
-            importConfig.update({
-              filter_column_number: req.body.filter_column_number,
-              filter_keyword: req.body.filter_keyword,
-              date_column_number: req.body.date_column_number,
-              date_format: req.body.date_format,
-              pay_to_column_number: req.body.pay_to_column_number,
-              amount_column_number: req.body.amount_column_number,
-              category_column_number: req.body.category_column_number,
-              description_column_number: req.body.description_column_number
-            });
-          }
-        });
-  res.send();
+
+  const body = await parseBody(c);
+  const importConfig = await models.ImportStatementConfig.findByPk(c.req.param('configId'));
+  if (importConfig) {
+    await importConfig.update({
+      filter_column_number: body.filter_column_number,
+      filter_keyword: body.filter_keyword,
+      date_column_number: body.date_column_number,
+      date_format: body.date_format,
+      pay_to_column_number: body.pay_to_column_number,
+      amount_column_number: body.amount_column_number,
+      category_column_number: body.category_column_number,
+      description_column_number: body.description_column_number
+    });
+  }
+  return empty(c);
 });
 
-router.delete('/configs/:configId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.delete('/configs/:configId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ImportStatementConfig.destroy({
+
+  await models.ImportStatementConfig.destroy({
     where: {
-      id: req.params.configId
+      id: c.req.param('configId')
     }
-  }).then(function() {
-    res.send();
   });
+  return empty(c);
 });
 
 module.exports = router;

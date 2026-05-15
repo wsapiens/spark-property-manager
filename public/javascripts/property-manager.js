@@ -94,7 +94,7 @@ $(function(){
               propertyId = null;
               // refreshTable(table, false);
               rows_selected=[];
-              table.api().ajax.url("/properties/");
+              table.api().ajax.url("/properties");
               table.api().clear();
               table.api().ajax.reload();
             },
@@ -111,7 +111,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/properties/",
+          url:"/properties",
           type: "POST",
           data: JSON.stringify({
                   type_id: typeId,
@@ -139,7 +139,7 @@ $(function(){
               $('#memo-text').val('');
               $("html, body").animate({ scrollTop: $(document).height() }, "slow");
               table.api().clear();
-              table.api().ajax.url("/properties/").load();
+              table.api().ajax.url("/properties").load();
             },
             400: function(response) {
               resultPopup(response);
@@ -159,7 +159,10 @@ $(function(){
   });
 
   table = $('#properties').dataTable({
-            ajax: "/properties",
+            ajax: {
+              url: "/properties",
+              cache: true
+            },
             columns: [
                 { data: null,
                   searchable: false,

@@ -87,7 +87,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/users/",
+          url:"/users",
           type: "POST",
           data: JSON.stringify({
                   email: loginEmail,

@@ -162,7 +162,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/works/",
+          url:"/works",
           type: "POST",
           data: JSON.stringify({
                   unit_id: unitId,

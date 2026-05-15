@@ -1,120 +1,125 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.Property.findAll({
+
+  const properties = await models.Property.findAll({
     where: {
-      company_id: req.user.company_id
+      company_id: user.company_id
     },
     include: [{
-        model: models.PropertyType
+      model: models.PropertyType
     }]
-  }).then(properties => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"data": properties}));
   });
+  return c.json({ data: properties });
 });
 
-router.get('/:propertyId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/:propertyId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.Property.findByPk(req.params.propertyId)
-    .then(property => {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(property));
-  });
+
+  const property = await models.Property.findByPk(c.req.param('propertyId'));
+  return c.json(property);
 });
 
-router.get('/:propertyId/units', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/:propertyId/units', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.Property.findAll({
+
+  const properties = await models.Property.findAll({
     where: {
-      id: req.params.propertyId
+      id: c.req.param('propertyId')
     },
     include: [{
-        model: models.PropertyUnit
+      model: models.PropertyUnit
     }]
-  }).then(properties => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"data": properties}));
   });
+  return c.json({ data: properties });
 });
 
-router.post('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.post('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.Property.create({
-    type_id: req.body.type_id,
-    address_street: req.body.address_street,
-    address_city: req.body.address_city,
-    address_state: req.body.address_state,
-    address_zip: req.body.address_zip,
-    index_number: req.body.index_number,
-    loan_info: req.body.loan_info,
-    memo: req.body.memo,
-    company_id:req.user.company_id
-  }).then(property => {
-    if(property.type_id !== 3) {
-      models.PropertyUnit.create({
-        property_id: property.id,
-        name: 'Building',
-        is_building: true
-      }).then(unit => {
-        log.info('default unit has been created for propertyId: ' + property.id);
-      });
-    }
-    res.send(property);
+
+  const body = await parseBody(c);
+  const property = await models.Property.create({
+    type_id: body.type_id,
+    address_street: body.address_street,
+    address_city: body.address_city,
+    address_state: body.address_state,
+    address_zip: body.address_zip,
+    index_number: body.index_number,
+    loan_info: body.loan_info,
+    memo: body.memo,
+    company_id: user.company_id
   });
+
+  if (property.type_id !== 3) {
+    await models.PropertyUnit.create({
+      property_id: property.id,
+      name: 'Building',
+      is_building: true
+    });
+    log.info('default unit has been created for propertyId: ' + property.id);
+  }
+
+  return c.json(property);
 });
 
-router.put('/:propertyId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.put('/:propertyId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.Property
-        .findByPk(req.params.propertyId)
-        .then(property => {
-          if(property) {
-            property.update({
-              type_id: req.body.type_id,
-              address_street: req.body.address_street,
-              address_city: req.body.address_city,
-              address_state: req.body.address_state,
-              address_zip: req.body.address_zip,
-              index_number: req.body.index_number,
-              loan_info: req.body.loan_info,
-              memo: req.body.memo,
-            });
-          }
-        });
-  res.send();
+
+  const body = await parseBody(c);
+  const property = await models.Property.findByPk(c.req.param('propertyId'));
+  if (property) {
+    await property.update({
+      type_id: body.type_id,
+      address_street: body.address_street,
+      address_city: body.address_city,
+      address_state: body.address_state,
+      address_zip: body.address_zip,
+      index_number: body.index_number,
+      loan_info: body.loan_info,
+      memo: body.memo
+    });
+  }
+  return empty(c);
 });
 
-router.delete('/:propertyId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.delete('/:propertyId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PropertyUnit.destroy({
+
+  await models.PropertyUnit.destroy({
     where: {
-      property_id: req.params.propertyId
+      property_id: c.req.param('propertyId')
     }
   });
-  models.Property.destroy({
+  await models.Property.destroy({
     where: {
-      id: req.params.propertyId
+      id: c.req.param('propertyId')
     }
-  }).then(function() {
-    res.send();
   });
+  return empty(c);
 });
 
 module.exports = router;

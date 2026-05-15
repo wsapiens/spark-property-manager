@@ -1,83 +1,89 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/methods', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/methods', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PaymentMethod.findAll({
+
+  const methods = await models.PaymentMethod.findAll({
     where: {
-      company_id: req.user.company_id
+      company_id: user.company_id
     },
     include: [{
-        model: models.PaymentType
+      model: models.PaymentType
     }]
-  }).then(methods => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"data": methods}));
   });
+  return c.json({ data: methods });
 });
 
-router.get('/methods/:methodId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/methods/:methodId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PaymentMethod.findByPk(req.params.methodId)
-    .then(method => {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(method));
+
+  const method = await models.PaymentMethod.findByPk(c.req.param('methodId'));
+  return c.json(method);
+});
+
+router.post('/methods', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const body = await parseBody(c);
+  const method = await models.PaymentMethod.create({
+    type_id: body.type_id,
+    description: body.description,
+    account_number: body.account_number,
+    company_id: user.company_id
   });
+  return c.json(method);
 });
 
-router.post('/methods/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.put('/methods/:methodId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PaymentMethod.create({
-    type_id: req.body.type_id,
-    description: req.body.description,
-    account_number: req.body.account_number,
-    company_id:req.user.company_id
-  }).then(method => {
-    res.send(method);
-  });
+
+  const body = await parseBody(c);
+  const method = await models.PaymentMethod.findByPk(c.req.param('methodId'));
+  if (method) {
+    await method.update({
+      type_id: body.type_id,
+      description: body.description,
+      account_number: body.account_number
+    });
+  }
+  return empty(c);
 });
 
-router.put('/methods/:methodId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.delete('/methods/:methodId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PaymentMethod
-        .findByPk(req.params.methodId)
-        .then(method => {
-          if(method) {
-            method.update({
-              type_id: req.body.type_id,
-              description: req.body.description,
-              account_number: req.body.account_number
-            });
-          }
-        });
-  res.send();
-});
 
-router.delete('/methods/:methodId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.PaymentMethod.destroy({
-    where: {
-      id: req.params.methodId
-    }
-  }).then(function() {
-    res.send();
-  }).catch(function(err){
+  try {
+    await models.PaymentMethod.destroy({
+      where: {
+        id: c.req.param('methodId')
+      }
+    });
+    return empty(c);
+  } catch (err) {
     log.error(err.message);
     log.error(err.stack);
-    res.status(400).send(err.message);
-  });
+    return c.text(err.message, 400);
+  }
 });
 
 module.exports = router;

@@ -94,7 +94,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/payments/methods/",
+          url:"/payments/methods",
           type: "POST",
           data: JSON.stringify({
                   type_id: typeId,

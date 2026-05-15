@@ -144,7 +144,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/import/configs/",
+          url:"/import/configs",
           type: "POST",
           data: JSON.stringify({
                   filter_column_number: filterColumn,
@@ -275,6 +275,7 @@ $(function(){
   });
 
   $('#upload-button').on('click', function() {
+    var token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     var methodId = $('#method-select').val();
     var unitId = $('#unit-select').val();
     if(methodId.toLowerCase().indexOf("select") === -1) {
@@ -285,7 +286,7 @@ $(function(){
 
         // Form data
         data: new FormData($('#file-upload-form')[0]),
-
+        headers: { "CSRF-Token": token },
         // Tell jQuery not to process data or worry about content-type
         // You *must* include these options!
         cache: false,

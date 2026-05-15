@@ -1,98 +1,102 @@
-const log = require('../log');
+const { Hono } = require('hono');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.sequelize
-        .query('SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
-             + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id '
-             + ' WHERE p.company_id = $1',
-             {
-               bind: [ req.user.company_id ],
-               type: models.sequelize.QueryTypes.SELECT
-             })
-        .then(units => {
-          // log.debug(units);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({"data": units}));
-        });
-});
+const router = new Hono();
 
-router.get('/:unitId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.sequelize
-        .query('SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building'
-             + ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id'
-             + ' WHERE u.id=$1',
-             {
-               bind: [ req.params.unitId ],
-               type: models.sequelize.QueryTypes.SELECT
-             })
-        .then(units => {
-          // log.debug(units);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify(units[0]));
-        });
-});
 
-router.post('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.sequelize
-        .query('INSERT INTO property_unit(property_id, name, is_building)'
-           + ' VALUES ($1, $2, $3)',
-            {
-              bind: [
-                req.body.property_id,
-                req.body.name,
-                req.body.is_building
-              ],
-              type: models.sequelize.QueryTypes.INSERT
-            })
-        .then(function() {
-          res.send();
-        });
-});
-
-router.put('/:unitId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.sequelize
-        .query('UPDATE property_unit SET property_id=$1, name=$2, is_building=$3'
-             + ' WHERE id=$4',
-             {
-               bind: [
-                 req.body.property_id,
-                 req.body.name,
-                 req.body.is_building,
-                 req.params.unitId
-               ],
-               type: models.sequelize.QueryTypes.UPDATE
-             })
-             .then(function() {
-               res.send();
-             });
-});
-
-router.delete('/:unitId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.PropertyUnit.destroy({
-    where: {
-      id: req.params.unitId
+  const units = await models.sequelize.query(
+    'SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building' +
+      ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id ' +
+      ' WHERE p.company_id = $1',
+    {
+      bind: [user.company_id],
+      type: models.sequelize.QueryTypes.SELECT
     }
-  }).then(function() {
-    res.send();
+  );
+  return c.json({ data: units });
+});
+
+router.get('/:unitId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const units = await models.sequelize.query(
+    'SELECT u.id, u.property_id, p.address_street, u.name, p.address_city, p.address_state, p.address_zip, u.is_building' +
+      ' FROM property_unit AS u JOIN property AS p ON u.property_id = p.id' +
+      ' WHERE u.id=$1',
+    {
+      bind: [c.req.param('unitId')],
+      type: models.sequelize.QueryTypes.SELECT
+    }
+  );
+  return c.json(units[0]);
+});
+
+router.post('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const body = await parseBody(c);
+  await models.sequelize.query(
+    'INSERT INTO property_unit(property_id, name, is_building)' +
+      ' VALUES ($1, $2, $3)',
+    {
+      bind: [
+        body.property_id,
+        body.name,
+        body.is_building
+      ],
+      type: models.sequelize.QueryTypes.INSERT
+    }
+  );
+  return empty(c);
+});
+
+router.put('/:unitId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const body = await parseBody(c);
+  await models.sequelize.query(
+    'UPDATE property_unit SET property_id=$1, name=$2, is_building=$3' +
+      ' WHERE id=$4',
+    {
+      bind: [
+        body.property_id,
+        body.name,
+        body.is_building,
+        c.req.param('unitId')
+      ],
+      type: models.sequelize.QueryTypes.UPDATE
+    }
+  );
+  return empty(c);
+});
+
+router.delete('/:unitId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  await models.PropertyUnit.destroy({
+    where: {
+      id: c.req.param('unitId')
+    }
   });
+  return empty(c);
 });
 
 module.exports = router;

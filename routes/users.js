@@ -1,130 +1,127 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const email = require('../email');
 const models = require('../models');
 const config = require('../config');
 const crypto = require('../util/crypto');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.User.findAll({
+
+  const users = await models.User.findAll({
     where: {
-      company_id: req.user.company_id
+      company_id: user.company_id
     }
-  }).then(users => {
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify({"data": users}));
   });
+  return c.json({ data: users });
 });
 
-router.get('/:userId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/:userId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.User.findByPk(req.params.userId)
-    .then(user => {
-      res.setHeader('Content-Type', 'application/json');
-      res.send(JSON.stringify(user));
-  });
+
+  const foundUser = await models.User.findByPk(c.req.param('userId'));
+  return c.json(foundUser);
 });
 
-router.post('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.post('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  var random_password = crypto.generateRandomString(5);
-  var message	= {
-   text:	'Your Account has been created with your email: '
-          + req.body.email
-          + ' and temporary password: '
-          + random_password
-          + ', please change password after login ' + config.get('app.url'),
-   from:	'SPARK REM <' + config.get('smtp.username') + '>',
-   to:		req.body.firstname + ' <' + req.body.email +'>',
-   //cc:		"else <else@your-email.com>",
-   subject:	'SPARK Property Manager App Account Creation',
-   // attachment:
-   // [
-   //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
-   //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
-   // ]
+
+  const body = await parseBody(c);
+  const randomPassword = crypto.generateRandomString(5);
+  const message = {
+    text: 'Your Account has been created with your email: ' +
+      body.email +
+      ' and temporary password: ' +
+      randomPassword +
+      ', please change password after login ' + config.get('app.url'),
+    from: 'SPARK REM <' + config.get('smtp.username') + '>',
+    to: body.firstname + ' <' + body.email + '>',
+    subject: 'SPARK Property Manager App Account Creation'
   };
-  models.sequelize
-        .query("INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)"
-             + " VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5, $6, $7)",
-            { bind: [
-                req.body.email,
-                random_password,
-                req.body.firstname,
-                req.body.lastname,
-                req.body.phone,
-                req.body.is_manager,
-                req.user.company_id
-              ],
-              type: models.sequelize.QueryTypes.INSERT
-            })
-    .then(function() {
-      email.send(message, function(err, message) { log.info(err || message); });
-      res.send();
-    });
+
+  await models.sequelize.query(
+    'INSERT INTO login_user(email, password, firstname, lastname, phone, is_manager, company_id)' +
+      " VALUES ($1, crypt($2, gen_salt('bf')), $3, $4, $5, $6, $7)",
+    {
+      bind: [
+        body.email,
+        randomPassword,
+        body.firstname,
+        body.lastname,
+        body.phone,
+        body.is_manager,
+        user.company_id
+      ],
+      type: models.sequelize.QueryTypes.INSERT
+    }
+  );
+  email.send(message, function(err, message) { log.info(err || message); });
+  return empty(c);
 });
 
-router.put('/:userId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.put('/:userId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  var random_password = crypto.generateRandomString(5);
-  var message	= {
-   text:	'Your Account has been updated with your email: '
-          + req.body.email
-          + ' and temporary password: '
-          + random_password
-          + ', please change password after login ' + config.get('app.url'),
-   from:	'SPARK PM <' + config.get('smtp.username') + '>',
-   to:		req.body.firstname + ' <' + req.body.email +'>',
-   //cc:		"else <else@your-email.com>",
-   subject:	'SPARK Property Manager App Account Update',
-   // attachment:
-   // [
-   //    {data:"<html>i <i>hope</i> this works!</html>", alternative:true},
-   //    {path:"path/to/file.zip", type:"application/zip", name:"renamed.zip"}
-   // ]
+
+  const body = await parseBody(c);
+  const randomPassword = crypto.generateRandomString(5);
+  const message = {
+    text: 'Your Account has been updated with your email: ' +
+      body.email +
+      ' and temporary password: ' +
+      randomPassword +
+      ', please change password after login ' + config.get('app.url'),
+    from: 'SPARK PM <' + config.get('smtp.username') + '>',
+    to: body.firstname + ' <' + body.email + '>',
+    subject: 'SPARK Property Manager App Account Update'
   };
-  models.sequelize
-        .query("UPDATE login_user SET email=$1, password=crypt($2, gen_salt('bf')), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7",
-          {
-            bind: [
-              req.body.email,
-              random_password,
-              req.body.firstname,
-              req.body.lastname,
-              req.body.phone,
-              req.body.is_manager,
-              req.params.userId
-            ],
-            type: models.sequelize.QueryTypes.UPDATE
-          })
-    .then(function() {
-      log.info('send email to ' + req.body.email);
-      email.send(message, function(err, message) { log.info(err || message); });
-      res.send();
-    });
+
+  await models.sequelize.query(
+    "UPDATE login_user SET email=$1, password=crypt($2, gen_salt('bf')), firstname=$3, lastname=$4, phone=$5, is_manager=$6 WHERE id=$7",
+    {
+      bind: [
+        body.email,
+        randomPassword,
+        body.firstname,
+        body.lastname,
+        body.phone,
+        body.is_manager,
+        c.req.param('userId')
+      ],
+      type: models.sequelize.QueryTypes.UPDATE
+    }
+  );
+  log.info('send email to ' + body.email);
+  email.send(message, function(err, message) { log.info(err || message); });
+  return empty(c);
 });
 
-router.delete('/:userId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.delete('/:userId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.User.destroy({
+
+  await models.User.destroy({
     where: {
-      id: req.params.userId
+      id: c.req.param('userId')
     }
-  }).then(function(){
-    res.send();
   });
+  return empty(c);
 });
 
 module.exports = router;

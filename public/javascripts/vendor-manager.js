@@ -81,7 +81,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/vendors/",
+          url:"/vendors",
           type: "POST",
           data: JSON.stringify({
                   note: noteText,

@@ -1,117 +1,119 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const util = require('../util');
 const models = require('../models');
-const csv = require("fast-csv");
-var validator = require('validator');
-// var fs = require('fs');
-var express = require('express');
-var router = express.Router();
-var multer = require('multer');
-var moment = require('moment-timezone');
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, './uploads/');
-  },
-  filename: function (req, file, cb) {
-    cb(null, validator.escape(
-              req.user.company_id
-              + '-'
-              + file.fieldname
-              + '-'
-              + Date.now()
-              + '-'
-              + file.originalname));
-  }
-});
-var upload = multer({ storage: storage });
+const csv = require('fast-csv');
+const validator = require('validator');
+const moment = require('moment-timezone');
+const { getQuery, renderLogin, requireUser, uploadSingle } = require('../lib/hono-helpers');
 
-router.post('/receipt', upload.single('receipt'), function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.post('/receipt', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  if (!req.file) {
-    return res.status(400).send('No files were uploaded.');
+
+  const file = await uploadSingle(c, 'receipt');
+  if (!file) {
+    return c.text('No files were uploaded.', 400);
   }
-  console.log(req.file.filename);
-  console.log(req.file.originalname);
-  res.send(req.file.filename);
+
+  console.log(file.filename);
+  console.log(file.originalname);
+  return c.text(file.filename);
 });
 
-router.post('/statement/:methodId', upload.single('statement'), function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.post('/statement/:methodId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  if (!req.file) {
-    return res.status(400).send('No files were uploaded.');
+
+  const file = await uploadSingle(c, 'statement');
+  if (!file) {
+    return c.text('No files were uploaded.', 400);
   }
-  var row = 0;
-  var importConfig;
-  var defaultUnitId;
-  var expenseTypes;
-  var expenses = [];
-  models.ImportStatementConfig.findAll({
+
+  const query = getQuery(c);
+  let row = 0;
+  const expenses = [];
+  const importStatementConfig = await models.ImportStatementConfig.findAll({
     where: {
-      company_id: req.user.company_id
+      company_id: user.company_id
     },
     limit: 1
-  }).then(importStatementConfig => {
-    importConfig = importStatementConfig[0];
-    models.ExpenseType
-          .findAll()
-          .then(types => {
-            expenseTypes = types;
-            models.Property.findAll({
-              where: {
-                company_id: req.user.company_id
-              },
-              include: [{
-                  model: models.PropertyUnit
-              }]
-            }).then(properties => {
-              defaultUnitId = properties[0].PropertyUnits[0].id;
-              if(req.query.unitId !== null ) {
-                defaultUnitId = req.query.unitId;
-              }
-
-              csv.parseFile(req.file.path)
-                 .on("data", function(data){
-                   console.log(data);
-                   row++;
-                   if(row === 1) {
-                     // skip first row as header
-                     return;
-                   }
-                   var filter = data[importConfig.filter_column_number];
-                   var regex = new RegExp( importConfig.filter_keyword.replace(",", "|") , "i");
-                   if(regex.test(filter)) {
-                     var expense_type_id = 9;
-                     for(let i = 0; i < expenseTypes.length; i++) {
-                       if(data[importConfig.category_column_number].includes(expenseTypes[i].name)) {
-                         expense_type_id = expenseTypes[i].id;
-                       }
-                     }
-                     expenses.push({
-                       unit_id: defaultUnitId,
-                       pay_to: data[importConfig.pay_to_column_number],
-                       type_id: expense_type_id,
-                       description: util.getImportDescription(data[importConfig.description_column_number], data[importConfig.filter_column_number]),
-                       amount: util.getImportAmount(parseFloat(data[importConfig.amount_column_number]), data[importConfig.filter_column_number]),
-                       pay_time: new Date(moment.tz(data[importConfig.date_column_number], importConfig.date_format, req.query.tzId).format()),
-                       method_id: req.params.methodId,
-                       file: ''
-                     });
-                   }
-                 })
-                 .on("end", function(){
-                   console.log(expenses);
-                   models.Expense
-                         .bulkCreate(expenses, {returning: true});
-                   log.info('import done for user_id: ' + req.user.id);
-                   console.log('import done for user_id: ' + req.user.id);
-                 });
-            });
-          });
   });
-  res.send(validator.escape(req.file.originalname));
+  const importConfig = importStatementConfig[0];
+  const expenseTypes = await models.ExpenseType.findAll();
+  const properties = await models.Property.findAll({
+    where: {
+      company_id: user.company_id
+    },
+    include: [{
+      model: models.PropertyUnit
+    }]
+  });
+  let defaultUnitId = properties[0].PropertyUnits[0].id;
+  if (query.unitId !== null) {
+    defaultUnitId = query.unitId;
+  }
+
+  await new Promise(function(resolve, reject) {
+    csv.parseFile(file.path)
+      .on('data', function(data) {
+        console.log(data);
+        row++;
+        if (row === 1) {
+          return;
+        }
+        const filter = data[importConfig.filter_column_number];
+        const regex = new RegExp(importConfig.filter_keyword.replace(',', '|'), 'i');
+        if (regex.test(filter)) {
+          let expenseTypeId = 9;
+          for (let i = 0; i < expenseTypes.length; i++) {
+            if (data[importConfig.category_column_number].includes(expenseTypes[i].name)) {
+              expenseTypeId = expenseTypes[i].id;
+            }
+          }
+          expenses.push({
+            unit_id: defaultUnitId,
+            pay_to: data[importConfig.pay_to_column_number],
+            type_id: expenseTypeId,
+            description: util.getImportDescription(
+              data[importConfig.description_column_number],
+              data[importConfig.filter_column_number]
+            ),
+            amount: util.getImportAmount(
+              parseFloat(data[importConfig.amount_column_number]),
+              data[importConfig.filter_column_number]
+            ),
+            pay_time: new Date(moment.tz(
+              data[importConfig.date_column_number],
+              importConfig.date_format,
+              query.tzId
+            ).format()),
+            method_id: c.req.param('methodId'),
+            file: ''
+          });
+        }
+      })
+      .on('error', reject)
+      .on('end', async function() {
+        try {
+          console.log(expenses);
+          await models.Expense.bulkCreate(expenses, { returning: true });
+          log.info('import done for user_id: ' + user.id);
+          console.log('import done for user_id: ' + user.id);
+          resolve();
+        } catch (error) {
+          reject(error);
+        }
+      });
+  });
+
+  return c.text(validator.escape(file.originalname));
 });
+
 module.exports = router;

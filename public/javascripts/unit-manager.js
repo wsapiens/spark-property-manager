@@ -100,7 +100,7 @@ $(function(){
         });
       } else {
         $.ajax({
-          url:"/units/",
+          url:"/units",
           type: "POST",
           data: JSON.stringify({
                   property_id: propertyId,

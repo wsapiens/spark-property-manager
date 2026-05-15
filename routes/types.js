@@ -1,45 +1,41 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/expense', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/expense', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.ExpenseType
-        .findAll()
-        .then(types => {
-          log.debug(types);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({"data": types}));
-        });
+
+  const types = await models.ExpenseType.findAll();
+  log.debug(types);
+  return c.json({ data: types });
 });
 
-router.get('/property', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/property', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PropertyType
-        .findAll()
-        .then(types => {
-          log.debug(types);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({"data": types}));
-        });
+
+  const types = await models.PropertyType.findAll();
+  log.debug(types);
+  return c.json({ data: types });
 });
 
-router.get('/payment', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/payment', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.PaymentType
-        .findAll()
-        .then(types => {
-          log.debug(types);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({"data": types}));
-        });
+
+  const types = await models.PaymentType.findAll();
+  log.debug(types);
+  return c.json({ data: types });
 });
 
 module.exports = router;

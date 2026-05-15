@@ -17,6 +17,7 @@ module.exports = function(grunt) {
               'test/*.js',
             ],
       options: {
+        esversion: 11,
         node: true,
         curly: true,
         immed: true,
@@ -26,7 +27,6 @@ module.exports = function(grunt) {
         boss: true,
         eqnull: true,
         laxbreak: true,
-        esversion: 6,
         globals: {
           jQuery: true
         }

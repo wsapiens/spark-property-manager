@@ -1,168 +1,133 @@
+const { Hono } = require('hono');
 const log = require('../log');
 const models = require('../models');
-var express = require('express');
-var router = express.Router();
+const { empty, parseBody, renderLogin, requireUser } = require('../lib/hono-helpers');
 
-router.get('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+const router = new Hono();
+
+router.get('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.WorkOrder
-        .findAll({
-          where: {
-            company_id: req.user.company_id
-          },
-          include: [{
-              model: models.PropertyUnit,
-              include: [{
-                model: models.Property
-              }]
-            },{
-              model: models.Vendor
-          }]
-        }).then(works => {
-          log.debug(works);
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify({"data": works}));
-        });
+
+  const works = await models.WorkOrder.findAll({
+    where: {
+      company_id: user.company_id
+    },
+    include: [{
+      model: models.PropertyUnit,
+      include: [{
+        model: models.Property
+      }]
+    }, {
+      model: models.Vendor
+    }]
+  });
+  log.debug(works);
+  return c.json({ data: works });
 });
 
-router.get('/:workId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.get('/:workId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  models.WorkOrder
-        .findOne({
-          where: {
-            id: req.params.workId
-          },
-          include: [{
-            model: models.Vendor
-          }]
-        }).then(work =>{
-          res.setHeader('Content-Type', 'application/json');
-          res.send(JSON.stringify(work));
-        });
+
+  const work = await models.WorkOrder.findOne({
+    where: {
+      id: c.req.param('workId')
+    },
+    include: [{
+      model: models.Vendor
+    }]
+  });
+  return c.json(work);
 });
 
-router.post('/', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.post('/', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  var startDate = new Date();
-  if(req.body.start_date) {
-    startDate = req.body.start_date;
-  }
-  var endDate = new Date();
-  if(req.body.end_date) {
-    endDate = req.body.end_date;
-  }
-  if(!req.body.vendor_id && req.body.vendor_name) {
-    models.Vendor.create({
-      name: req.body.vendor_name,
-      phone: req.body.vendor_phone,
-      email: req.body.vendor_email,
-      company_id: req.user.company_id
-    }).then(vendor => {
-      models.WorkOrder.create({
-        unit_id: req.body.unit_id,
-        description: req.body.description,
-        status: req.body.status,
-        estimation: req.body.estimation,
-        scheduled_date: new Date(),
-        start_date: startDate,
-        end_date: endDate,
-        vendor_id: vendor.id,
-        company_id: req.user.company_id
-      }).then(work => {
-        res.send(work);
-      });
+
+  const body = await parseBody(c);
+  const startDate = body.start_date || new Date();
+  const endDate = body.end_date || new Date();
+  let vendorId = body.vendor_id;
+
+  if (!vendorId && body.vendor_name) {
+    const vendor = await models.Vendor.create({
+      name: body.vendor_name,
+      phone: body.vendor_phone,
+      email: body.vendor_email,
+      company_id: user.company_id
     });
-  } else {
-    models.WorkOrder.create({
-      unit_id: req.body.unit_id,
-      description: req.body.description,
-      status: req.body.status,
-      estimation: req.body.estimation,
-      scheduled_date: new Date(),
+    vendorId = vendor.id;
+  }
+
+  const work = await models.WorkOrder.create({
+    unit_id: body.unit_id,
+    description: body.description,
+    status: body.status,
+    estimation: body.estimation,
+    scheduled_date: new Date(),
+    start_date: startDate,
+    end_date: endDate,
+    vendor_id: vendorId,
+    company_id: user.company_id
+  });
+  return c.json(work);
+});
+
+router.put('/:workId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const body = await parseBody(c);
+  const startDate = body.start_date || new Date();
+  const endDate = body.end_date || new Date();
+  let vendorId = body.vendor_id;
+
+  if (!vendorId && body.vendor_name) {
+    const vendor = await models.Vendor.create({
+      name: body.vendor_name,
+      phone: body.vendor_phone,
+      email: body.vendor_email,
+      company_id: user.company_id
+    });
+    vendorId = vendor.id;
+  }
+
+  const work = await models.WorkOrder.findByPk(c.req.param('workId'));
+  if (work) {
+    await work.update({
+      unit_id: body.unit_id,
+      description: body.description,
+      status: body.status,
+      estimation: body.estimation,
       start_date: startDate,
       end_date: endDate,
-      vendor_id: req.body.vendor_id,
-      company_id: req.user.company_id
-    }).then(work => {
-      res.send(work);
+      vendor_id: vendorId
     });
   }
+  return empty(c);
 });
 
-router.put('/:workId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
+router.delete('/:workId', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
   }
-  var startDate = new Date();
-  if(req.body.start_date) {
-    startDate = req.body.start_date;
-  }
-  var endDate = new Date();
-  if(req.body.end_date) {
-    endDate = req.body.end_date;
-  }
-  if(!req.body.vendor_id && req.body.vendor_name) {
-    models.Vendor.create({
-      name: req.body.vendor_name,
-      phone: req.body.vendor_phone,
-      email: req.body.vendor_email,
-      company_id: req.user.company_id
-    }).then(vendor => {
-      models.WorkOrder
-            .findByPk(req.params.workId)
-            .then(work => {
-              if(work) {
-                work.update({
-                  unit_id: req.body.unit_id,
-                  description: req.body.description,
-                  status: req.body.status,
-                  estimation: req.body.estimation,
-                  //scheduled_date: req.body['scheduled_date'],
-                  start_date: startDate,
-                  end_date: endDate,
-                  vendor_id: vendor.id
-                });
-              }
-            });
-    });
-  } else {
-    models.WorkOrder
-          .findByPk(req.params.workId)
-          .then(work => {
-            if(work) {
-              work.update({
-                unit_id: req.body.unit_id,
-                description: req.body.description,
-                status: req.body.status,
-                estimation: req.body.estimation,
-                //scheduled_date: req.body['scheduled_date'],
-                start_date: startDate,
-                end_date: endDate,
-                vendor_id: req.body.vendor_id
-              });
-            }
-          });
-  }
-  res.send();
-});
 
-router.delete('/:workId', function(req, res, next) {
-  if(!req.isAuthenticated()) {
-    return res.render('login', { message: '' });
-  }
-  models.WorkOrder.destroy({
+  await models.WorkOrder.destroy({
     where: {
-      id: req.params.workId
+      id: c.req.param('workId')
     }
-  }).then(function() {
-    res.send();
   });
+  return empty(c);
 });
 
 module.exports = router;
