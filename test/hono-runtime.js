@@ -198,6 +198,27 @@ describe('hono runtime', function() {
     assert(body.includes('Login'));
   });
 
+  it('deletes expired database sessions during cleanup', async function() {
+    var cleanup = require('../lib/session-cleanup');
+    var now = new Date();
+    sessions.set('expired-session', {
+      sid: 'expired-session',
+      expires: new Date(now.getTime() - 1000),
+      data: '{}'
+    });
+    sessions.set('active-session', {
+      sid: 'active-session',
+      expires: new Date(now.getTime() + 1000),
+      data: '{}'
+    });
+
+    var deleted = await cleanup.deleteExpiredSessions(now);
+
+    assert.equal(deleted, 1);
+    assert.equal(sessions.has('expired-session'), false);
+    assert.equal(sessions.has('active-session'), true);
+  });
+
   it('destroys database sessions and clears cookies on logout', async function() {
     var login = await loginRequest();
     var cookie = login.headers.get('set-cookie');
@@ -297,7 +318,26 @@ describe('hono runtime', function() {
           sessions.set(record.sid, Object.assign({}, existing || {}, record));
         },
         destroy: async function(options) {
-          sessions.delete(options.where.sid);
+          if (options.where.sid) {
+            sessions.delete(options.where.sid);
+            return 1;
+          }
+
+          if (options.where.expires) {
+            var operators = Object.getOwnPropertySymbols(options.where.expires);
+            var cutoff = options.where.expires[operators[0]];
+            var deleted = 0;
+            Array.from(sessions.keys()).forEach(function(sid) {
+              var session = sessions.get(sid);
+              if (session.expires && session.expires < cutoff) {
+                sessions.delete(sid);
+                deleted++;
+              }
+            });
+            return deleted;
+          }
+
+          return 0;
         }
       },
       User: {
@@ -382,6 +422,7 @@ describe('hono runtime', function() {
       if (
         key.includes('/app.js')
         || key.includes('/lib/hono-compat.js')
+        || key.includes('/lib/session-cleanup.js')
         || key.includes('/routes/')
         || key.includes('/models/index.js')
         || key.includes('/config/index.js')

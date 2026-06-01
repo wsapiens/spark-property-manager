@@ -1,8 +1,10 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
+const cluster = require('cluster');
 const config = require('../config');
 const app = require('../app');
+const { startExpiredSessionCleanup } = require('../lib/session-cleanup');
 const debug = require('debug')('spark-property-manager:server');
 
 const port = normalizePort(process.env.PORT || config.get('app.port'));
@@ -26,6 +28,9 @@ function startServer() {
   }
 
   const server = globalThis.Bun.serve(serverOptions);
+  if (!cluster.isWorker) {
+    startExpiredSessionCleanup();
+  }
   onListening(server);
   return server;
 }

@@ -152,6 +152,7 @@ password = dbpass
 hostname = localhost
 port = 8080
 sessionSecret = secret
+sessionCleanupIntervalMs = 3600000
 https = false
 serverkey = /path/to/server.key
 servercert = /path/to/server.crt

@@ -1,7 +1,10 @@
 const cluster = require('cluster');
 const numCPUs = require('os').cpus().length;
+const { startExpiredSessionCleanup } = require('../lib/session-cleanup');
 
 if (cluster.isMaster) {
+  startExpiredSessionCleanup();
+
   // Fork workers.
   for (let i = 0; i < numCPUs; i++) {
     cluster.fork();
