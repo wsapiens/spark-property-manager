@@ -3,6 +3,7 @@
 app.log
 /.github
 /.codex
+/.vscode
 /openspec
 /node_modules
 /uploads
