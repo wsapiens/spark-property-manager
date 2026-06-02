@@ -6,6 +6,7 @@
 /app.log
 /uploads
 /app.properties
+/.codex
 .DS_Store
 .app.key
 pm2-*.log
