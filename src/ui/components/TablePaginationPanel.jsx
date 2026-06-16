@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 export function TablePaginationPanel({
   currentPage,
@@ -7,6 +7,12 @@ export function TablePaginationPanel({
   onPageSizeChange,
   onPageChange
 }) {
+  const [pageJump, setPageJump] = useState(String(currentPage));
+
+  useEffect(() => {
+    setPageJump(String(currentPage));
+  }, [currentPage]);
+
   return (
     <section className="card border-0 shadow-sm mb-3">
       <div className="card-body d-flex flex-wrap gap-2 align-items-center">
@@ -49,18 +55,22 @@ export function TablePaginationPanel({
           <label className="form-label mb-0" htmlFor="table-page-jump">Go to page</label>
           <input
             id="table-page-jump"
-            type="number"
-            min="1"
-            max={totalPages}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
             className="form-control"
             style={{ width: '7rem' }}
-            value={currentPage}
+            value={pageJump}
             onChange={event => {
-              const value = Number(event.target.value || 1);
-              onPageChange(value);
+              const value = String(event.target.value || '').replace(/[^0-9]/g, '');
+              setPageJump(value);
             }}
           />
-          <button type="button" className="btn btn-outline-secondary" onClick={() => onPageChange(currentPage)}>
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => onPageChange(Number(pageJump || 1))}
+          >
             Go
           </button>
         </div>
