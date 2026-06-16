@@ -65,6 +65,12 @@ export function TablePaginationPanel({
               const value = String(event.target.value || '').replace(/[^0-9]/g, '');
               setPageJump(value);
             }}
+            onKeyDown={event => {
+              if (event.key === 'Enter') {
+                event.preventDefault();
+                onPageChange(Number(pageJump || 1));
+              }
+            }}
           />
           <button
             type="button"
