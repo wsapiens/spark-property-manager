@@ -108,6 +108,20 @@ export function PaymentPage({ bootstrap }) {
     });
   }
 
+  function handleEditSelected(setter) {
+    const shouldScroll = isFormSectionOpen;
+    setIsFormSectionOpen(true);
+    manager.editSelected(setter);
+    if (shouldScroll) {
+      window.requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+  }
+
   async function handleSubmit() {
     try {
       const method = manager.editingId ? 'PUT' : 'POST';
@@ -154,10 +168,7 @@ export function PaymentPage({ bootstrap }) {
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={handleSubmit}
-      onEdit={setter => {
-        setIsFormSectionOpen(true);
-        manager.editSelected(setter);
-      }}
+      onEdit={handleEditSelected}
       onDelete={manager.deleteSelected}
       message={manager.message}
       error={manager.error}

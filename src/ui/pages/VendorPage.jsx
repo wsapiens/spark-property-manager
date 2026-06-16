@@ -111,6 +111,20 @@ export function VendorPage({ bootstrap }) {
     });
   }
 
+  function handleEditSelected(setter) {
+    const shouldScroll = isFormSectionOpen;
+    setIsFormSectionOpen(true);
+    manager.editSelected(setter);
+    if (shouldScroll) {
+      window.requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+  }
+
   return (
     <ManagerPage
       bootstrap={bootstrap}
@@ -131,7 +145,7 @@ export function VendorPage({ bootstrap }) {
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={() => manager.submit(form, setForm)}
-      onEdit={setter => manager.editSelected(setter)}
+      onEdit={handleEditSelected}
       onDelete={manager.deleteSelected}
       message={manager.message}
       error={manager.error}

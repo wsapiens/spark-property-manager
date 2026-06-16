@@ -186,8 +186,17 @@ export function TenantPage({ bootstrap }) {
   }
 
   function handleEditSelected(setter) {
+    const shouldScroll = isFormSectionOpen;
     setIsFormSectionOpen(true);
     manager.editSelected(setter);
+    if (shouldScroll) {
+      window.requestAnimationFrame(() => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
   }
 
   async function handleSubmit() {

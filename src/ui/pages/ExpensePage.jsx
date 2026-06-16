@@ -208,6 +208,12 @@ export function ExpensePage({ bootstrap }) {
   function handleEditSelected(setter) {
     setIsFormSectionOpen(true);
     manager.editSelected(setter);
+    window.requestAnimationFrame(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
   }
 
   const columns = useMemo(() => [
