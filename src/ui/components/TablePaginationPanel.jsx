@@ -13,6 +13,17 @@ export function TablePaginationPanel({
     setPageJump(String(currentPage));
   }, [currentPage]);
 
+  function normalizePageJump(value) {
+    const numeric = Number(String(value || '').replace(/[^0-9]/g, ''));
+    if (!numeric || numeric < 1) {
+      return 1;
+    }
+    if (numeric > totalPages) {
+      return totalPages;
+    }
+    return numeric;
+  }
+
   return (
     <section className="card border-0 shadow-sm mb-3">
       <div className="card-body d-flex flex-wrap gap-2 align-items-center">
@@ -68,14 +79,20 @@ export function TablePaginationPanel({
             onKeyDown={event => {
               if (event.key === 'Enter') {
                 event.preventDefault();
-                onPageChange(Number(pageJump || 1));
+                const nextPage = normalizePageJump(pageJump);
+                setPageJump(String(nextPage));
+                onPageChange(nextPage);
               }
             }}
           />
           <button
             type="button"
             className="btn btn-outline-secondary"
-            onClick={() => onPageChange(Number(pageJump || 1))}
+            onClick={() => {
+              const nextPage = normalizePageJump(pageJump);
+              setPageJump(String(nextPage));
+              onPageChange(nextPage);
+            }}
           >
             Go
           </button>
