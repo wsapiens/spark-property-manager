@@ -1,8 +1,10 @@
 import React, { useMemo, useState } from 'react';
 import { Icon } from '../components/Icon.jsx';
 import { ManagerPage } from '../components/ManagerPage.jsx';
+import { TablePaginationPanel } from '../components/TablePaginationPanel.jsx';
 import { useCrudManager } from '../hooks/useCrudManager.js';
 import { getCsrfToken, requestJson } from '../lib/api.js';
+import { useTablePagination } from '../hooks/useTablePagination.js';
 
 function initialForm() {
   return {
@@ -110,6 +112,15 @@ export function UserPage({ bootstrap }) {
 
     return [...filteredRows].sort((left, right) => compare(left, right) * direction);
   }, [filteredRows, sortDirection, sortKey]);
+
+  const {
+    currentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    pagedRows,
+    goToPage
+  } = useTablePagination(sortedRows, { searchTerm, sortKey, sortDirection });
 
   function handleSortColumn(columnKey) {
     setSortKey(currentKey => {
@@ -258,7 +269,7 @@ export function UserPage({ bootstrap }) {
       footerLabels={['Id', 'Email', 'Firstname', 'Lastname', 'Phone', 'IsManager']}
       form={form}
       setForm={setForm}
-      rows={sortedRows}
+      rows={pagedRows}
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={handleSubmit}
@@ -292,6 +303,15 @@ export function UserPage({ bootstrap }) {
       formSectionOpen={isFormSectionOpen}
       formSectionOnToggle={setIsFormSectionOpen}
       formSectionIconPosition="right"
+      sectionBeforeTable={
+        <TablePaginationPanel
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          onPageChange={goToPage}
+        />
+      }
       sortKey={sortKey}
       sortDirection={sortDirection}
       onSortColumn={handleSortColumn}

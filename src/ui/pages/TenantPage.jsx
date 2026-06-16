@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ManagerPage } from '../components/ManagerPage.jsx';
+import { TablePaginationPanel } from '../components/TablePaginationPanel.jsx';
 import { useCrudManager } from '../hooks/useCrudManager.js';
 import { requestJson } from '../lib/api.js';
 import { formatDateInput } from '../lib/date.js';
+import { useTablePagination } from '../hooks/useTablePagination.js';
 
 function initialForm() {
   return {
@@ -174,6 +176,15 @@ export function TenantPage({ bootstrap }) {
     return [...filteredRows].sort((left, right) => compare(left, right) * direction);
   }, [filteredRows, sortDirection, sortKey]);
 
+  const {
+    currentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    pagedRows,
+    goToPage
+  } = useTablePagination(sortedRows, { searchTerm, sortKey, sortDirection });
+
   function handleSortColumn(columnKey) {
     setSortKey(currentKey => {
       if (currentKey === columnKey) {
@@ -232,7 +243,7 @@ export function TenantPage({ bootstrap }) {
       footerLabels={['Id', 'PropertyUnit', 'Firstname', 'Lastname', 'Phone', 'Email', 'LeaseStartDate', 'LeaseEndDate']}
       form={form}
       setForm={setForm}
-      rows={sortedRows}
+      rows={pagedRows}
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={handleSubmit}
@@ -247,6 +258,15 @@ export function TenantPage({ bootstrap }) {
       formSectionOpen={isFormSectionOpen}
       formSectionOnToggle={setIsFormSectionOpen}
       formSectionIconPosition="right"
+      sectionBeforeTable={
+        <TablePaginationPanel
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          onPageChange={goToPage}
+        />
+      }
       tableActionsRight={
         <div style={{ width: '20%', minWidth: '240px' }}>
           <label className="form-label" htmlFor="tenant-search">Search Tenant</label>

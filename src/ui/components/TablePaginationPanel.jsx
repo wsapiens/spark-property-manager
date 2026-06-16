@@ -1,0 +1,70 @@
+import React from 'react';
+
+export function TablePaginationPanel({
+  currentPage,
+  totalPages,
+  pageSize,
+  onPageSizeChange,
+  onPageChange
+}) {
+  return (
+    <section className="card border-0 shadow-sm mb-3">
+      <div className="card-body d-flex flex-wrap gap-2 align-items-center">
+        <div className="d-flex flex-wrap gap-2 align-items-center">
+          <div className="d-flex flex-wrap gap-2 align-items-center">
+            <label className="form-label mb-0" htmlFor="table-page-size">Page Size</label>
+            <select
+              id="table-page-size"
+              className="form-select"
+              style={{ width: '7rem' }}
+              value={pageSize}
+              onChange={event => onPageSizeChange(Number(event.target.value))}
+            >
+              {[5, 10, 20, 50, 100].map(size => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+            </select>
+          </div>
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            Previous
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-secondary"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            Next
+          </button>
+          <span className="text-muted">
+            Page {currentPage} of {totalPages}
+          </span>
+        </div>
+        <div className="d-flex flex-wrap gap-2 align-items-center ms-auto">
+          <label className="form-label mb-0" htmlFor="table-page-jump">Go to page</label>
+          <input
+            id="table-page-jump"
+            type="number"
+            min="1"
+            max={totalPages}
+            className="form-control"
+            style={{ width: '7rem' }}
+            value={currentPage}
+            onChange={event => {
+              const value = Number(event.target.value || 1);
+              onPageChange(value);
+            }}
+          />
+          <button type="button" className="btn btn-outline-secondary" onClick={() => onPageChange(currentPage)}>
+            Go
+          </button>
+        </div>
+      </div>
+    </section>
+  );
+}

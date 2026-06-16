@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ManagerPage } from '../components/ManagerPage.jsx';
+import { TablePaginationPanel } from '../components/TablePaginationPanel.jsx';
 import { useCrudManager } from '../hooks/useCrudManager.js';
 import { getCsrfToken, requestJson } from '../lib/api.js';
+import { useTablePagination } from '../hooks/useTablePagination.js';
 
 function initialForm() {
   return {
@@ -150,6 +152,15 @@ export function PropertyPage({ bootstrap }) {
     return [...filteredRows].sort((left, right) => compare(left, right) * direction);
   }, [filteredRows, sortDirection, sortKey]);
 
+  const {
+    currentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    pagedRows,
+    goToPage
+  } = useTablePagination(sortedRows, { searchTerm, sortKey, sortDirection });
+
   function handleSortColumn(columnKey) {
     setSortKey(currentKey => {
       if (currentKey === columnKey) {
@@ -194,7 +205,7 @@ export function PropertyPage({ bootstrap }) {
       footerLabels={['Id', 'Street', 'City', 'State', 'Zip', 'Type', 'Index', 'Loan', 'Memo']}
       form={form}
       setForm={setForm}
-      rows={sortedRows}
+      rows={pagedRows}
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={handleSubmit}
@@ -204,6 +215,15 @@ export function PropertyPage({ bootstrap }) {
       error={manager.error}
       submitLabel={manager.editingId ? 'Update' : 'Submit'}
       loading={manager.loading}
+      sectionBeforeTable={
+        <TablePaginationPanel
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          onPageChange={goToPage}
+        />
+      }
       tableActionsRight={
         <div className="d-flex flex-column align-items-end" style={{ width: '20%', minWidth: '240px' }}>
           <label className="form-label mb-1 w-100 text-end" htmlFor="property-search">Search Property</label>

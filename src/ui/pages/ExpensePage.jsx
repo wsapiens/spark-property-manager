@@ -1,7 +1,9 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { ManagerPage } from '../components/ManagerPage.jsx';
 import { Icon } from '../components/Icon.jsx';
+import { TablePaginationPanel } from '../components/TablePaginationPanel.jsx';
 import { useCrudManager } from '../hooks/useCrudManager.js';
+import { useTablePagination } from '../hooks/useTablePagination.js';
 import { buildQuery, getCsrfToken, requestJson } from '../lib/api.js';
 import { formatDateInput, startOfYearDate, todayDate } from '../lib/date.js';
 
@@ -205,6 +207,15 @@ export function ExpensePage({ bootstrap }) {
     });
   }
 
+  const {
+    currentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    pagedRows,
+    goToPage
+  } = useTablePagination(sortedRows, { searchTerm, sortKey, sortDirection });
+
   function handleEditSelected(setter) {
     setIsFormSectionOpen(true);
     manager.editSelected(setter);
@@ -352,7 +363,6 @@ export function ExpensePage({ bootstrap }) {
       footerLabels={['Id', 'PropertyAddress', 'PropertyUnit', 'PropertyCity', 'PayMethod', 'PayAccount', 'PayTo', 'Description', 'Type', 'Amount', 'Time', 'Receipt']}
       form={formWithDateField}
       setForm={setForm}
-      rows={sortedRows}
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={handleSubmit}
@@ -425,18 +435,30 @@ export function ExpensePage({ bootstrap }) {
         null
       }
       tableActionsRight={
-        <div className="d-flex flex-column align-items-end" style={{ width: '20%', minWidth: '240px' }}>
-          <label className="form-label mb-1 w-100 text-end" htmlFor="expense-search">Search Expenses</label>
-          <input
-            id="expense-search"
-            type="search"
-            className="form-control"
-            placeholder="Search by payee, amount, unit, receipt, or date"
-            value={searchTerm}
-            onChange={event => setSearchTerm(event.target.value)}
-          />
+        <div className="d-flex flex-column align-items-end gap-2" style={{ width: '20%', minWidth: '240px' }}>
+          <div className="w-100">
+            <label className="form-label mb-1 w-100 text-end" htmlFor="expense-search">Search Expenses</label>
+            <input
+              id="expense-search"
+              type="search"
+              className="form-control"
+              placeholder="Search by payee, amount, unit, receipt, or date"
+              value={searchTerm}
+              onChange={event => setSearchTerm(event.target.value)}
+            />
+          </div>
         </div>
       }
+      sectionBeforeTable={
+        <TablePaginationPanel
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          onPageChange={goToPage}
+        />
+      }
+      rows={pagedRows}
       sortKey={sortKey}
       sortDirection={sortDirection}
       onSortColumn={handleSortColumn}

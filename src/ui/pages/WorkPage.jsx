@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { ManagerPage } from '../components/ManagerPage.jsx';
+import { TablePaginationPanel } from '../components/TablePaginationPanel.jsx';
 import { useCrudManager } from '../hooks/useCrudManager.js';
 import { requestJson } from '../lib/api.js';
 import { formatDateInput } from '../lib/date.js';
+import { useTablePagination } from '../hooks/useTablePagination.js';
 
 function initialForm() {
   return {
@@ -261,6 +263,15 @@ export function WorkPage({ bootstrap }) {
     return [...filteredRows].sort((left, right) => compare(left, right) * direction);
   }, [filteredRows, sortDirection, sortKey]);
 
+  const {
+    currentPage,
+    pageSize,
+    setPageSize,
+    totalPages,
+    pagedRows,
+    goToPage
+  } = useTablePagination(sortedRows, { searchTerm, sortKey, sortDirection });
+
   function handleSortColumn(columnKey) {
     setSortKey(currentKey => {
       if (currentKey === columnKey) {
@@ -309,7 +320,7 @@ export function WorkPage({ bootstrap }) {
       footerLabels={['Id', 'PropertyUnit', 'Description', 'Status', 'Estimation', 'ScheduleDate', 'StartDate', 'EndDate', 'VendorName', 'VendorPhone', 'VendorEmail']}
       form={form}
       setForm={setForm}
-      rows={sortedRows}
+      rows={pagedRows}
       selectedIds={manager.selectedIds}
       setSelectedIds={manager.setSelectedIds}
       onSubmit={async () => {
@@ -331,6 +342,15 @@ export function WorkPage({ bootstrap }) {
       formSectionOpen={isFormSectionOpen}
       formSectionOnToggle={setIsFormSectionOpen}
       formSectionIconPosition="right"
+      sectionBeforeTable={
+        <TablePaginationPanel
+          currentPage={currentPage}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageSizeChange={setPageSize}
+          onPageChange={goToPage}
+        />
+      }
       tableActionsRight={
         <div style={{ width: '20%', minWidth: '240px' }}>
           <label className="form-label" htmlFor="work-search">Search Work Record</label>
