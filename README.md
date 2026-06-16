@@ -65,16 +65,19 @@ $ tar -xvf spark-property-manager-{version}.tgz
 $ cd spark-property-manager
 spark-property-manager$ npm install
 ```
+
  or
+
 ```bash
 spark-property-manager$ bun install
 ```
 
 ## Run database migration
+
 First, setup sequelize CLI config.json.
 
 ```bash
-$ vi config/config.json
+spark-property-manager$ vi config/config.json
 ```
 
 See the example below.
@@ -95,15 +98,15 @@ See the example below.
 Run DB migration and generate seed data using the installed Sequelize.
 
 ```bash
-$ node_modules/.bin/sequelize db:migrate
-$ node_modules/.bin/sequelize db:seed:all
+spark-property-manager$ node_modules/.bin/sequelize db:migrate
+spark-property-manager$ node_modules/.bin/sequelize db:seed:all
 ```
 
 Or via npx (Node Package eXecute command-line utility) with sequelize-cli.
 
 ```bash
-$ npx sequelize-cli db:migrate
-$ npx sequelize-cli db:seed:all
+spark-property-manager$ npx sequelize-cli db:migrate
+spark-property-manager$ npx sequelize-cli db:seed:all
 ```
 
 Create the base company and initial login user after completing the DB migration and seeding data.
@@ -132,11 +135,11 @@ $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout apache-selfsi
 ## Copy app.properties.TEMPLATE to app.properties and update app.properties accordingly to your environment
 
 ```bash
-$ cp app.properties.TEMPLATE app.properties
-$ vi app.properties
+spark-property-manager$ cp app.properties.TEMPLATE app.properties
+spark-property-manager$ vi app.properties
 ```
 
-* app.properties example
+- app.properties example
 
 ```bash
 # contents of properties file
@@ -176,7 +179,7 @@ If deploying in a cloud environment with a domain (named IP address), update the
 
 ## Encrypt database password
 
-* encrypt db password from command line by node.js
+- encrypt db password from command line by node.js
 
 ```bash
 spark-property-manager$ node
@@ -185,7 +188,7 @@ spark-property-manager$ node
 'a199/unJEhzdS5lfoF3sQe1haMc5kg=='
 ```
 
-* encrypt db password from command line by bun
+- encrypt db password from command line by bun
 
 ```bash
 spark-property-manager$ bun repl
@@ -203,7 +206,7 @@ Type .copy [code] to copy to clipboard. .help for more info.
 ❯
 ```
 
-* put the encrypted password with '[encrypt]' prefix into db password field on app.properties
+- put the encrypted password with '[encrypt]' prefix into db password field on app.properties
 
 ```bash
 # contents of properties file
@@ -218,18 +221,22 @@ password = [encrypt]a199/unJEhzdS5lfoF3sQe1haMc5kg==
 
 ## Static code analysis by jshint and grunt
 
-* install grunt
+- install grunt
+
 ```bash
 $ npm i -g grunt-cli
 ```
+
    or
+
 ```bash
 $ bun add -g grunt-cli
 ```
 
-* run grunt
+- run grunt
+
 ```bash
-$ grunt
+spark-property-manager$ grunt
 Running "jshint:files" (jshint) task
 >> 46 files lint free.
 
@@ -239,8 +246,9 @@ Done.
 ## Static code analysis by ESLint
 
 The .eslintrc.js file defines ESLint configurations and rules.
+
 ```bash
-$ npm run lint
+spark-property-manager$ npm run lint
 
 > spark-property-manager@1.1.15 lint
 > eslint --ext .js app.js bin config email log migrations models routes util seeders
@@ -249,24 +257,27 @@ $ npm run lint
 To recreate the configuration rather than editing the existing one.
 
 ```bash
-$ npm init @eslint/config
+spark-property-manager$ npm init @eslint/config
 ```
 
 ## Run unit test by mocha
 
-* install mocha globally
+- install mocha globally
 
 ```bash
 $ npm i -g mocha
 ```
+
  or
+
 ```bash
 $ bun add -g mocha
 ```
 
-* run mocha
+- run mocha
+
 ```bash
-❯ mocha
+spark-property-manager$ mocha
 
 
   util
@@ -291,11 +302,11 @@ $ bun add -g mocha
   9 passing (10ms)
 ```
 
-* install mocha locally
+- install mocha locally
 
 ```bash
-$ npm i mocha
-$ node_modules/.bin/mocha
+spark-property-manager$ npm i mocha
+spark-property-manager$ node_modules/.bin/mocha
 
 util
   getImportAmount()
@@ -319,11 +330,39 @@ crypto
 9 passing (23ms)
 ```
 
+## Update the UI by run build:ui
+
+- run build:ui by npm
+
+```bash
+spark-property-manager$ npm run build:ui
+
+> spark-property-manager@2.2.0 build:ui
+> esbuild src/ui/index.jsx --bundle --format=iife --global-name=SparkUI --loader:.js=jsx --outfile=public/assets/react-ui.js
+
+
+  public/assets/react-ui.js  1.8mb ⚠️
+
+⚡ Done in 43ms
+```
+
+or run build:ui by bun
+
+```bash
+spark-property-manager$ bun run build:ui
+$ esbuild src/ui/index.jsx --bundle --format=iife --global-name=SparkUI --loader:.js=jsx --outfile=public/assets/react-ui.js
+
+  public/assets/react-ui.js  1.8mb ⚠️
+
+⚡ Done in 31ms
+```
+
 ## Run Application
 
-* run application by npm
+- run application by npm
 
 Update package.json script section to use Node
+
 ```json
   "scripts": {
     "test": "mocha",
@@ -334,8 +373,9 @@ Update package.json script section to use Node
 ```
 
 npm start command will run the application
+
 ```bash
-$ npm start
+spark-property-manager$ npm start
 ```
 
 or update package.json script section to use bun
@@ -350,8 +390,9 @@ or update package.json script section to use bun
 ```
 
 bun start command will run the application
+
 ```bash
-$ bun start
+spark-property-manager$ bun start
 ```
 
 ## Run Application by using Process Manager PM2
@@ -359,16 +400,16 @@ $ bun start
 PM2 offers production-grade process management.
 [pm2 install guide](https://www.npmjs.com/package/pm2)
 
-* install pm2
+- install pm2
 
 ```bash
-$ npm install pm2 -g
+npm install pm2 -g
 ```
 
-* run application by pm2
+- run application by pm2
 
 ```bash
-$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
+spark-property-manager$ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
 [PM2] Starting /Users/spark/workspace3/spark-property-manager/bin/server.js in cluster_mode (8 instances)
 [PM2] Done.
 ┌────────────────────────┬────┬─────────┬───────┬────────┬─────────┬────────┬──────┬───────────┬───────┬──────────┐
@@ -386,7 +427,7 @@ $ pm2 start ./bin/server.js --name "spark-property-manager" -i 8 -l pm2.log
  Use `pm2 show <id|name>` to get more details about an app
 ```
 
-* stop application by pm2
+- stop application by pm2
 
 ```bash
 $ pm2 stop spark-property-manager
@@ -414,7 +455,7 @@ $ pm2 stop spark-property-manager
  Use `pm2 show <id|name>` to get more details about an app
 ```
 
-* remove application from pm2
+- remove application from pm2
 
 ```bash
 $ pm2 delete spark-property-manager
@@ -438,7 +479,7 @@ Use `pm2 show <id|name>` to get more details about an app
 BM2 is a process manager built entirely on Bun native APIs.
 The modern PM2 replacement — zero Node.js dependencies, pure Bun performance.
 
-* install bm2
+- install bm2
 
 ```bash
 $ bun add -g bm2
@@ -452,10 +493,10 @@ installed bm2@1.0.39 with binaries:
 warn: To run "bm2", add the global bin folder to $PATH:
 ```
 
-* run application by bm2
+- run application by bm2
 
 ```bash
-$ bm2 start ./bin/server.js --name "spark-property-manager" -i 4 --cwd $(pwd)
+spark-property-manager$ bm2 start ./bin/server.js --name "spark-property-manager" -i 4 --cwd $(pwd)
 Starting daemon..
 Waiting for daemon..
 
@@ -475,7 +516,7 @@ BM2 — Bun Process Manager
 └────┴──────────────────────────┴───────────┴─────────┴─────────┴───────┴──────────┴───┴──────────┴──────┴─────┘
 ```
 
-* stop application by bm2
+- stop application by bm2
 
 ```bash
 $ bm2 stop spark-property-manager
@@ -496,7 +537,7 @@ BM2 — Bun Process Manager
 └────┴──────────────────────────┴───────────┴─────────┴─────────┴─────┴────────┴────┴───────────┴──────┴─────┘
 ```
 
-* remove application from bm2
+- remove application from bm2
 
 ```bash
 $ bm2 delete spark-property-manager
@@ -527,37 +568,21 @@ No processes running
 
 ## Open by Browser
 
-http://localhost:8080
+<http://localhost:8080>
 
-## Create Account by Valid Email address and it will send temporary password to your email
+## Creating a Login User on the Login User page for your company sets the default password to “password”
 
-![alt text][account_creation]
-
-## Login by temporary password sent to your email
-
-![alt text][login]
-
-## Change password
-
-![alt text][password_change]
-
-[account_creation]: https://github.com/wsapiens/spark-property-manager/blob/master/doc/account_creation.png
-
-[login]:
-https://github.com/wsapiens/spark-property-manager/blob/master/doc/login.png
-
-[password_change]:
-https://github.com/wsapiens/spark-property-manager/blob/master/doc/password_change.png
+- Change the default password by selecting a user and clicking “Change Password Selected” button.
 
 ## How to record expense
 
-* Add a property from the Property Manager view; the building unit will be automatically added as the default unit.
+- Add a property from the Property Manager view; the building unit will be automatically added as the default unit.
 
-* Add or modify a unit for the added property from the Unit Manager view.
+- Add or modify a unit for the added property from the Unit Manager view.
 
-* Add an expense by selecting the unit/property and expense type; you can also upload a receipt photo.
+- Add an expense by selecting the unit/property and expense type; you can also upload a receipt photo.
   On mobile, users will be prompted to either take a picture or choose a photo from the device.
 
-* For importing bank or credit card statements, use a flat file (.csv) format.
+- For importing bank or credit card statements, use a flat file (.csv) format.
   As each bank and credit card company has a different format, define the column numbers for each data type first.
   Once the import column configuration is set in the Import Manager view, upload the .csv file to populate expenses.

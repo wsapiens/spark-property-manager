@@ -4,63 +4,70 @@ const { csrfToken, renderLogin, renderView, requireUser } = require('../lib/hono
 
 const router = new Hono();
 
-function managerLocals(c, title, extra) {
+function reactManagerLocals(c, title, reactPage, extra) {
   const user = requireUser(c);
   return Object.assign({
-    title: title,
-    manager: user.is_manager,
+    title,
+    manager: user ? user.is_manager : false,
     version: pjson.version,
-    csrfToken: csrfToken(c)
+    csrfToken: csrfToken(c),
+    legacyUi: false,
+    reactPage,
+    reactBootstrap: Object.assign({
+      manager: user ? user.is_manager : false,
+      version: pjson.version,
+      csrfToken: csrfToken(c),
+      title
+    }, extra || {})
   }, extra || {});
 }
 
-async function renderManagerView(c, view, title, extra) {
+async function renderManagerView(c, view, title, reactPage, extra) {
   const user = requireUser(c);
   if (!user) {
     return renderLogin(c);
   }
 
-  return renderView(c, view, managerLocals(c, title, extra));
+  return renderView(c, view, reactManagerLocals(c, title, reactPage, extra));
 }
 
 router.get('/expense', async c => {
-  console.log(csrfToken(c));
-  return renderManagerView(c, 'expense', 'Expense');
+  return renderManagerView(c, 'expense', 'Expense', 'expense');
 });
 
-router.get('/import', c => {
-  return renderManagerView(c, 'import', 'Import Transactions', {
+router.get('/import', async c => {
+  return renderManagerView(c, 'import', 'Import Transactions', 'import', {
     message: '',
     error_message: ''
   });
 });
 
-router.get('/property', c => {
-  return renderManagerView(c, 'property', 'Property');
+router.get('/property', async c => {
+  return renderManagerView(c, 'property', 'Property', 'property');
 });
 
-router.get('/unit', c => {
-  return renderManagerView(c, 'unit', 'Unit');
+router.get('/unit', async c => {
+  return renderManagerView(c, 'unit', 'Unit', 'unit');
 });
 
-router.get('/user', c => {
-  return renderManagerView(c, 'user', 'Login User');
+router.get('/user', async c => {
+  return renderManagerView(c, 'user', 'Login User', 'user');
 });
 
-router.get('/tenant', c => {
-  return renderManagerView(c, 'tenant', 'Tenant');
+router.get('/tenant', async c => {
+  return renderManagerView(c, 'tenant', 'Tenant', 'tenant');
 });
 
-router.get('/work', c => {
-  return renderManagerView(c, 'work', 'Work Record');
+router.get('/work', async c => {
+  return renderManagerView(c, 'work', 'Work Record', 'work');
 });
 
-router.get('/vendor', c => {
-  return renderManagerView(c, 'vendor', 'Vendor');
+router.get('/vendor', async c => {
+  return renderManagerView(c, 'vendor', 'Vendor', 'vendor');
 });
 
-router.get('/payment', c => {
-  return renderManagerView(c, 'payment', 'Payment Method');
+router.get('/payment', async c => {
+  return renderManagerView(c, 'payment', 'Payment Method', 'payment');
 });
 
 module.exports = router;

@@ -7,6 +7,7 @@ const pjson = require('../package.json');
 const crypto = require('../util/crypto');
 const {
   authenticate,
+  csrfToken,
   destroySession,
   flash,
   getRequestIp,
@@ -28,9 +29,13 @@ router.get('/', async c => {
   }
 
   return renderView(c, 'index', {
-    manager: user.is_manager,
-    version: pjson.version,
-    message: ''
+    legacyUi: false,
+    reactPage: 'dashboard',
+    reactBootstrap: {
+      manager: user.is_manager,
+      version: pjson.version,
+      csrfToken: csrfToken(c)
+    }
   });
 });
 
@@ -66,7 +71,11 @@ router.get('/password', async c => {
     return renderLogin(c);
   }
 
-  return renderView(c, 'index', { manager: user.is_manager, message: '' });
+  return renderView(c, 'password', {
+    manager: user.is_manager,
+    message: '',
+    csrfToken: csrfToken(c)
+  });
 });
 
 router.post('/password', async c => {
@@ -103,11 +112,19 @@ router.post('/password', async c => {
         }
       );
       log.info('password has been changed for user id: ' + user.id);
-      return renderView(c, 'index', { manager: user.is_manager, message: '' });
+      return renderView(c, 'password', {
+        manager: user.is_manager,
+        message: '',
+        csrfToken: csrfToken(c)
+      });
     }
     console.log('old password verification fail for user id: ' + user.id);
     log.info('old password verification fail for user id: ' + user.id);
-    return renderView(c, 'index', { manager: user.is_manager, message: 'password change failed' });
+    return renderView(c, 'password', {
+      manager: user.is_manager,
+      message: 'password change failed',
+      csrfToken: csrfToken(c)
+    });
   });
 });
 

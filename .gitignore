@@ -3,6 +3,7 @@
 /bin/app.properties
 /bin/app.log
 /bin/uploads
+/public/assets/*
 /app.log
 /uploads
 /app.properties

@@ -16,7 +16,11 @@ module.exports = {
         }
     ],
     'parserOptions': {
-        'ecmaVersion': 'latest'
+        'ecmaVersion': 'latest',
+        'sourceType': 'module',
+        'ecmaFeatures': {
+            'jsx': true
+        }
     },
     'rules': {
         'indent': 'off' ,

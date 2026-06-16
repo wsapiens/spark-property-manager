@@ -1,20 +1,30 @@
+<%
+  const useLegacyUi = typeof legacyUi === 'undefined' ? true : legacyUi;
+  const reactPageName = typeof reactPage === 'string' ? reactPage : '';
+%>
 <title>Spark Property Manager</title>
 <meta name="viewport" content="initial-scale=1, maximum-scale=1">
 <link rel="icon" type="image/x-icon" href="/images/favicon.png">
-<link rel="stylesheet" type="text/css" href="/jquery-ui-dist/jquery-ui.min.css">
+<% if (typeof csrfToken !== 'undefined' && csrfToken) { %>
+<meta name="csrf-token" content=<%= csrfToken %>>
+<% } %>
 <link rel="stylesheet" type="text/css" href="/bootstrap/dist/css/bootstrap.min.css">
-<link rel="stylesheet" type="text/css" href="/datatables/media/css/jquery.dataTables.css">
-<link rel="stylesheet" type="text/css" href="/datatables.net-dt/css/jquery.dataTables.css">
+<% if (useLegacyUi) { %>
+<link rel="stylesheet" type="text/css" href="/jquery-ui-dist/jquery-ui.min.css">
+<% } %>
 <!-- <link rel="stylesheet" type="text/css" href="/stylesheets/style.css"> -->
 <meta name="theme-color" content="#7952b3">
+<script type="text/javascript" src="/bootstrap/dist/js/bootstrap.min.js"></script>
+<% if (useLegacyUi) { %>
 <script type="text/javascript" src="/jquery/dist/jquery.js"></script>
 <script type="text/javascript" src="/jquery.cookie/jquery.cookie.js"></script>
 <script type="text/javascript" src="/jquery-ui-dist/jquery-ui.min.js"></script>
-<script type="text/javascript" src="/bootstrap/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="/feather-icons/dist/feather.min.js"></script>
-<script type="text/javascript" src="/datatables.net/js/jquery.dataTables.js"></script>
-<script type="text/javascript" src="/datatables/media/js/jquery.dataTables.js"></script>
 <script type="text/javascript" src="/chart.js/dist/chart.min.js"></script>
+<% } %>
+<% if (reactPageName) { %>
+<script type="text/javascript" src="/assets/react-ui.js" defer></script>
+<% } %>
 
 <style>
 body {
@@ -121,5 +131,21 @@ body {
 .container-fluid .manager-content{
   display: none;
   padding : 5px;
+}
+
+.chart-frame {
+  height: 360px;
+  position: relative;
+}
+
+.chart-frame-square {
+  aspect-ratio: 5 / 4;
+  height: auto;
+}
+
+.chart-canvas-fit {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
 }
 </style>

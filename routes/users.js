@@ -22,6 +22,61 @@ router.get('/', async c => {
   return c.json({ data: users });
 });
 
+router.post('/:userId/password', async c => {
+  const user = requireUser(c);
+  if (!user) {
+    return renderLogin(c);
+  }
+
+  const body = await parseBody(c);
+  const userId = c.req.param('userId');
+  if (!body.new_pass) {
+    return c.text('New password is required', 400);
+  }
+
+  return await models.sequelize.transaction(async t => {
+    const rows = await models.sequelize.query(
+      'SELECT password FROM login_user WHERE id=$1',
+      {
+        bind: [userId],
+        type: models.sequelize.QueryTypes.SELECT,
+        transaction: t
+      }
+    );
+
+    if (rows.length === 0) {
+      return c.text('User not found', 404);
+    }
+
+    const existingPassword = rows[0].password;
+    if (existingPassword) {
+      const verified = await models.sequelize.query(
+        'SELECT id FROM login_user WHERE id=$1 AND password = crypt($2, password)',
+        {
+          bind: [userId, body.old_pass || ''],
+          type: models.sequelize.QueryTypes.SELECT,
+          transaction: t
+        }
+      );
+
+      if (verified.length === 0) {
+        return c.text('Old password does not match', 400);
+      }
+    }
+
+    await models.sequelize.query(
+      "UPDATE login_user SET password = crypt($2, gen_salt('bf')) WHERE id=$1",
+      {
+        bind: [userId, body.new_pass],
+        type: models.sequelize.QueryTypes.UPDATE,
+        transaction: t
+      }
+    );
+
+    return c.json({ message: 'Password changed successfully.' });
+  });
+});
+
 router.get('/:userId', async c => {
   const user = requireUser(c);
   if (!user) {
@@ -39,12 +94,15 @@ router.post('/', async c => {
   }
 
   const body = await parseBody(c);
-  const randomPassword = crypto.generateRandomString(5);
+  if (!body.email) {
+    return c.text('Email is required field', 400);
+  }
+  const temporaryPassword = 'password';
   const message = {
     text: 'Your Account has been created with your email: ' +
       body.email +
       ' and temporary password: ' +
-      randomPassword +
+      temporaryPassword +
       ', please change password after login ' + config.get('app.url'),
     from: 'SPARK REM <' + config.get('smtp.username') + '>',
     to: body.firstname + ' <' + body.email + '>',
@@ -57,7 +115,7 @@ router.post('/', async c => {
     {
       bind: [
         body.email,
-        randomPassword,
+        temporaryPassword,
         body.firstname,
         body.lastname,
         body.phone,
@@ -78,12 +136,12 @@ router.put('/:userId', async c => {
   }
 
   const body = await parseBody(c);
-  const randomPassword = crypto.generateRandomString(5);
+  const temporaryPassword = 'password';
   const message = {
     text: 'Your Account has been updated with your email: ' +
       body.email +
       ' and temporary password: ' +
-      randomPassword +
+      temporaryPassword +
       ', please change password after login ' + config.get('app.url'),
     from: 'SPARK PM <' + config.get('smtp.username') + '>',
     to: body.firstname + ' <' + body.email + '>',
@@ -95,7 +153,7 @@ router.put('/:userId', async c => {
     {
       bind: [
         body.email,
-        randomPassword,
+        temporaryPassword,
         body.firstname,
         body.lastname,
         body.phone,
